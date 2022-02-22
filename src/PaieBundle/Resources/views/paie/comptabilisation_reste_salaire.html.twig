@@ -1,0 +1,101 @@
+{#----------MODAL COMPTABILISER PRISE SALAIRE----------#}
+<div class="modal fade"  id="ModalComptabiliser" role="dialog">
+    <form action="{{ path('paie_comptabiliser_salaire', { 'slug':compte_Paie.slug }) }}" method="post">
+
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Comptabiliser prise salaire</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row ">
+                        <div class="form-group col-md-6 col-md-offset-3">
+                            <label for="caisse_debiter">Caisse de débit <b class="text-danger" id="err_caisse_debiter"></b></label>
+                            <select required type="text" class="form-control" name="caisse_debiter" id="caisse_debiter" >
+
+                            </select>
+                        </div>
+
+                    </div>
+                    {% if employe.methodePaiement == 'Virement' %}
+                        <h4 class="text-danger">Le salarié doit prendre sa paie par Virement</h4>
+                    {% endif %}
+
+                    <input type="hidden" name="resteSalaire" value="{{ solde }}" id="soldeReste">
+                    <input type="hidden" name="mois" value="{{ mois }}" id="soldeReste">
+                    <input type="hidden" name="annee" value="{{ annee }}" id="soldeReste">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="btnComptabiliser">Comptabiliser</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+</div>
+
+{% if (app.user.ifRole('ROLE_ADMIN' or app.user.ifRole('ROLE_PAIE')))  %}
+    <script>
+
+        // initialisation des caisses
+        $.post("http://{{ servIP }}/FATEMI/web/api/grh/liste-caisse",
+            {
+                username: "{{ app.user.username }}"
+            },
+            function(result){
+                listeCaisse = jQuery.parseJSON(result);
+                // console.log(listeCaisse);
+
+                $.each(listeCaisse, function( key, caisse ) {
+                    console.log(caisse);
+
+                    $('#caisse_debiter').append("<option value='"+caisse['nom']+"'>"+caisse['nom']+" - "+"("+caisse['solde']+")"+"</option>");
+
+
+                });
+            }
+        );
+
+        var var_btn = 0;
+
+        var retour = false;
+        $('#btnComptabiliser').click(function () {
+            var_btn = var_btn + 1;
+            var nom_caisse = $('#caisse_debiter').children("option:selected").val();
+
+            if(var_btn == 1){
+
+                $.post("http://{{ servIP }}/FATEMI/web/api/grh/comptabiliser/salaire",
+                    {
+                        username: "{{ app.user.username }}",
+                        caisse: nom_caisse,
+                        montant: "{{ solde }}",
+                        employe: "{{ employe.nomComplet }}",
+                        libelle: "Salaire {{ employe.nomComplet }} mois de {{ mois|monmois ~ ' ' ~ annee }}"
+
+                    },
+                    function(result){
+
+                        if(result){
+                            retour = true;
+
+                            $('#btnComptabiliser').click();
+                        }
+                    }
+                );
+            }
+        });
+
+        $('#btnComptabiliser').click(function () {
+            return retour;
+        });
+
+    </script>
+{% endif %}

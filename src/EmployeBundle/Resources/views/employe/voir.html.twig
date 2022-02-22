@@ -1,0 +1,588 @@
+{% extends 'base.html.twig' %}
+
+{% block titre %}{{ employe.prenom }}{% endblock %}
+
+{% block stylesheets %}
+
+    {#STYLE PROFIL #}
+    <link href="{{ asset('assets/css/EmployeBundle/voir-style-profil.css') }}" rel="stylesheet">
+
+{% endblock %}
+
+{% block body %}
+
+    {% if  not employe.etat %}
+        <div class="alert alert-danger alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Alert!</strong> Ce compte est désactivé, <a  href="#" data-toggle="modal" data-target="#modalEtatEmploye">cliquer ici</a> pour la réactivation.
+        </div>
+    {% endif %}
+
+    <h1 class="text-primary">Détails sur l'Employé </h1>
+    <hr>
+    <ul class="write list-inline text-right">
+        <li>
+            <button class="btn btn-warning btn-lg" data-toggle="modal" data-target="#modalDocAdmin"><i class="fa fa-file"></i> Actualiser les Documents Administratifs</button>
+        </li>
+        {% if app.user.ifRole('ROLE_RH') %}
+            <li>
+                <a href="{{ path('employe_modifier', { 'slug' : employe.slug } ) }}" class="btn btn-primary btn-lg"><i class="fa fa-edit"></i> Modifier</a>
+            </li>
+            <li>
+                {% if employe.etat %}
+                    <div class="dropdown">
+                        <button class="btn btn-success btn-lg dropdown-toggle" type="button" data-toggle="dropdown">Compte Activé
+                            <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li class="active"><a href="#">Activer</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#modalEtatEmploye">Désactiver</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if not employe.etat %}
+                    <div class="dropdown">
+                        <button class="btn btn-danger btn-lg dropdown-toggle" type="button" data-toggle="dropdown">Compte Désactivé
+                            <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li ><a href="#" data-toggle="modal" data-target="#modalEtatEmploye">Réactiver</a></li>
+                            <li class="active"><a href="#">Désactiver</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </li>
+        {% endif %}
+
+    </ul>
+    <hr>
+
+    <div class="row">
+        <div class="col-md-4 col-lg-4">
+            <br>
+            <img src="{{ asset('document/imagesEmployes/') }}{{ employe.imageUrl }}" alt="" height="300" class="img-circle text-center center-block">
+        </div>
+        <br>
+        <div class=" col-md-8 col-lg-8">
+            <div class="well profile">
+                <div class="col-md-12">
+                    <h2 class="text-warning">
+                        {{ employe.nomComplet }}
+                        {% if employe.matricul %}
+                            <strong style="color: black;"> -|- </strong><b class="text-primary">N° {{ employe.matricul }}</b>
+                        {% endif %}
+                    </h2>
+                    <div class="col-md-6">
+                        <p><strong>Poste: </strong> {{ employe.poste }} </p>
+                        <p><strong>Adresse: </strong> {{ employe.adresse }} </p>
+                        <p><strong>N° CIN: </strong> {{ employe.numCin }} </p>
+                        <p><strong>Contact: </strong> {{ employe.contact }} </p>
+                        <p><strong>Email: </strong> {{ employe.email }} </p>
+                        <p><strong>Prise paie par: </strong> {{ employe.methodePaiement }} </p>
+                        <p><strong>Département: </strong>
+                            {% if employe.departement %}
+                                {{ employe.departement }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Nombre d'enfant:
+                            </strong>
+                            {% if employe.nbEnfant %}
+                                {{ employe.nbEnfant }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                        <p><strong>Date de prise du poste: </strong> {{ employe.dateDebut|date('d/m/Y') }} </p>
+                        <p><strong>Société d'affectation: </strong> {{ employe.societe.nom }} </p>
+                        <p><strong>CNAPS: </strong>
+                            {% if employe.cnaps %}
+                                {{ employe.cnaps }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                        <p><strong>OSTIE: </strong>
+                            {% if employe.ostie %}
+                                {{ employe.ostie }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                        <p><strong>Poste: </strong> {{ employe.poste }} </p>
+
+
+                    </div>
+                </div>
+                <div class="col-xs-12 divider text-center">
+                    <div class="col-xs-12 col-sm-4 emphasis">
+                        <h2><strong>{{ employe.comptePresence.resteConge }}</strong></h2>
+                        <p><small>Reste Congé</small></p>
+                        <a href="{{ path('compte_employe_voir', { 'slug' : employe.comptePresence.slug } ) }}" class="btn btn-info btn-block"><span class="fa fa-user"></span>  Gestion Presonnel </a>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 emphasis">
+                        <div class="not_paie">
+                            <h2><strong> {{ employe.salaire|number_format(2, ',', ' ') }} </strong></h2>
+                            {% if employe.salaireMin %}
+                                <p>>  {{ employe.salaireMin|number_format(2, ',', ' ') }}</p>
+                            {% endif %}
+                            <p><small>Salaire de base</small></p>
+                            <a href="{{ path('paie_detail', { 'slug' : employe.comptePaie.slug } ) }}" class="btn btn-success btn-block"><span class="fa fa-money"></span>  Gestion Salaire </a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 emphasis">
+                        <h2><strong>{{ nb_absence }}</strong></h2>
+                        <p><small>Nombre Absence en {{ "now"|date('Y') }}</small></p>
+                        <a href="{{ path('compte_employe_voir', { 'slug' : employe.comptePresence.slug } ) }}" class="btn btn-danger btn-block"><span class="fa fa-user"></span>  Gestion Presonnel </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#EXPLORER FICHIER#}
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8 ">
+            {#STYLE FILE MANAGER #}
+            <link href="{{ asset('assets/css/EmployeBundle/file-manager.css') }}" rel="stylesheet">
+
+            <div class="animated fadeInRight" style="margin-top: 5px; border-style: dashed">
+                <h2 class="text-primary text-center">Pièce jointe:</h2>
+                <div class="row">
+                    <div class="">
+                        <button class="btn btn-default btn-block btn-lg" data-toggle="modal" data-target="#modalUpload"><i class="fa fa-upload text-center"></i> Ajouter</button>
+                    </div>
+                </div>
+                <hr>
+                <div class="my_file"  >
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+
+                            {#-------------CIN & RESIDENCE-------------#}
+
+                            {% if cin %}
+                                <div class="file-box">
+                                    <div class="file">
+                                        <a href="{{ asset('document/') }}{{ cin.url }}" target="_blank">
+                                            <span class="corner"></span>
+
+                                            <div class="icon">
+                                                <i class="fa fa-file"></i>
+                                            </div>
+                                            <div class="file-name">
+                                                CIN
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if residence %}
+                                <div class="file-box">
+                                    <div class="file">
+                                        <a href="{{ asset('document/') }}{{ residence.url }}" target="_blank">
+                                            <span class="corner"></span>
+
+                                            <div class="icon">
+                                                <i class="fa fa-file"></i>
+                                            </div>
+                                            <div class="file-name">
+                                                Certificat de Résidance
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+
+                            {#-------------////CIN & RESIDENCE////-------------#}
+
+                            {% for document in documents %}
+
+
+
+                                {% if document.url|typeFile == 'file' %}
+                                    <div class="file-box">
+                                        <div class="file">
+                                            <a href="{{ asset('document/') }}{{ document.url }}" target="_blank">
+                                                <span class="corner"></span>
+
+                                                <div class="icon">
+                                                    <i class="fa fa-file"></i>
+                                                </div>
+                                                <div class="file-name">
+                                                    {{ document.nom }}
+                                                    <a class="text-danger supprimer_doc" id_doc="{{ document.id }}">
+                                                        <i class="fa fa-minus-circle "></i>
+                                                    </a>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if document.url|typeFile == 'pdf' %}
+                                    <div class="file-box">
+                                        <div class="file">
+                                            <a href="{{ asset('document/') }}{{ document.url }}" target="_blank">
+                                                <span class="corner"></span>
+
+                                                <div class="icon">
+                                                    <i class="fa fa-file-pdf-o"></i>
+                                                </div>
+                                                <div class="file-name">
+                                                    {{ document.nom }}
+                                                    <a class="text-danger supprimer_doc" id_doc="{{ document.id }}">
+                                                        <i class="fa fa-minus-circle "></i>
+                                                    </a>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if document.url|typeFile == 'image' %}
+                                    <div class="file-box">
+                                        <div class="file">
+                                            <a href="{{ asset('document/') }}{{ document.url }}" target="_blank">
+                                                <span class="corner"></span>
+
+                                                <div class="image">
+                                                    <img alt="image" class="img-responsive" src="{{ asset('document/') }}{{ document.url }}">
+                                                </div>
+                                                <div class="file-name">
+                                                    {{ document.nom }}
+                                                    <a class="text-danger supprimer_doc" id_doc="{{ document.id }}">
+                                                        <i class="fa fa-minus-circle "></i>
+                                                    </a>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if document.url|typeFile == 'word' %}
+                                    <div class="file-box">
+                                        <div class="file">
+                                            <a href="{{ asset('document/') }}{{ document.url }}" target="_blank">
+                                                <span class="corner"></span>
+
+                                                <div class="icon">
+                                                    <i class="fa fa-file-word-o"></i>
+                                                </div>
+                                                <div class="file-name">
+                                                    {{ document.nom }}
+                                                    <a class="text-danger supprimer_doc" id_doc="{{ document.id }}">
+                                                        <i class="fa fa-minus-circle "></i>
+                                                    </a>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if document.url|typeFile == 'excel' %}
+                                    <div class="file-box">
+                                        <a href="{{ asset('document/') }}{{ document.url }}" target="_blank">
+                                            <div class="file">
+                                                <span class="corner"></span>
+
+                                                <div class="icon">
+                                                    <i class="fa fa-file-excel-o"></i>
+                                                </div>
+                                                <div class="file-name">
+                                                    {{ document.nom }}
+                                                    <a class="text-danger supprimer_doc" id_doc="{{ document.id }}">
+                                                        <i class="fa fa-minus-circle "></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% endif %}
+
+                                {% if document.url|typeFile == 'video' %}
+                                    <div class="file-box">
+                                        <div class="file">
+                                            <a href="{{ asset('document/') }}{{ document.url }}" target="_blank">
+                                                <span class="corner"></span>
+
+                                                <div class="icon">
+                                                    <i class="img-responsive fa fa-film"></i>
+                                                </div>
+                                                <div class="file-name">
+                                                    {{ document.nom }}
+                                                    <a class="text-danger supprimer_doc" id_doc="{{ document.id }}">
+                                                        <i class="fa fa-minus-circle "></i>
+                                                    </a>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if document.url|typeFile == 'audio' %}
+                                    <div class="file-box">
+                                        <div class="file">
+                                            <a href="{{ asset('document/') }}{{ document.url }}" target="_blank">
+                                                <span class="corner"></span>
+
+                                                <div class="icon">
+                                                    <i class="fa fa-music"></i>
+                                                </div>
+                                                <div class="file-name">
+                                                    {{ document.nom }}
+                                                    <button class="text-danger supprimer_doc" id_doc="{{ document.id }}">
+                                                        <i class="fa fa-minus-circle "></i>
+                                                    </button>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Suppression Document -->
+            <div class="modal fade" id="ModalSuppressionDocument" role="dialog">
+                <div class="modal-dialog">
+                    <form action="{{ path('document_supprimer') }}" method="post">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Confirmation</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Voulez-vous supprimer ce Document?</p>
+                            </div>
+
+                            <input type="hidden" name="mon_url" value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">
+                            <input type="hidden" name="id_document" id="id_document" value="0">
+
+                            <div class="modal-footer">
+                                <input type="submit" value="Confirmer" class="btn btn-danger">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {#SUPPRESSION DE DOCUMENT#}
+            <script>
+                $('.supprimer_doc').click(function () {
+                    $('#ModalSuppressionDocument').modal();
+                    id_doc = $(this).attr('id_doc');
+
+                    $('#id_document').attr('value', id_doc);
+                })
+            </script>
+        </div>
+    </div>
+
+    {#Modal UPLOAD #}
+    <div class="modal fade " id="modalUpload" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content ">
+                <form action="{{ path('employe_upload_fichier', { 'slug' : employe.slug }) }}" method="post" autocomplete="off" enctype="multipart/form-data">
+                    <div class="modal-header" style="background-color: #e9e9e9">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title text-danger"><i class="fa fa-minus-circle"></i> Ajouter Pièce jointe</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row " >
+                            <div class="col-md-offset-2 col-md-8 text-center">
+                                <div class="form-group">
+                                    <label for="nomUpload">Nom:</label>
+                                    <input type="text" name="nom" id="nomUpload" class="form-control" required="required">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="fichierUpload">Fichier:</label>
+                                    <input type="file" name="fichier" id="fichierUpload" class="form-control" required="required">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <input type="submit" value="Enregistrer" class="btn btn-danger" id="enregistrer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+    {#---------------MODAL ACTIVER DESACTIVER----------#}
+    <!-- Modal -->
+
+    {% set text_etat = 'Voulez-vous désactiver le compte? L\'employé ne serra plus gérer par le logiciel.'  %}
+    {% set color = 'danger' %}
+    {% if not employe.etat %}
+        {% set text_etat = 'Voulez-vous réactiver le compte?'  %}
+        {% set color = 'success' %}
+    {% endif %}
+
+    <div class="modal fade" id="modalEtatEmploye" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <form action="{{ path('employe_changer_etat', { 'slug' : employe.slug }) }}" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h2 class="modal-title text-{{ color }}">Etat du compte</h2>
+                    </div>
+                    <div class="modal-body">
+                        <h3>{{ text_etat }}</h3>
+                        {% if employe.etat %}
+                            <div class="row">
+                                <div class='col-sm-6'>
+                                    <div class="form-group">
+                                        <label for="">Date de débauche:</label>
+                                        <div class='input-group date' id='date_debauche'>
+
+                                            <input type='datetime' class="form-control "  name="date_debauche" required/>
+                                            <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                $('#date_debauche').datetimepicker({
+                                    format: 'DD/MM/YYYY',
+                                    date: new Date()
+                                });
+                            </script>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-{{ color }}" >Confirmer</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+
+
+    {#MODAL INSERTION DOCUMENT ADMINISTRATIVE#}
+    <div class="modal fade " id="modalDocAdmin" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content ">
+                <form action="{{ path('employe_upload_doc_admin', { 'id' : employe.id } ) }}" method="post" autocomplete="off" enctype="multipart/form-data">
+                    <div class="modal-header" style="background-color: #e9e9e9">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title text-danger"><i class="fa fa-minus-circle"></i> Ajouter Document Administrative</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <h3 class="text-center">CIN</h3>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="fichierCIN">Fichier CIN</label>
+                                    <input type="file" name="fichierCIN" id="fichierCIN" class="form-control" >
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class=''>
+                                        <div class="form-group">
+                                            <label for="dateCIN">Date CIN</label>
+                                            <div class='input-group date' id='date_cin'>
+
+                                                <input type="text" name="dateCIN" id="dateCIN" class="form-control" />
+                                                <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                            </div>
+                                        </div>
+                                        <script>
+
+                                            $('#date_cin').datetimepicker({
+                                                format: 'DD/MM/YYYY'
+                                            });
+
+                                        </script>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="border-style: groove; margin-bottom: 0%">
+                        <div class="row">
+                            <h3 class="text-center">Résidence</h3>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="fichierResidence">Fichier Certificat de Résidence</label>
+                                    <input type="file" name="fichierResidence" id="fichierResidence" class="form-control" >
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class=''>
+                                        <div class="form-group">
+                                            <label for="dateResidence">Date Certificat de Résidence</label>
+                                            <div class='input-group date' id='date_residence'>
+
+                                                <input type="text" name="dateResidence" id="dateResidence" class="form-control"  />
+                                                <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            $('#date_residence').datetimepicker({
+                                                format: 'DD/MM/YYYY'
+                                            });
+                                        </script>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <input type="submit" value="Enregistrer" class="btn btn-danger" id="enregistrer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {% if not app.user.ifRole('ROLE_PAIE')and employe.userCompte == app.user %}
+        <script>
+            $('.not_paie').removeClass('hide');
+        </script>
+    {% endif %}
+{% endblock %}
+

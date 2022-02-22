@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Accueil{% endblock %}
+
+
+{% block body %}
+    <style>
+        .accueil_btn{
+            margin-left: 7px;
+        }
+        .col-md-3{
+            width: 24%;
+        }
+        .accueil_btn > img:hover{
+            -webkit-filter: saturate(3); filter: saturate(3);
+        }
+
+        .accueil_btn:hover{
+            color: #4d4d4d;
+            border-radius: 10px;
+        }
+    </style>
+
+    <h1 class="text-primary">Page d'accueil</h1>
+    <a href="http://{{ servIP }}/IBC/web/" ><h3 class="text-right"><img width="32" height="32" src="{{ asset('images/RH.ico') }}" alt=""> Aller vers Hissab</h3></a>
+
+    <hr>
+
+    <h1 class="text-primary">MENU RH</h1>
+
+    <div class="row">
+        {% if app.user.ifRole('ROLE_RH') or app.user.ifRole('ROLE_SEC') %}
+            <a href="{{ path('absence_index') }}">
+                <div class="col-md-3  center-block text-center well accueil_btn">
+                    <img src="{{ asset('images/accueil_absence.jpg') }}" alt="" width="160" class="">
+                    <h2>Liste Absence et Retard</h2>
+                </div>
+            </a>
+        {% endif %}
+
+        <a href="{{ path('dcp_index') }}">
+            <div class="col-md-3  center-block text-center well accueil_btn">
+                <img src="{{ asset('images/accueil_dcp.jpg') }}" alt="" width="160" class="">
+                <h2>Demande Congé</h2>
+            </div>
+        </a>
+
+        {% if app.user.ifRole('ROLE_RH') %}
+            <a href="{{ path('compte_employe_index') }}">
+                <div class="col-md-3  center-block text-center well accueil_btn">
+                    <img src="{{ asset('images/accueil_liste_rh.jpg') }}" alt="" width="160" class="">
+                    <h2 style="font-size: 26px">Journal de Présence</h2>
+                </div>
+            </a>
+        {% endif %}
+    </div>
+    <hr>
+    <h1 class="text-primary">MENU PAIE</h1>
+    <div class="row">
+        <a href="{{ path('liste_demande') }}">
+            <div class="col-md-3  center-block text-center well accueil_btn">
+                <img src="{{ asset('images/accueil_avance.jpg') }}" alt="" width="160" class="">
+                <h2 style="font-size: 26px">Demande d'Avance</h2>
+            </div>
+        </a>
+
+        <a href="{{ path('PaieBd_dpc_index') }}">
+            <div class="col-md-3  center-block text-center well accueil_btn">
+                <img src="{{ asset('images/paiement_conge.jpg') }}" alt="" width="160" class="">
+                <h2 style="font-size: 26px">Demande de paiement reste congé</h2>
+            </div>
+        </a>
+        {% if app.user.ifRole('ROLE_PAIE') %}
+            <a href="{{ path('listeAvanceSpeciale') }}">
+                <div class="col-md-3  center-block text-center well accueil_btn">
+                    <img src="{{ asset('images/accueil_avance_special.jpg') }}" alt="" width="160" class="">
+                    <h2 style="font-size: 24px">Liste Avance Spéciale</h2>
+                </div>
+            </a>
+
+            <a href="{{ path('paie_homepage') }}">
+                <div class="col-md-3  center-block text-center well accueil_btn">
+                    <img src="{{ asset('images/accueil_compte_paie.jpg') }}" alt="" width="160" class="">
+                    <h2 style="font-size: 24px">Compte Paie Employé</h2>
+                </div>
+            </a>
+        {% endif %}
+    </div>
+
+
+
+    {#<h2><a href="{{ path('compte_employe_index') }}">Menu RH</a></h2>#}
+    {#<ul>#}
+        {#<li><h4><a href="{{ path('absence_index') }}">Liste Absence</a></h4></li>#}
+        {#<li><h4><a href="{{ path('dcp_index') }}">Liste Demande Congé-Permission</a></h4></li>#}
+    {#</ul>#}
+
+    {#<hr>#}
+
+    {#<h2><a href="{{ path('paie_homepage') }}">Menu Paie</a></h2>#}
+    {#<ul>#}
+        {#<li><h4><a href="{{ path('liste_demande') }}">Liste Demande d'Avance</a></h4></li>#}
+    {#</ul>#}
+
+    {#<hr>#}
+    {#<h2><a href="{{ path('employe_index') }}">Menu Fiche Employe</a></h2>#}
+{% endblock %}
+
+
+
+
+

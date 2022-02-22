@@ -1,0 +1,19 @@
+paie_route:
+    resource: "@PaieBundle/Controller/comptePaieController.php"
+    type:     annotation
+
+historiquePaie_route:
+    resource: "@PaieBundle/Controller/historiquePaieController.php"
+    type:     annotation
+
+demandeAvance_route:
+    resource: "@PaieBundle/Controller/demandeAvanceController.php"
+    type:     annotation
+
+demandeAvanceSpecial_route:
+    resource: "@PaieBundle/Controller/demandeAvanceSpecialController.php"
+    type:     annotation
+
+dpc_paiement_route:
+  resource: "@PaieBundle/Controller/demandePaiementCongeController.php"
+  type:     annotation

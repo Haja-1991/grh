@@ -1,0 +1,60 @@
+<div class="modal fade"  id="ModalConge" role="dialog">
+    <form action="{{ path('new_reste_conge', { 'id':resteConge.id }) }}" method="post">
+
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modification du reste  congé:</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div>
+
+                        <div class="row">
+                            <div class='col-sm-6'>
+                                <div class="form-group">
+
+                                    <div class='input-group date' id='date_credit'>
+
+                                        <label for="">Ancienne valeur :</label>
+                                        <input  readonly value="{{ resteConge.montant }}" type="text" class="form-control form-control-moyen" name="libelle" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 ">
+                            <div class="">
+
+                                <label for="reference">Nouveau valeur:</label>
+                                <input type="text" class="form-control form-control-moyen" name="conge" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" >Valider</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+</div>
+
+<script>
+    $('#date_credit').datetimepicker({
+        format: 'DD/MM/YYYY',
+        date: new Date()
+    });
+</script>

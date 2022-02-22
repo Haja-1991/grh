@@ -1,0 +1,27 @@
+compte_presence_route:
+    resource: "@PresenceBundle/Controller/comptePresenceController.php"
+    type:     annotation
+
+retard_route:
+  resource: "@PresenceBundle/Controller/RetardController.php"
+  type:     annotation
+graph_route:
+  resource: "@PresenceBundle/Controller/GraphController.php"
+  type:     annotation
+
+absence_route:
+  resource: "@PresenceBundle/Controller/AbsenceController.php"
+  type:     annotation
+
+dcp_route:
+  resource: "@PresenceBundle/Controller/DemandeCPController.php"
+  type:     annotation
+
+api_dcp_route:
+    resource: "@PresenceBundle/Controller/APIDemandeCPController.php"
+    type:     annotation
+
+calendrier_route:
+  resource: "@PresenceBundle/Controller/CalendrierController.php"
+  type:     annotation
+

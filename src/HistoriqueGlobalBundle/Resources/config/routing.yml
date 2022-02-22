@@ -1,0 +1,21 @@
+historique_global_homepage:
+    path:     /accueil
+    defaults: { _controller: HistoriqueGlobalBundle:Accueil:index }
+
+redirect_accueil:
+    path:     /
+    defaults: { _controller: HistoriqueGlobalBundle:Accueil:index }
+
+test_homepage:
+    path:     /test/test/test
+    defaults: { _controller: HistoriqueGlobalBundle:Accueil:test }
+
+test_homepage2:
+  path:     /test
+  defaults: { _controller: HistoriqueGlobalBundle:Accueil:test2 }
+
+#--------DEV UPDATE-------------------
+dev_avanceSpecial_update:
+  path:     /admin/dev/avance/123456
+  defaults: { _controller: HistoriqueGlobalBundle:Accueil:updateAvanceSpecial }
+

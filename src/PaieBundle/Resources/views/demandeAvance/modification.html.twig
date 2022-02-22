@@ -1,0 +1,154 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Formulaire Avance{% endblock %}
+
+{% block body %}
+    <div >
+        <form action="#" method="post" autocomplete="off">
+
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Formulaire Modification Avance :</h3>
+                    </div>
+                    <div class="modal-body">
+
+                        <div>
+                            <div class="row">
+                                <div class='col-sm-6'>
+                                    <div class="form-group">
+                                        <label for="">Date:</label>
+                                        <div class='input-group date' id='date_avance'>
+
+                                            <input value="{{ demande.date|date('d/m/Y') }}" type='datetime' class="form-control"  name="date_avance" required/>
+                                            <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                        </div>
+                                    </div>
+                                    <script>
+
+                                        $('#date_avance').datetimepicker({
+                                            format: 'DD/MM/YYYY',
+
+                                        });
+
+                                    </script>
+
+                                </div>
+                                <div class="col-lg-6 ">
+                                    <div class="">
+                                        <label for="">Numéro de demande:</label>
+                                        <input readonly type="text" value="{{ demande.numero}}" class="form-control form-control-moyen" name="numero" required>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 ">
+                                <div class="">
+                                    <label for="">Montant:</label>
+                                    <input value="{{ demande.montant }}" type="text" class="form-control form-control-moyen only_float" name="montant" id="montant" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="">
+                                    <label for="reference">Employer:</label>
+                                    <input readonly value="{{ demande.empoye.nomComplet }}" list="employes" name="employe" id="employe" class="form-control form-control-moyen">
+
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="reference">Motif (facultatif):</label>
+                                <textarea name="desc" id="" cols="65" rows="5">{{ demande.description }}</textarea>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger" id="btn_valider">Valider</button>
+                        <a type="button" class="btn btn-default" href="{{ path('liste_demande') }}">Annuler</a>
+                    </div>
+                </div>
+
+            </div>
+            <input type="text" value="debit" class="hide" name="type">
+        </form>
+    </div>
+
+    {#    NULERAL FORMAT#}
+    <script>
+        numeralFormat('#montant');
+    </script>
+
+
+    {#TEST NOM EMPLOYE#}
+
+
+    {#<script src="{{ asset('assets/NumeralJs/numeral.js') }}"></script>#}
+    {#<script>#}
+    {#// load a locale#}
+    {#numeral.register('locale', 'fr', {#}
+    {#delimiters: {#}
+    {#thousands: ' ',#}
+    {#decimal: '.'#}
+    {#},#}
+    {#abbreviations: {#}
+    {#thousand: 'k',#}
+    {#million: 'm',#}
+    {#billion: 'b',#}
+    {#trillion: 't'#}
+    {#},#}
+    {#ordinal : function (number) {#}
+    {#return number === 1 ? 'er' : 'ème';#}
+    {#},#}
+    {#currency: {#}
+    {#symbol: '€'#}
+    {#}#}
+    {#});#}
+
+    {#// switch between locales#}
+    {#numeral.locale('fr');#}
+
+    {#var myFormat = '0,0.00';#}
+
+    {#function vraiFormat(option){#}
+    {#var montant = $(option).val();#}
+
+    {#if(montant != ''){#}
+    {#montant = numeral(montant);#}
+
+    {#$(option).val(montant.format('0.00'));#}
+    {#}#}
+    {#}#}
+
+    {#function affichageFormat(option) {#}
+    {#var montant = $(option).val();#}
+    {#montant = numeral(montant);#}
+    {#$(option).val(montant.format(myFormat));#}
+    {#}#}
+    {#</script>#}
+    {#<script>#}
+    {#$('#montant').focusout(function () {#}
+    {#affichageFormat('#montant')#}
+    {#});#}
+
+    {#$('#montant').focusin(function () {#}
+    {#vraiFormat('#montant');#}
+    {#})#}
+
+    {#$('#montant').submit(function () {#}
+    {#vraiFormat('#montant')#}
+    {#})#}
+
+    {#</script>#}
+
+{% endblock %}

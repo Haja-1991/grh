@@ -1,0 +1,118 @@
+<div class="modal fade"  id="modalSignalerAbsence" role="dialog">
+    <form action="{{ path('absence_signaler', { 'slug' : comptePresence.slug }) }}" method="post">
+
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title text-warning"><i class="fa fa-warning"></i> Signaler Absence:</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div>
+                        <div class="row">
+                            <div class='col-md-6'>
+                                <div class="form-group">
+                                    <label for="date_debut_absence">Date de début:</label>
+                                    <div class='input-group date' id='_date_debut_absence'>
+
+                                        <input type='datetime' class="form-control date_absence" id="date_debut_absence"  name="date_debut_absence" required/>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                    <script>
+                                        $('#_date_debut_absence').datetimepicker({
+                                            format: 'DD/MM/YYYY',
+                                        }).on('dp.change', function () {
+                                            changementIntervalleAbsence();
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class='col-md-6'>
+                                <div class="form-group">
+                                    <label for="date_retour_absence">Date de retour:</label>
+                                    <div class='input-group date' id='_date_retour_absence'>
+
+                                        <input type='datetime' class="form-control date_absence" id="date_retour_absence"  name="date_retour_absence" required/>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                    <script>
+                                        $('#_date_retour_absence').datetimepicker({
+                                            format: 'DD/MM/YYYY',
+                                        }).on('dp.change', function () {
+                                            changementIntervalleAbsence();
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="intervalle_absence">Intervalle (en jour):</label>
+                                <input type="text" class="form-control only_float" name="intervalle_absence" id="intervalle_absence" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="motif_retard">Motif:</label>
+                                <textarea id="motif_retard" class="form-control" name="motif_absence" rows="5"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                    </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-warning" id="enregistrer_absence" >Enregistrer</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{#SCRIPT DE L'INTERVALLE DE DATE#}
+<script>
+    function stringToDate(str_date) {
+        splitStr = str_date.split('/');
+
+        return dateConverted = new Date(splitStr[2], splitStr[1]-1, splitStr[0]);
+
+
+    }
+
+    function dateDiff(dateold, datenew)
+    {
+        var WNbJours = -1*(dateold.getTime() - datenew.getTime());
+        return Math.ceil(WNbJours/(1000*60*60*24));
+    }
+
+    function changementIntervalleAbsence() {
+        dt1 = $('#date_debut_absence').val();
+        dt2 = $('#date_retour_absence').val();
+
+        date_debut = stringToDate(dt1);
+        date_retour = stringToDate(dt2);
+
+        intervalle = dateDiff(date_debut, date_retour);
+
+        if(intervalle > 0){
+            $('#intervalle_absence').val(intervalle);
+        }
+
+        // console.log(dateDiff(date_debut, date_retour));
+    }
+
+</script>

@@ -1,0 +1,43 @@
+<?php
+
+namespace PaieBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Numero
+ *
+ * @ORM\Table(name="numero")
+ * @ORM\Entity(repositoryClass="PaieBundle\Repository\NumeroRepository")
+ */
+class Numero
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="numero_demande", type="integer")
+     */
+    private $numero_Demande;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+
+}

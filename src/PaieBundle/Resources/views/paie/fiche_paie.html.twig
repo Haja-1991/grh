@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        @media print {
+            .pagebreak { page-break-before: always; } /* page-break-after works, as well */
+        }
+        body{margin-left:60px;font-size: 1.2em;}
+        div#bandeau {
+            width: 1000px;
+            height:150px;
+
+
+        }
+        div#contenu {
+            width: 1000px;
+            height:auto;
+
+
+        }
+        div#piedpage {
+            width: 900px;
+            height:50px;
+
+            margin-left: 30px;
+            margin-top: 0px;
+        }
+        div#piedg {
+            float: left;
+            width:450px;
+            height:auto;
+
+        }
+        div#piedd {
+            float: right;
+            width:450px;
+            height:auto;
+
+            text-align:right
+        }
+        div#gauche {
+            float: left;
+            width:500px;
+            height:auto;
+
+        }
+        div#droit {
+            float: right;
+            width:450px;
+            height:50px;
+
+
+        }
+        div#titre1 {
+            float: left;
+            width:250px;
+            height:150px;
+
+        }
+        div#titre2 {
+            float: right;
+            width:450px;
+            height:150px;
+
+        }
+        div#Scontenu {
+
+            width: 900px;;
+            height:auto;
+
+            margin-left: 30px;
+
+
+        }
+        img {
+            border: 1px solid #ddd;
+
+            margin-left: 45px;
+            margin-top: 45px;
+
+        }
+        div#sgauche {
+            margin-left: 30px;
+            padding: 0px 5px 0px 5px;
+            border: 1px solid black;
+            margin-top:20px;
+
+        }
+        div#sdroit {
+
+            width:450px;
+            margin-left: 80px;
+            margin-top:20px;
+        }
+        div#stitre1 {
+            height:auto;
+            width:auto;
+            margin-left: 30px;
+            margin-top: 25px;
+
+
+        }
+        p,li{
+            line-height: 1;
+        }
+        ul li{
+            list-style:none;
+        }
+        h2{
+            margin: 10px;
+        }
+        div#stitre2 {
+
+            margin-top: 75px;
+            margin-left: 0px;}
+        #table {
+            margin-top:160px;
+            border-collapse:collapse;
+            border-style:solid;
+            border-color:black;
+            width: 900px;
+            text-align: left;
+
+        }
+        #table1 {
+
+            border-collapse:collapse;
+            border-style:solid;
+            border-color:black;
+            width: 900px;
+            text-align: left;
+        }
+        th{
+            text-align:center;}
+
+        #footer {
+            border:0px;
+            width: 900px;
+            margin-top:10px;
+
+        }
+        td{
+            height: 5px;
+            padding: 0px 5px 0px 5px;
+            border-bottom: hidden;
+
+
+        }
+        h2{
+            padding-left:10px
+        }
+        .mat{
+            padding-left:135px;
+        }
+
+        #piedtr{
+            border-bottom: 1px solid black;
+
+        }
+        #souligne{
+            border-bottom: 1px solid black;
+
+        }
+        #total{text-align:center}
+        #retenu{text-align:right;}
+        #flg{line-height: 8;}
+        #fld{line-height: 8;}
+
+        #add{padding-left:95px}
+        #anc{padding-left:70px}
+        #date{padding-left:20px}
+        #dep{padding-left:20px}
+        #emp{padding-left:70px}
+        #qua{padding-left:20px}
+        #cat{padding-left:45px}
+        #cin{padding-left:65px}
+        thead{background:gray}
+        b,label{font-size: 1em; line-height: 1.5;}
+        .align-d {text-align:left;}
+
+        /*IN LINE*/
+        .no_saut{
+            white-space: nowrap;
+        }
+
+    </style>
+</head>
+<body onload="window.print()">
+<div id="bandeau">
+    <div id="gauche">
+
+
+        <div id="sgauche">
+            <img src="{{ asset('images/logo_md.jpg') }}" alt="" height="120" style="margin:5px 5px 5px 5px; border: none" >
+            <p>{{ employe.societe.adresse }}</p>
+            <p>Tél: {{ employe.societe.contact }}</p>
+            <p>Email: contact@groupe-ibc.com</p>
+        </div>
+        <div id="stitre1">
+
+            <table class="info" >
+
+            </table>
+        </div>
+    </div>
+    <div id="droit">
+        <div id="sdroit">
+            <h2>SOLDE DE TOUT COMPTE</h2>
+            <p class="per"><b>Période du </b>{{ date_Debut|date('d/m/Y') }} <b>au</b> {{ date_Fin|date_modify("-1 day")|date('d/m/Y') }}</p>
+
+
+        </div>
+        <div id="stitre2">
+
+{#            <p><b>Date d'embauche: </b><label id="date">{{ employe.dateDebut|date('d/m/Y') }}</label></p>#}
+{#            <p><b>Ancienneté: </b><label id="anc">{{ ancienete }}</label></p>#}
+
+            <table class="info" >
+
+
+                <tr>
+                    <td  class="align-d no_saut"><b>Nom /Prénom :</b></td><td class="align-d"><label  >{{ employe.nomComplet }}</label></td>
+
+                </tr>
+                <tr>
+                    <td  class="align-d no_saut"><b>Matricule :</b></td><td class="align-d"><label  >{{ employe.matricul }}</label></td>
+
+                </tr>
+                <tr>
+                    <td class="no_saut"><b>Adresse :</b></td><td class="align-d"><label  >{{ employe.adresse }} </label></td>
+
+                </tr>
+                <tr>
+                    <td class="no_saut"><b>N°CNAPS :</b></td><td class="align-d"><label >
+                            {% if employe.cnaps  %}
+                                {{ employe.cnaps }}
+                            {% else %}
+                                -
+                            {% endif %} </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="no_saut"><b>Poste :</b></td><td class="align-d"><label  >{{ employe.poste }} </label></td>
+
+                </tr>
+                <tr>
+                    <td class="no_saut"><b>Catégorie :</b></td><td class="align-d"><label  >
+                            {% if employe.categorie > 0  %}
+                                {{ employe.categorie }}
+                            {% else %}
+                                -
+                            {% endif %}
+                             </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="no_saut"><b>Nb Enfant :</b></td><td class="align-d"><label  >
+                            {% if tmpNbEnfant %}
+                                {{ tmpNbEnfant.montant }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </label></td>
+                </tr>
+                <tr>
+                    <td class="no_saut"><b>Reste congé :</b></td><td class="align-d"><label  >
+                            {{ tmpNbConge }}
+                        </label></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="contenu">
+    <br>
+    <br>
+
+    <br>
+    <br><br><br>
+    <div id="Scontenu">
+        <table border="1" id="table">
+            <thead>
+
+            <tr >
+                <th></th>
+                <th >Désignation</th>
+                <th >Nombre</th>
+                <th >Base</th>
+                <th >Revenus</th>
+                <th >Retenues</th>
+            </tr>
+
+
+            </thead>
+            <tbody>
+
+
+            <tr>
+                <td><p></p></td>
+                <td ><p>
+                        SALAIRE DE BASE:
+                        {% if tmpSalaireBase %}
+                            {{ tmpSalaireBase.montant                                                    |number_format(2, ',', ' ') }}
+                        {% endif %}
+                        <br><br>
+                        JOURS TRAVAILLES
+                    </p>
+
+                </td>
+                <td style="text-align: center"><p>
+                        <br>
+                        {{ salaireBase.nbJour }}</p></td>
+                <td style="text-align: right"><p>
+                        <br>
+                        {{ (employe.salaire / 30)|number_format(2, ',', ' ') }} </p></td>
+                <td style="text-align: right"><p>
+                        <br>
+                        {{ salaireBase.montant|number_format(2, ',', ' ') }}</p></td>
+                <td><p></p></td>
+            </tr>
+
+            <tr>
+                <td><p></p></td>
+                <td ><p>CONGES</p></td>
+                <td style="text-align: center">
+                    <p>
+                        {% if allocConge %}
+                            {{ allocConge.nbJour }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </td>
+                {% set empAllocConge = employe.allocationConge %}
+                {% if not empAllocConge %}
+                    {% set empAllocConge = employe.salaire %}
+                {% endif %}
+                <td style="text-align: right"><p>{{ (empAllocConge / 30)|number_format(2, ',', ' ') }} </p></td>
+                <td style="text-align: right">
+                    <p>
+                        {% if allocConge %}
+                            {{ allocConge.montant|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </td>
+                <td><p></p></td>
+            </tr>
+
+            {% for autreCredit in autreCredits %}
+                <tr>
+                    <td><p></p></td>
+                    <td ><p>{{ autreCredit.libelle|upper }}</p></td>
+                    <td><p></p></td>
+                    <td style="text-align: center"><p></p></td>
+                    <td style="text-align: right"><p>{{ autreCredit.montant|number_format(2, ',', ' ') }}</p></td>
+                    <td><p></p></td>
+                </tr>
+            {% endfor %}
+            {% if not autreCredits %}
+                <tr>
+                    <td><p></p></td>
+                    <td ><p>INDEMNITES ET PRIMES</p></td>
+                    <td><p></p></td>
+                    <td style="text-align: center"><p></p></td>
+                    <td style="text-align: right"><p>-</p></td>
+                    <td><p></p></td>
+                </tr>
+            {% endif %}
+
+            {% if heureSuppDeductible %}
+                <tr>
+                    <td><p></p></td>
+                    <td ><p>HEURES SUPP. </p></td>
+                    <td><p></p></td>
+                    <td style="text-align: center"><p>
+                            30% <br>
+                            40% <br>
+                            50% <br>
+                            100%
+                        </p>
+                    </td>
+
+                    {% set tableDeductible = heureSuppDeductible.tabHeureSupp %}
+                    {% set tableExonerer = heureSuppExonerer.tabHeureSupp %}
+                    {% set pH_salaire = employe.salaire / 30 %}
+                    <td style="text-align: right">
+                        <p>
+                            {% set montant3 = tableDeductible[0]['heure'] * pH_salaire + (pH_salaire * tableDeductible[0]['heure'] * tableDeductible[0]['majoration'] / 100) %}
+                            {% set montant3 = montant3 + tableExonerer[0]['heure'] * pH_salaire + (pH_salaire * tableExonerer[0]['heure'] * tableExonerer[0]['majoration'] / 100) %}
+
+                            {% if montant3 == 0 %}
+                                -
+                            {% else %}
+                                {{ montant3|number_format(2, ',', ' ') }}
+                            {% endif %}
+                            <br>
+                            {% set montant4 = tableDeductible[1]['heure'] * pH_salaire + (pH_salaire * tableDeductible[1]['heure'] * tableDeductible[1]['majoration'] / 100) %}
+                            {% set montant4 = montant4 + tableExonerer[1]['heure'] * pH_salaire + (pH_salaire * tableExonerer[1]['heure'] * tableExonerer[1]['majoration'] / 100) %}
+
+                            {% if montant4 == 0 %}
+                                -
+                            {% else %}
+                                {{ montant4|number_format(2, ',', ' ') }}
+                            {% endif %}
+                            <br>
+                            {% set montant5 = tableDeductible[2]['heure'] * pH_salaire + (pH_salaire * tableDeductible[2]['heure'] * tableDeductible[2]['majoration'] / 100) %}
+                            {% set montant5 = montant5 + tableExonerer[2]['heure'] * pH_salaire + (pH_salaire * tableExonerer[2]['heure'] * tableExonerer[2]['majoration'] / 100) %}
+
+                            {% if montant5 == 0 %}
+                                -
+                            {% else %}
+                                {{ montant5|number_format(2, ',', ' ') }}
+                            {% endif %}
+                            <br>
+                            {% set montant10 = tableDeductible[3]['heure'] * pH_salaire + (pH_salaire * tableDeductible[3]['heure'] * tableDeductible[3]['majoration'] / 100) %}
+                            {% set montan10 = montant10 + tableExonerer[3]['heure'] * pH_salaire + (pH_salaire * tableExonerer[3]['heure'] * tableExonerer[3]['majoration'] / 100) %}
+
+                            {% if montant10 == 0 %}
+                                -
+                            {% else %}
+                                {{ montant10|number_format(2, ',', ' ') }}
+                            {% endif %}
+                            <br>
+                        </p>
+                    </td>
+                    <td><p></p></td>
+                </tr>
+            {% endif %}
+
+
+            <tr>
+                <td><p></p></td>
+                <td ><p>CNaPS</p></td>
+                <td style="text-align: center"><p></p></td>
+
+                <td style="text-align: center"><p></p></td>
+                <td style="text-align: right"><p></p></td>
+                <td style="text-align: right">
+                    <p>
+                        {% if cnaps %}
+                            {{ cnaps.montant|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <td><p></p></td>
+                <td >
+                    <p>
+                        {% if ostie %}
+                            {% if ostie.nonOstie %}
+                                {{ ostie.libelle|upper }}
+                            {% else %}
+                                OSTIE
+                            {% endif %}
+                        {% endif %}
+                    </p>
+                </td>
+                <td style="text-align: center"><p></p></td>
+
+                <td style="text-align: center"><p></p></td>
+                <td style="text-align: right"><p></p></td>
+                <td style="text-align: right">
+                    <p>
+                        {% if ostie %}
+                            {{ ostie.montant|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <td><p></p></td>
+                <td ><p>IRSA DU</p></td>
+                <td style="text-align: center"><p></p></td>
+
+                <td style="text-align: center"><p></p></td>
+                <td style="text-align: right"><p></p></td>
+                <td style="text-align: right">
+                    <p>
+                        {% if irsa %}
+                            {{ irsa.montant|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <td><p></p></td>
+                <td ><p>AVANCE QUINZAINE</p></td>
+                <td style="text-align: center"><p></p></td>
+
+                <td style="text-align: center"><p></p></td>
+                <td style="text-align: right"><p></p></td>
+                <td style="text-align: right">
+                    <p>
+                        {% if avanceQz %}
+                            {{ avanceQz|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <td><p></p></td>
+                <td >
+
+                    {#  ---------------- TEST RESTE AVANCE SPECIAL ----------------  #}
+                    {% set varResteAvc = 0 %}
+                    {% if resteAvanceSpecial %}
+                        {% if resteAvanceSpecial.montant > 0 %}
+                            {% set varResteAvc = 1 %}
+                        {% endif %}
+                    {% endif %}
+                    {#  ---------------- TEST RESTE AVANCE SPECIAL ----------------  #}
+
+                    <p>AVANCE SPECIALE {% if varResteAvc > 0 %}:{% endif %}</p>
+                    {% if varResteAvc > 0 %}
+                        <p><strong style="white-space: pre">    </strong>Reste à payer: {{ resteAvanceSpecial.montant|number_format(2, ',', ' ') }} ({{ resteAvanceSpecial.mois|round }}mois) </p>
+                    {% endif %}
+                </td>
+                <td style="text-align: center"><p></p></td>
+
+                <td style="text-align: center"><p></p></td>
+                <td style="text-align: right"><p></p></td>
+                <td style="text-align: right">
+                    <p>
+                        {% if avanceSp %}
+                            {{ avanceSp|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </td>
+            </tr>
+
+            {% for deduction in autreDeduction %}
+                <tr>
+                    <td><p></p></td>
+                    <td ><p>{{ deduction.libelle|upper }}</p></td>
+                    <td><p></p></td>
+                    <td style="text-align: center"><p></p></td>
+                    <td ><p></p></td>
+                    <td style="text-align: right"><p>{{ deduction.montant|number_format(2, ',', ' ') }}</p></td>
+                </tr>
+            {% endfor %}
+
+            <tr>
+                <td><p></p></td>
+                <td ><p></p></td>
+                <td><p></p></td>
+                <td><p></p></td>
+                <td id="souligne"><p></p></td>
+                <td id="souligne"><p></p></td>
+            </tr>
+
+            <tr>
+                <td><p></p></td>
+                <td ><p><b>TOTAL</b></p></td>
+                <td style="text-align: center"><p></p></td>
+
+                <td style="text-align: center"><p></p></td>
+                <td style="text-align: right">
+                    <p>
+                        <b>{{ totalCredit|number_format(2, ',', ' ') }}</b>
+                    </p>
+                </td>
+                <td style="text-align: right">
+                    <p>
+                        <b>{{ totalDebit|number_format(2, ',', ' ') }}</b>
+                    </p>
+                </td>
+            </tr>
+
+
+{#            -----------------------------------------------------------------------------------------------------------------#}
+            <tr>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div id="piedpage">
+        <div style="text-align: right">
+            <h3><b>Salaire net: {{ netTotalArround|number_format(2, ',', ' ') }}</b></h3>
+        </div>
+    </div>
+
+    <div id="piedpage">
+        <div style="text-align: left">
+            <h3><b>Arrêté à la somme de: {{ netTotalLettre }} Ariary</b></h3>
+        </div>
+    </div>
+
+    <table style="width: 100%; margin-left: 120pt;">
+        <tr>
+            <td></td>
+            <td><p><strong>La Société</strong></p></td>
+            <td></td>
+            <td><p><strong>L'Employé</strong></p></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+</div>
+<div class="pagebreak">
+<div id="bandeau">
+    <div id="gauche">
+
+
+        <div id="sgauche">
+            <img src="{{ asset('images/logo_md.jpg') }}" alt="" height="120" style="margin:5px 5px 5px 5px; border: none" >
+            <p>{{ employe.societe.adresse }}</p>
+            <p>Tél: {{ employe.societe.contact }}</p>
+            <p>Email: contact@groupe-ibc.com</p>
+        </div>
+        <div id="stitre1">
+
+            <table class="info" >
+
+            </table>
+        </div>
+    </div>
+    <div id="droit">
+        <div id="sdroit">
+            <h2>SOLDE DE TOUT COMPTE </h2>
+            <p class="per"><b>Période du </b>{{ date_Debut|date('d/m/Y') }} <b>au</b> {{ date_Fin|date_modify("-1 day")|date('d/m/Y') }}</p>
+
+
+        </div>
+        <div id="stitre2">
+
+            {#            <p><b>Date d'embauche: </b><label id="date">{{ employe.dateDebut|date('d/m/Y') }}</label></p>#}
+            {#            <p><b>Ancienneté: </b><label id="anc">{{ ancienete }}</label></p>#}
+
+            <table class="info" >
+
+
+                <tr>
+                    <td  class="align-d no_saut"><b>Nom /Prénom :</b></td><td class="align-d"><label  >{{ employe.nomComplet }}</label></td>
+
+                </tr>
+                <tr>
+                    <td  class="align-d no_saut"><b>Matricule :</b></td><td class="align-d"><label  >{{ employe.matricul }}</label></td>
+
+                </tr>
+                <tr>
+                    <td class="no_saut"><b>Adresse :</b></td><td class="align-d"><label  >{{ employe.adresse }} </label></td>
+
+                </tr>
+                <tr>
+                    <td class="no_saut"><b>N°CNAPS :</b></td><td class="align-d"><label >
+                            {% if employe.cnaps  %}
+                                {{ employe.cnaps }}
+                            {% else %}
+                                -
+                            {% endif %} </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="no_saut"><b>Poste :</b></td><td class="align-d"><label  >{{ employe.poste }} </label></td>
+
+                </tr>
+                <tr>
+                    <td class="no_saut"><b>Catégorie :</b></td><td class="align-d"><label  >
+                            {% if employe.categorie > 0  %}
+                                {{ employe.categorie }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="no_saut"><b>Nb Enfant :</b></td><td class="align-d"><label  >
+                            {% if tmpNbEnfant %}
+                                {{ tmpNbEnfant.montant }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </label></td>
+                </tr>
+                <tr>
+                    <td class="no_saut"><b>Reste congé :</b></td><td class="align-d"><label  >
+                            {{ tmpNbConge }}
+                        </label></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="contenu">
+    <br>
+    <br>
+
+    <br>
+    <br><br><br>
+    <div id="Scontenu">
+        <table border="1" id="table">
+            <thead>
+
+            <tr >
+                <th></th>
+                <th >Désignation</th>
+                <th >Nombre</th>
+                <th >Base</th>
+                <th >Revenus</th>
+                <th >Retenues</th>
+            </tr>
+
+
+            </thead>
+            <tbody>
+
+
+            <tr>
+                <td><p></p></td>
+                <td ><p>
+                        SALAIRE DE BASE:
+                        {% if tmpSalaireBase %}
+                            {{ tmpSalaireBase.montant                                                    |number_format(2, ',', ' ') }}
+                        {% endif %}
+                        <br><br>
+                        JOURS TRAVAILLES
+                    </p>
+
+                </td>
+                <td style="text-align: center"><p>
+                        <br>
+                        {{ salaireBase.nbJour }}</p></td>
+                <td style="text-align: right"><p>
+                        <br>
+                        {{ (employe.salaire / 30)|number_format(2, ',', ' ') }} </p></td>
+                <td style="text-align: right"><p>
+                        <br>
+                        {{ salaireBase.montant|number_format(2, ',', ' ') }}</p></td>
+                <td><p></p></td>
+            </tr>
+
+            <tr>
+                <td><p></p></td>
+                <td ><p>CONGES</p></td>
+                <td style="text-align: center">
+                    <p>
+                        {% if allocConge %}
+                            {{ allocConge.nbJour }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </td>
+                {% set empAllocConge = employe.allocationConge %}
+                {% if not empAllocConge %}
+                    {% set empAllocConge = employe.salaire %}
+                {% endif %}
+                <td style="text-align: right"><p>{{ (empAllocConge / 30)|number_format(2, ',', ' ') }} </p></td>
+                <td style="text-align: right">
+                    <p>
+                        {% if allocConge %}
+                            {{ allocConge.montant|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </td>
+                <td><p></p></td>
+            </tr>
+
+            {% for autreCredit in autreCredits %}
+                <tr>
+                    <td><p></p></td>
+                    <td ><p>{{ autreCredit.libelle|upper }}</p></td>
+                    <td><p></p></td>
+                    <td style="text-align: center"><p></p></td>
+                    <td style="text-align: right"><p>{{ autreCredit.montant|number_format(2, ',', ' ') }}</p></td>
+                    <td><p></p></td>
+                </tr>
+            {% endfor %}
+            {% if not autreCredits %}
+                <tr>
+                    <td><p></p></td>
+                    <td ><p>INDEMNITES ET PRIMES</p></td>
+                    <td><p></p></td>
+                    <td style="text-align: center"><p></p></td>
+                    <td style="text-align: right"><p>-</p></td>
+                    <td><p></p></td>
+                </tr>
+            {% endif %}
+
+            {% if heureSuppDeductible %}
+                <tr>
+                    <td><p></p></td>
+                    <td ><p>HEURES SUPP. </p></td>
+                    <td><p></p></td>
+                    <td style="text-align: center"><p>
+                            30% <br>
+                            40% <br>
+                            50% <br>
+                            100%
+                        </p>
+                    </td>
+
+                    {% set tableDeductible = heureSuppDeductible.tabHeureSupp %}
+                    {% set tableExonerer = heureSuppExonerer.tabHeureSupp %}
+                    {% set pH_salaire = employe.salaire / 30 %}
+                    <td style="text-align: right">
+                        <p>
+                            {% set montant3 = tableDeductible[0]['heure'] * pH_salaire + (pH_salaire * tableDeductible[0]['heure'] * tableDeductible[0]['majoration'] / 100) %}
+                            {% set montant3 = montant3 + tableExonerer[0]['heure'] * pH_salaire + (pH_salaire * tableExonerer[0]['heure'] * tableExonerer[0]['majoration'] / 100) %}
+
+                            {% if montant3 == 0 %}
+                                -
+                            {% else %}
+                                {{ montant3|number_format(2, ',', ' ') }}
+                            {% endif %}
+                            <br>
+                            {% set montant4 = tableDeductible[1]['heure'] * pH_salaire + (pH_salaire * tableDeductible[1]['heure'] * tableDeductible[1]['majoration'] / 100) %}
+                            {% set montant4 = montant4 + tableExonerer[1]['heure'] * pH_salaire + (pH_salaire * tableExonerer[1]['heure'] * tableExonerer[1]['majoration'] / 100) %}
+
+                            {% if montant4 == 0 %}
+                                -
+                            {% else %}
+                                {{ montant4|number_format(2, ',', ' ') }}
+                            {% endif %}
+                            <br>
+                            {% set montant5 = tableDeductible[2]['heure'] * pH_salaire + (pH_salaire * tableDeductible[2]['heure'] * tableDeductible[2]['majoration'] / 100) %}
+                            {% set montant5 = montant5 + tableExonerer[2]['heure'] * pH_salaire + (pH_salaire * tableExonerer[2]['heure'] * tableExonerer[2]['majoration'] / 100) %}
+
+                            {% if montant5 == 0 %}
+                                -
+                            {% else %}
+                                {{ montant5|number_format(2, ',', ' ') }}
+                            {% endif %}
+                            <br>
+                            {% set montant10 = tableDeductible[3]['heure'] * pH_salaire + (pH_salaire * tableDeductible[3]['heure'] * tableDeductible[3]['majoration'] / 100) %}
+                            {% set montan10 = montant10 + tableExonerer[3]['heure'] * pH_salaire + (pH_salaire * tableExonerer[3]['heure'] * tableExonerer[3]['majoration'] / 100) %}
+
+                            {% if montant10 == 0 %}
+                                -
+                            {% else %}
+                                {{ montant10|number_format(2, ',', ' ') }}
+                            {% endif %}
+                            <br>
+                        </p>
+                    </td>
+                    <td><p></p></td>
+                </tr>
+            {% endif %}
+
+
+            <tr>
+                <td><p></p></td>
+                <td ><p>CNaPS</p></td>
+                <td style="text-align: center"><p></p></td>
+
+                <td style="text-align: center"><p></p></td>
+                <td style="text-align: right"><p></p></td>
+                <td style="text-align: right">
+                    <p>
+                        {% if cnaps %}
+                            {{ cnaps.montant|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <td><p></p></td>
+                <td >
+                    <p>
+                        {% if ostie %}
+                            {% if ostie.nonOstie %}
+                                {{ ostie.libelle|upper }}
+                            {% else %}
+                                OSTIE
+                            {% endif %}
+                        {% endif %}
+                    </p>
+                </td>
+                <td style="text-align: center"><p></p></td>
+
+                <td style="text-align: center"><p></p></td>
+                <td style="text-align: right"><p></p></td>
+                <td style="text-align: right">
+                    <p>
+                        {% if ostie %}
+                            {{ ostie.montant|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <td><p></p></td>
+                <td ><p>IRSA DU</p></td>
+                <td style="text-align: center"><p></p></td>
+
+                <td style="text-align: center"><p></p></td>
+                <td style="text-align: right"><p></p></td>
+                <td style="text-align: right">
+                    <p>
+                        {% if irsa %}
+                            {{ irsa.montant|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <td><p></p></td>
+                <td ><p>AVANCE QUINZAINE</p></td>
+                <td style="text-align: center"><p></p></td>
+
+                <td style="text-align: center"><p></p></td>
+                <td style="text-align: right"><p></p></td>
+                <td style="text-align: right">
+                    <p>
+                        {% if avanceQz %}
+                            {{ avanceQz|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <td><p></p></td>
+                <td >
+
+                    {#  ---------------- TEST RESTE AVANCE SPECIAL ----------------  #}
+                    {% set varResteAvc = 0 %}
+                    {% if resteAvanceSpecial %}
+                        {% if resteAvanceSpecial.montant > 0 %}
+                            {% set varResteAvc = 1 %}
+                        {% endif %}
+                    {% endif %}
+                    {#  ---------------- TEST RESTE AVANCE SPECIAL ----------------  #}
+
+                    <p>AVANCE SPECIALE {% if varResteAvc > 0 %}:{% endif %}</p>
+                    {% if varResteAvc > 0 %}
+                        <p><strong style="white-space: pre">    </strong>Reste à payer: {{ resteAvanceSpecial.montant|number_format(2, ',', ' ') }} ({{ resteAvanceSpecial.mois|round }}mois) </p>
+                    {% endif %}
+                </td>
+                <td style="text-align: center"><p></p></td>
+
+                <td style="text-align: center"><p></p></td>
+                <td style="text-align: right"><p></p></td>
+                <td style="text-align: right">
+                    <p>
+                        {% if avanceSp %}
+                            {{ avanceSp|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </td>
+            </tr>
+
+            {% for deduction in autreDeduction %}
+                <tr>
+                    <td><p></p></td>
+                    <td ><p>{{ deduction.libelle|upper }}</p></td>
+                    <td><p></p></td>
+                    <td style="text-align: center"><p></p></td>
+                    <td ><p></p></td>
+                    <td style="text-align: right"><p>{{ deduction.montant|number_format(2, ',', ' ') }}</p></td>
+                </tr>
+            {% endfor %}
+
+            <tr>
+                <td><p></p></td>
+                <td ><p></p></td>
+                <td><p></p></td>
+                <td><p></p></td>
+                <td id="souligne"><p></p></td>
+                <td id="souligne"><p></p></td>
+            </tr>
+
+            <tr>
+                <td><p></p></td>
+                <td ><p><b>TOTAL</b></p></td>
+                <td style="text-align: center"><p></p></td>
+
+                <td style="text-align: center"><p></p></td>
+                <td style="text-align: right">
+                    <p>
+                        <b>{{ totalCredit|number_format(2, ',', ' ') }}</b>
+                    </p>
+                </td>
+                <td style="text-align: right">
+                    <p>
+                        <b>{{ totalDebit|number_format(2, ',', ' ') }}</b>
+                    </p>
+                </td>
+            </tr>
+
+
+            {#            -----------------------------------------------------------------------------------------------------------------#}
+            <tr>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div id="piedpage">
+        <div style="text-align: right">
+            <h3><b>Salaire net: {{ netTotalArround|number_format(2, ',', ' ') }}</b></h3>
+        </div>
+    </div>
+
+    <div id="piedpage">
+        <div style="text-align: left">
+            <h3><b>Arrêté à la somme de: {{ netTotalLettre }} Ariary</b></h3>
+        </div>
+    </div>
+
+    <table style="width: 100%; margin-left: 120pt;">
+        <tr>
+            <td></td>
+            <td><p><strong>La Société</strong></p></td>
+            <td></td>
+            <td><p><strong>L'Employé</strong></p></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+
+</div>
+</div>
+</body>
+</html>

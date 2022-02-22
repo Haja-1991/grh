@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Liste Employé - Gestion RH{% endblock %}
+
+{% block body %}
+    <h1 class="text-primary">Modification reste congé</h1>
+    <hr>
+
+    <form action="#" method="post" autocomplete="off">
+        <table class="table table-striped " id="myTable">
+            <thead>
+            <tr class="text-center">
+                <th></th>
+                <th>Matricule</th>
+                <th>Nom</th>
+                <th>Prénom(s)</th>
+                <th>Poste</th>
+                <th>Reste congé</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for employe in employes %}
+                <tr>
+                    <td><a href="{{ path('compte_employe_voir', { 'slug' : employe.comptePresence.slug }) }}"><img src="{{ asset('document/imagesEmployes/') }}{{ employe.imageUrl }}" alt="" class="img-circle" width="50" height="50"></a></td>
+                    <td>{{ employe.matricul }}</td>
+                    <td><a  href="{{ path('compte_employe_voir', { 'slug' : employe.comptePresence.slug }) }}">{{ employe.nom }}</a></td>
+                    <td>{{ employe.prenom }}</td>
+                    <td>{{ employe.poste }}</td>
+                    <td>
+                        <input type="text" class="form-control" name="{{ employe.comptePresence.id }}"  value="{{ employe.comptePresence.resteConge }}" >
+
+                    </td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-lg btn-primary btn-block"><i class="fa fa-save"></i> Enregistrer</button>
+            </div>
+            <div class="col-md-6">
+                <a href="#" class="btn btn-lg btn-default btn-block">Annuler</a>
+            </div>
+        </div>
+
+    </form>
+
+
+
+    {#SORT DU TABLE#}
+    <script src="{{ asset('assets/DataTables/datatables.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('assets/DataTables/datatables.css') }}">
+
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable({
+                paging: false,
+                info: false,
+                language: {
+                    processing:     "Traitement en cours...",
+                    search:         "Rechercher&nbsp;:",
+                    lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix:    "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable:     "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first:      "Premier",
+                        previous:   "Pr&eacute;c&eacute;dent",
+                        next:       "Suivant",
+                        last:       "Dernier"
+                    },
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+        } );
+    </script>
+
+{% endblock %}
+

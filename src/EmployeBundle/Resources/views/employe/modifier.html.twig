@@ -1,0 +1,161 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1 class="text-primary">Formulaire de modification employé</h1>
+    <hr>
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <form action="#" method="post" autocomplete="off" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="checkbox" id="nonOfficiel" name="nonOfficiel"   >
+                    <label for="nonOfficiel" class="text-danger">Cochez ici si l'employé n'est pas encore déclaré</label>
+                </div>
+                <hr>
+                {{ form_widget(form) }}
+
+                {% set societe = '' %}
+                {% if employe.societe %}
+                    {% set societe = employe.societe.nom %}
+                {% endif %}
+                <div class="form-group">
+                    <label for="societe">Société d'affectation</label>
+                    <input list="societeList" id="societe" name="societe" class="form-control" value="{{ societe }}" required>
+                    <datalist id="societeList">
+                        {% for societe in societeList %}
+                        <option value="{{ societe.nom }}">
+                        {% endfor %}
+                    </datalist>
+                </div>
+
+                {% set username = '--- Non-défini ---' %}
+                {% if employe.userCompte %}
+                    {% set username = employe.userCompte.username %}
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="username"><i class="fa fa-user"></i>Nom d'utilisateur</label>
+                    <input list="userList" id="username" name="username" class="form-control" value="{{ username }}" required >
+                    <datalist id="userList">
+                        <option value="--- Non-défini ---" >
+                            {% for user in userList %}
+                        <option value="{{ user.username }}">{{ user.nom }}</option>
+                        {% endfor %}
+                    </datalist>
+                </div>
+
+                <br>
+
+                <div class="form-group">
+                    <label for="fichierUpload">Image de l'employé:</label>
+                    <input type="file" name="image" id="fichierUpload" class="form-control" accept="image/*">
+                </div>
+
+                <div class="form-group info" >
+                    <fieldset>
+                        <label for="banque">Banque:</label>
+                        <input class="form-control" type="text" id="banque" value="{{ employe.nomBanque }}" name="banque"><br><br>
+                        <label for="numero">N° de compte:</label>
+                        <input class="form-control" type="text" id="numero" value="{{ employe.numeroCompte }}" name="numero"><br><br>
+                        <label for="beneficiaire">Bénéficiaire:</label>
+                        <input class="form-control" type="text" id="beneficiaire" value="{{ employe.beneficiaire }}" name="beneficiaire"><br><br>
+
+                    </fieldset>
+                </div>
+
+                <fieldset>
+                    <legend>Cotisation non-prix en charge</legend>
+                    <div class="form-group">
+                        <label for="innactifCnaps">Cnaps</label>
+                        {% set inCnaps = '' %}
+                        {% if employe.innactifCnaps %}
+                            {% set inCnaps = 'checked' %}
+                        {% endif %}
+                        <input type="checkbox" name="innactifCnaps" id="innactifCnaps" {{ inCnaps }}  >
+                    </div>
+                    <div class="form-group">
+                        {% set inOstie = '' %}
+                        {% set classCollapse = 'collapse' %}
+                        {% if employe.innactifOstie %}
+                            {% set classCollapse = 'collapse in' %}
+                            {% set inOstie = 'checked' %}
+                        {% endif %}
+                        <label for="innactifOstie">Ostie</label>
+                        <input type="checkbox" name="innactifOstie" id="innactifOstie" {{ inOstie }} data-toggle="collapse" data-target="#autreOrganisation">
+                    </div>
+                    <div id="autreOrganisation" class="{{ classCollapse }}">
+                        <div class="form-group">
+                            <label for="pourcentTravailleur">Pourcentage travailleur</label>
+                            <input type="text" id="pourcentTravailleur" name="pourcentTravailleur" class="form-control only_float" value="{{ employe.poucentOrgSatTrav }}" >
+                        </div>
+                        <div class="form-group">
+                            <label for="pourcentEmployeur">Pourcentage Employeur</label>
+                            <input type="text" id="pourcentEmployeur" name="pourcentEmployeur" class="form-control only_float" value="{{ employe.poucentOrgSatEmpl }}" >
+                        </div>
+                    </div>
+                </fieldset>
+
+
+
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="submit" value="Enregistrer" id="btn_modifier_employe" class="btn btn-primary  btn-block btn-lg "/>
+                    </div>
+
+                    <div class="col-md-6">
+                        <a href="{{ path('employe_index') }}" class="btn btn-default btn-block btn-lg">Annuler</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+
+    {#TEST USERNAME#}
+    <script>
+        function testNomEmploye() {
+            var val=$("#username").val();
+
+            var obj=$("#userList").find("option[value='"+val+"']");
+
+            if(obj !=null && obj.length>0){
+
+                return true;
+            }
+            else{
+                alert("Nom d'utilisateur non-reconu"); // don't allow form submission
+                return false;
+            }
+        }
+
+        $('#btn_modifier_employe').click(function () {
+            return testNomEmploye();
+        });
+
+
+        $(document).ready(function(){
+            var val = $('#employe_methodePaiement option:selected').text() ;
+
+            if(val=='Virement'){
+                $('.info').show(2000, "linear");
+            }else{
+                $('.info').hide();
+            }
+
+        });
+        $("#employe_methodePaiement").change(function () {
+
+            var val = $('#employe_methodePaiement option:selected').text() ;
+
+            if(val=='Virement'){
+                $('.info').show(2000, "linear");
+            }else{
+                $('.info').hide(2000, "linear");
+            }
+        })
+    </script>
+
+{% endblock %}

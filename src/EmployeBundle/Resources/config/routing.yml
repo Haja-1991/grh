@@ -1,0 +1,7 @@
+employe_route:
+    resource: "@EmployeBundle/Controller/EmployeController.php"
+    type:     annotation
+
+employe_api_route:
+  resource: "@EmployeBundle/Controller/ApiEmployeController.php"
+  type:     annotation

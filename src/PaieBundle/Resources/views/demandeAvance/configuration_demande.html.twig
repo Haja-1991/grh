@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Configuration{% endblock %}
+
+{% block body %}
+    <h1 class="text-primary">Nombre de Confirmation de la Direction</h1>
+    <hr>
+
+    <div class="row">
+        <div class="col-md-6">
+            <form action="#" method="post">
+                <label for="valeur">Nombre de Confirmation: </label>
+                <select name="valeur" id="valeur" class="form-control">
+                    <option value="1" {% if valeur == 1 %} selected {% endif %}>Une Validation (1)</option>
+                    <option value="2" {% if valeur == 2 %} selected {% endif %}>Double Validation (2)</option>
+                </select>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="submit" value="Enregistrer" class="btn btn-primary btn-block btn-lg">
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{ path('redirect_accueil') }}" class="btn btn-default btn-block btn-lg">Annuler</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    {#----------RIEN--------------#}
+    <div class="row">
+        <div class="col-lg-3" style="width: 250px; height: 750px; text-align: center">
+
+
+        </div>
+    </div>
+{% endblock %}

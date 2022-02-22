@@ -1,0 +1,258 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1 class="text-primary">Nouvelle Employé</h1>
+    <hr>
+
+    <form action="{{ path('employe_ajouter') }}" method="post" autocomplete="off" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="checkbox" id="nonOfficiel" name="nonOfficiel"   >
+                    <label for="nonOfficiel" class="text-danger">Cochez ici si l'employé n'est pas encore déclaré</label>
+                </div>
+                <hr>
+                {{ form_widget(form) }}
+
+                <div class="form-group">
+                    <label for="societe">Société d'affectation</label>
+                    <input list="societeList" id="societe" name="societe" class="form-control" required>
+                    <datalist id="societeList">
+                        {% for societe in societeList %}
+                        <option value="{{ societe.nom }}">
+                        {% endfor %}
+                    </datalist>
+                </div>
+
+                <div class="form-group">
+                    <label for="reste_conge">Reste Congés</label>
+                    <input type="text" id="reste_conge" name="reste_conge" class="form-control only_float">
+                </div>
+
+                <div class="form-group">
+                    <div class=''>
+                        <div class="form-group">
+                            <label for="dateDebutTravail">Date de début de travail</label>
+                            <div class='input-group date' id='date_debut_travail'>
+
+                                <input type="text" name="dateDebutTravail" id="dateDebutTravail" class="form-control" required/>
+                                <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                            </div>
+                        </div>
+                        <script>
+
+                            $('#date_debut_travail').datetimepicker({
+                                format: 'DD/MM/YYYY'
+                            });
+
+                        </script>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="username"><i class="fa fa-user"></i>Nom d'utilisateur</label>
+                    <input list="userList" id="username" name="username" class="form-control" required>
+                    <datalist id="userList">
+                        <option value="--- Non-défini ---" >
+                        {% for user in userList %}
+                            <option value="{{ user.username }}">{{ user.nom }}</option>
+                        {% endfor %}
+                    </datalist>
+                </div>
+
+                <input type="checkbox" id="virement"  style="width: 20px ;display: inline"> <label style="display: inline" for="virement">Paie par virement</label>
+                <br/>
+                <div class="form-group info" >
+                    <fieldset>
+
+                        <label for="banque">Banque:</label>
+                        <input class="form-control" type="text" id="banque" name="banque"><br><br>
+                        <label for="numero">N° de compte:</label>
+                        <input class="form-control" type="text" id="numero" name="numero"><br><br>
+                        <label for="beneficiaire">Bénéficiaire:</label>
+                        <input class="form-control" type="text" id="beneficiaire" name="beneficiaire"><br><br>
+
+                    </fieldset>
+                </div>
+
+                <br>
+
+            </div>
+            <br><br>
+            <div class="col-md-6 well">
+                <h3 class="text-center">Profil</h3>
+                <div class="form-group">
+                    <label for="fichierUpload">Image de l'employé</label>
+                    <input type="file" name="image" id="fichierUpload" class="form-control" accept="image/*">
+                </div>
+                <hr style="border-style: groove; margin-bottom: 0%">
+                <div class="row">
+                    <h3 class="text-center">CIN</h3>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="fichierCIN">Fichier CIN</label>
+                            <input type="file" name="fichierCIN" id="fichierCIN" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class=''>
+                                <div class="form-group">
+                                    <label for="dateCIN">Date CIN</label>
+                                    <div class='input-group date' id='date_cin'>
+
+                                        <input type="text" name="dateCIN" id="dateCIN" class="form-control"/>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <script>
+
+                                    $('#date_cin').datetimepicker({
+                                        format: 'DD/MM/YYYY'
+                                    });
+
+                                </script>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr style="border-style: groove; margin-bottom: 0%">
+                <div class="row">
+                    <h3 class="text-center">Résidence</h3>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="fichierResidence">Fichier Certificat de Résidence</label>
+                            <input type="file" name="fichierResidence" id="fichierResidence" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class=''>
+                                <div class="form-group">
+                                    <label for="dateResidence">Date Certificat de Résidence</label>
+                                    <div class='input-group date' id='date_residence'>
+
+                                        <input type="text" name="dateResidence" id="dateResidence" class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <script>
+                                    $('#date_residence').datetimepicker({
+                                        format: 'DD/MM/YYYY'
+                                    });
+                                </script>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-offset-4 col-md-8">
+                    <input type="submit" value="Ajouter" id="btn_valider_employe" class="btn btn-primary  btn-block btn-lg "/>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-8">
+                    <a href="{{ path('employe_index') }}" class="btn btn-default btn-block btn-lg">Annuler</a>
+                </div>
+            </div>
+        </div>
+        <br>
+
+    </form>
+
+    {#TEST USERNAME#}
+    <script>
+        function testNomEmploye() {
+            var val=$("#username").val();
+
+            var obj=$("#userList").find("option[value='"+val+"']");
+
+            if(obj !=null && obj.length>0){
+
+                return true;
+            }
+            else{
+                alert("Nom d'utilisateur non-reconu"); // don't allow form submission
+                return false;
+            }
+        }
+        function testPaiement() {
+            var val=$("#paiement").val();
+
+            var obj=$("#list").find("option[value='"+val+"']");
+
+            if(obj !=null && obj.length>0){
+
+                return true;
+            }
+            else{
+                alert("Methode de paiement non-reconu"); // don't allow form submission
+                return false;
+            }
+        }
+
+        $('#btn_valider_employe').click(function () {
+           return testNomEmploye();
+
+
+        });
+    </script>
+
+    {#TEST SOCIETE#}
+    <script>
+        function testSociete() {
+            var val=$("#societe").val();
+
+            var obj=$("#societeList").find("option[value='"+val+"']");
+
+            if(obj !=null && obj.length>0){
+
+                return true;
+            }
+            else{
+                alert("Société non-reconu"); // don't allow form submission
+                return false;
+            }
+        }
+
+        $('#btn_valider_employe').click(function () {
+            return testSociete();
+        });
+
+
+        $(document).ready(function(){
+            var val = $('#employe_methodePaiement option:selected').text() ;
+
+            if(val=='Virement'){
+                $('.info').show(2000, "linear");
+            }else{
+                $('.info').hide();
+            }
+        });
+
+        $("#employe_methodePaiement").change(function () {
+
+            var val = $('#employe_methodePaiement option:selected').text() ;
+
+            if(val=='Virement'){
+                $('.info').show(2000, "linear");
+            }else{
+                $('.info').hide(2000, "linear");
+            }
+        })
+
+    </script>
+{% endblock %}

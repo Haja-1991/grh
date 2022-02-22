@@ -1,0 +1,120 @@
+{% extends "::base.html.twig" %}
+{% block titre %}Modifier{% endblock %}
+
+
+{% block body %}
+
+    <style>
+        .form-group input[type="checkbox"] {
+            display: none;
+        }
+
+        .form-group input[type="checkbox"] + .btn-group > label span {
+            width: 20px;
+        }
+
+        .form-group input[type="checkbox"] + .btn-group > label span:first-child {
+            display: none;
+        }
+        .form-group input[type="checkbox"] + .btn-group > label span:last-child {
+            display: inline-block;
+        }
+
+        .form-group input[type="checkbox"]:checked + .btn-group > label span:first-child {
+            display: inline-block;
+        }
+        .form-group input[type="checkbox"]:checked + .btn-group > label span:last-child {
+            display: none;
+        }
+    </style>
+
+    <div class="row">
+        <div class="col-md-1 col-lg-1">
+            <br>
+            <a href="{{ path('admin_homepage') }}" class="btn btn-default btn-lg"><i class="fa fa-arrow-left"> Retour</i></a>
+        </div>
+        <div class="col-md-offset-3 col-lg-offset-3 col-md-4 col-lg-4 text-center">
+            <h1 class="text-primary">Modifier Information d'utilisateur</h1>
+            <h5>Gestion d'utilisateur</h5>
+        </div>
+    </div>
+
+
+    <hr>
+    <div class="row">
+        <div class="col-lg-6 col-md-6" style="background-color: #dfdfdf" >
+
+            <h2 class="text-primary">FORMULAIRE UTILISATEUR</h2> <hr>
+            <form action="{{ path('admin_user_modifier', {'id' : user.id}) }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+
+                <div class="form-group">
+                    <label for="">{{ 'form.email'|trans({}, 'FOSUserBundle')  }}</label>
+                    {{ form_widget(form.email, { 'attr': {'class': 'form-control', 'placeholder': 'form.email'|trans } }) }}
+                    {{ form_errors(form.email) }}
+                </div>
+
+                <div class="form-group">
+                    <label for="">{{ 'form.username'|trans({}, 'FOSUserBundle')  }}</label>
+                    {{ form_widget(form.username, { 'attr': {'class': 'form-control', 'placeholder': 'form.username'|trans } }) }}
+                    {{ form_errors(form.username) }}
+                </div>
+
+                <div class="form-group">
+                    <label for="">{{ 'Nom'  }}</label>
+                    {{ form_widget(form.nom, { 'attr': {'class': 'form-control', 'placeholder': 'Nom'} }) }}
+                    {{ form_errors(form.nom) }}
+                </div>
+
+                {#<div class="form-group">#}
+                    {#<label for="">{{ 'form.password'|trans({}, 'FOSUserBundle')  }}</label>#}
+                    {#{{ form_widget(form.plainPassword.first, { 'attr': {'class': 'form-control', 'placeholder': 'form.password'|trans } }) }}#}
+                    {#{{ form_errors(form.plainPassword.first) }}#}
+                {#</div>#}
+
+                {#<div class="form-group">#}
+                    {#<label for="">{{ 'form.password_confirmation'|trans({}, 'FOSUserBundle')  }}</label>#}
+                    {#{{ form_widget(form.plainPassword.second, { 'attr': {'class': 'form-control', 'placeholder': 'form.password_confirmation'|trans } }) }}#}
+                    {#{{ form_errors(form.plainPassword.second) }}#}
+                {#</div>#}
+
+                <div class="form-group">
+                    <label for="">Rôle de l'utilisateur</label>
+                    <select name="role" class="form-control">
+                        <option value="ROLE_USER" {% if user.myRoles == "ROLE_USER" %} selected  {% endif %}>Secrétaire</option>
+                        <option value="ROLE_RH" {% if user.myRoles == "ROLE_RH" %} selected  {% endif %}>Gestionnaire du Personelle</option>
+                        <option value="ROLE_SEC" {% if user.myRoles == "ROLE_SEC" %} selected  {% endif %}>Secrétaire Responsable RH</option>
+                        {#<option value="ROLE_PAIE" {% if user.myRoles == "ROLE_PAIE" %} selected  {% endif %}>Gestionnaire des Paies</option>#}
+                        <option value="ROLE_ADMIN" {% if user.myRoles == "ROLE_ADMIN" %} selected  {% endif %}>Administrateur - Direction</option>
+                    </select>
+                </div>
+
+                {{ form_rest(form) }}
+                <hr>
+                <div>
+                    {#<a href="#" data-toggle="modal" data-target="#modalMDP" class="btn btn-warning btn-lg "><i class="fa fa-lock"></i> Modifier Mot de Passe</a>#}
+                    {#<hr >#}
+                    <input type="submit" value="{{ 'profile.edit.submit'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary btn-lg" />
+                    <a href="{{ path('admin_user_modifier_mdp', { 'id' : user.id } ) }}" class="btn btn-warning btn-lg"><i class="fa fa-lock"></i> Modifier mot de passe</a>
+                    <br><br>
+                    <a href="{{ path('admin_homepage') }}" class="btn btn-default btn-lg">Annuler</a>
+
+                </div>
+                <br>
+            </form>
+
+        </div>
+
+
+    </div>
+
+
+    {#----------RIEN--------------#}
+    <div class="row">
+        <div class="col-lg-3" style="width: 250px; height: 300px; text-align: center">
+
+
+        </div>
+    </div>
+
+{% endblock %}
+

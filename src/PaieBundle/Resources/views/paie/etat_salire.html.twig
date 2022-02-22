@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+
+        div#contenu {
+            margin-top:50px;
+            width: auto;
+            height:auto;
+
+        }
+        div#piedpage {
+
+
+            width: 900px;
+            height:50px;
+
+            margin-left: 30px;
+            margin-top: 0px;
+        }
+        div#piedg {
+            float: left;
+            width:450px;
+            height:auto;
+
+        }
+        div#piedd {
+            float: right;
+            width:450px;
+            height:auto;
+
+            text-align:right
+        }
+        div#gauche {
+            float: left;
+            width:500px;
+            height:auto;
+
+        }
+        div#droit {
+            float: right;
+            width:450px;
+            height:50px;
+
+
+        }
+        div#titre1 {
+            float: left;
+            width:250px;
+            height:150px;
+
+        }
+        div#titre2 {
+            float: right;
+            width:450px;
+            height:150px;
+
+        }
+        div#Scontenu {
+
+            width: auto;
+            height:auto;
+
+
+        }
+        img {
+            border: 1px solid #ddd;
+
+            margin-left: 45px;
+            margin-top: 45px;
+
+        }
+        div#sgauche {
+            margin-left: 30px;
+            padding-left: 20px;
+            border: 1px solid black;
+            margin-top:20px;
+
+        }
+        div#sdroit {
+
+            width:450px;
+            margin-left: 80px;
+            margin-top:20px;
+        }
+        div#stitre1 {
+            height:auto;
+            width:auto;
+            margin-left: 30px;
+            margin-top: 35px;
+
+
+        }
+        p,li{
+            line-height: 1;
+        }
+        ul li{
+            list-style:none;
+        }
+        h2{
+            margin: 10px;
+        }
+        div#stitre2 {
+
+            margin-top: 60px;
+            margin-left: 0px;}
+        #table {
+
+            border-collapse:collapse;
+            border-style:solid;
+            border-color:black;
+            width: auto;
+            text-align: left;
+
+        }
+        #table1 {
+
+            border-collapse:collapse;
+            border-style:solid;
+            border-color:black;
+            width: 900px;
+            text-align: left;
+        }
+        th{
+            text-align:center;
+            font-size:0.8em;
+
+            width:150px;
+
+        }
+
+        #footer {
+            border:0px;
+            width: 900px;
+            margin-top:10px;
+
+        }
+        td{
+            height: 5px;
+            padding: 0px 5px 0px 5px;
+            border-bottom: hidden;
+        }
+        #cas{border-left: hidden;}
+        #partage{border-right :hidden;}
+        h2{
+            padding-left:10px
+        }
+        .mat{
+            padding-left:135px
+        }
+
+
+        #piedtr{
+            border-bottom: 1px solid black;
+
+        }
+        #piedtrc{
+            border-bottom: 1px solid black;border-right:hidden;
+
+        }
+        #souligne{
+            border-bottom: 1px solid black;
+
+        }
+        #total{text-align:center}
+        #retenu{text-align:right;}
+        #flg{line-height: 4;}
+        #fld{line-height: 4;}
+
+
+        b,label{font-size: 1em; line-height: 1.5;}
+        .align-d {text-align:left;}
+
+        .no_saut{
+            white-space: nowrap;
+            text-align: right;
+        }
+
+    </style>
+</head>
+<body >
+
+<div id="contenu">
+
+    <div id="Scontenu">
+        <h3 >ETAT DE PAIE MOIS DE {{ mois|monmois|upper }} {{ annee }} - <b>{{ societe.nom }}</b> </h3>
+        <table border="1" id="table">
+            <thead >
+
+            <tr >
+                <th rowspan="2">Mat.</th>
+                <th rowspan="2">Nom</th>
+                <th  rowspan="2">Prénoms</th>
+                <th  rowspan="2">Fonction</th>
+                <th colspan="5">Salaires</th>
+
+                <th colspan="3">CNaPS</th>
+                <th rowspan="2">FMFP 1%</BR >(Employeur)</th>
+                <th colspan="3">OSTIE</th>
+                <th rowspan="2">Org. Sanit. Trav.</th>
+                <th rowspan="2">Org. Sanit. Employeur</th>
+                <th  rowspan="2">Enfants </BR >à charge</th>
+                <th  rowspan="2">IRSA</th>
+
+                <th   rowspan="2">Avances Qz. </th>
+                <th   rowspan="2">Avances Sp. </th>
+                <th  rowspan="2">Autres </BR >(HS exonérées,pénalité,..) </th>
+                <th  rowspan="2">SALAIRE NET</th>
+
+            </tr>
+            <tr>
+
+                <th >Base</th>
+                <th >Avantages</th>
+                <th >HS</th>
+                <th>Nb J.</th>
+                <th >Brut du mois</th>
+                <th>1% </BR >(Travailleur)</th><th >13% </BR >( Employeur)</th><th >TOTAL</th>
+                <th >1%</BR >(Travailleur</th><th >5% </BR >( Employeur)</th><th >TOTAL</th>
+
+            </tr>
+
+            </thead>
+            <tbody>
+
+            {% set gTotalBrut = 0 %}
+            {% set gTotalCnaps = 0 %}
+            {% set gTotalOstie = 0 %}
+            {% set gTotalIrsa = 0 %}
+            {% set gTotalSalaireNet = 0 %}
+            {% set gTotalBase = 0 %}
+            {% set gTotalAvantages = 0 %}
+            {% set gCnapsTrav = 0 %}
+            {% set gCnapsEmp = 0 %}
+            {% set gTotalFmfp = 0 %}
+            {% set gOstieTrav = 0 %}
+            {% set gOstieEmp = 0 %}
+            {% set gTotalEnfant = 0 %}
+            {% set gTotalAvanceQz = 0 %}
+            {% set gTotalAvanceSp = 0 %}
+            {% set gTotalAutreRetenu = 0 %}
+            {% set gTotalOrgSanit = 0 %}
+            {% set gTotalOrgSanitEmpl = 0 %}
+            {% set gTotalHSD = 0 %}
+
+
+
+            {% for liste in listes %}
+                <tr>
+                    <td><p>{{ liste.matricule }}</p></td>
+                    <td ><p>{{ liste.nom }}</p></td>
+                    <td><p>{{ liste.prenom }}</p></td>
+                    <td><p>{{ liste.poste }}</p></td>
+                    <td class="no_saut">
+                        <p>
+                            {% if liste.tmpSalaireBase %}
+                                {{ liste.tmpSalaireBase.montant|number_format(2, ',', ' ') }}
+                                {% set gTotalBase = gTotalBase + liste.tmpSalaireBase.montant  %}
+                            {% else %}
+                                {{ liste.empSalaire|number_format(2, ',', ' ') }}
+                                {% set gTotalBase = gTotalBase + liste.empSalaire  %}
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+                            {% if liste.totalAvantage %}
+                                {{ liste.totalAvantage|number_format(2, ',', ' ') }}
+                                {% set gTotalAvantages = gTotalAvantages + liste.totalAvantage %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+                            {% if liste.heureSuppDeductible %}
+                                {% if liste.heureSuppDeductible.montant != 0 %}
+                                    {{ liste.heureSuppDeductible.montant|number_format(2, ',', ' ') }}
+                                    {% set gTotalHSD = gTotalHSD + liste.heureSuppDeductible.montant %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>{{ liste.jourTravailler }}</p>
+                    </td>
+                    <td  class="no_saut">
+                        {% set gTotalBrut = gTotalBrut + liste.brutDuMois %}
+                        <p>{{ liste.brutDuMois|number_format(2, ',', ' ') }}</p>
+                    </td>
+                    <td  class="no_saut">
+                        <p>
+                            {% set totalCnaps = 0 %}
+                            {% if liste.cnaps %}
+                                {{ liste.cnaps.montant|number_format(2, ',', ' ') }}
+                                {% set totalCnaps = totalCnaps + liste.cnaps.montant %}
+                                {% set gCnapsTrav = gCnapsTrav + liste.cnaps.montant %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+                            {% if liste.cnaps13 %}
+                                {{ liste.cnaps13|number_format(2, ',', ' ') }}
+                                {% set totalCnaps = totalCnaps + liste.cnaps13 %}
+                                {% set gCnapsEmp = gCnapsEmp + liste.cnaps13 %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+                            {% if totalCnaps %}
+                                {% set gTotalCnaps = gTotalCnaps + totalCnaps %}
+                                {{ totalCnaps|number_format(2, ',', ' ') }}
+
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+                            {{ liste.fmfp|number_format(2, ',', ' ') }}
+                            {% set gTotalFmfp = gTotalFmfp + liste.fmfp %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+                            {% set totalOstie = 0 %}
+                            {% if liste.ostie %}
+                                {% if liste.ostie.nonOstie != true %}
+                                    {{ liste.ostie.montant|number_format(2, ',', ' ') }}
+                                    {% set totalOstie = totalOstie + liste.ostie.montant %}
+                                    {% set gOstieTrav = gOstieTrav + liste.ostie.montant %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+                            {% if liste.ostie5 %}
+                                {% if liste.ostie.nonOstie != true %}
+                                    {{ liste.ostie5|number_format(2, ',', ' ') }}
+                                    {% set totalOstie = totalOstie + liste.ostie5 %}
+                                    {% set gOstieEmp = gOstieEmp + liste.ostie5 %}
+                                {% else %}
+                                    -
+                                {% endif %}
+
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+                            {% set gTotalOstie = gTotalOstie + totalOstie %}
+                            {{ totalOstie|number_format(2, ',', ' ') }}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+
+                            {% if liste.ostie %}
+                                {% if liste.ostie.nonOstie == true %}
+                                    {{ liste.ostie.montant|number_format(2, ',', ' ') }}
+                                    {% set gTotalOrgSanit = gTotalOrgSanit + liste.ostie.montant %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+
+                            {% if liste.ostie %}
+                                {% if liste.ostie.nonOstie == true and liste.ostie.valueOrgSatEmpl > 0 %}
+                                    {{ liste.ostie.valueOrgSatEmpl|number_format(2, ',', ' ') }}
+                                    {% set gTotalOrgSanitEmpl = gTotalOrgSanitEmpl + liste.ostie.valueOrgSatEmpl %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no_saut" style="text-align: center">
+                        <p>
+                            {% if liste.tmpNbEnfant %}
+                                {{ liste.tmpNbEnfant.montant }}
+                                {% set gTotalEnfant = gTotalEnfant + liste.tmpNbEnfant.montant %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+                            {% if liste.irsa %}
+                                {% set gTotalIrsa = gTotalIrsa + liste.irsa.montant %}
+                                {{ liste.irsa.montant|number_format(2, ',', ' ') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+                            {{ liste.avanceQz|number_format(2, ',', ' ') }}
+                            {% set gTotalAvanceQz = gTotalAvanceQz + liste.avanceQz %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+                            {{ liste.avanceSp|number_format(2, ',', ' ') }}
+                            {% set gTotalAvanceSp = gTotalAvanceSp + liste.avanceSp %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        <p>
+                            {{ liste.totalAutre|number_format(2, ',', ' ') }}
+                            {% set gTotalAutreRetenu = gTotalAutreRetenu + liste.totalAutre %}
+                        </p>
+                    </td>
+                    <td class="no_saut">
+                        {% set soldeEmp = liste.totalCredit - liste.totalDebit %}
+                        {% set soldeEmp = soldeEmp|arrondir %}
+                        {% set gTotalSalaireNet = gTotalSalaireNet + soldeEmp %}
+
+                        {{ soldeEmp|number_format(2, ',', ' ') }}
+                        <p></p>
+                    </td>
+
+                </tr>
+            {% endfor %}
+            <tr>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+                <td id="piedtr"><p></p></td>
+
+            </tr>
+            </tbody>
+            <tr>
+
+                <td id="cas" colspan="4"></td>
+                <td id="piedtr" class="no_saut"><p>{{ gTotalBase|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gTotalAvantages|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gTotalHSD|number_format(2, ',', ' ') }}</p></td>
+                <td colspan="1"></td>
+                <td id="piedtr" class="no_saut"><p>{{ gTotalBrut|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gCnapsTrav|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gCnapsEmp|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gTotalCnaps|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gTotalFmfp|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gOstieTrav|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gOstieEmp|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gTotalOstie|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gTotalOrgSanit|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gTotalOrgSanitEmpl|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut" style="text-align: center"><p>{{ gTotalEnfant }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gTotalIrsa|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gTotalAvanceQz|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gTotalAvanceSp|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p>{{ gTotalAutreRetenu|number_format(2, ',', ' ') }}</p></td>
+                <td id="piedtr" class="no_saut"><p><b>{{ gTotalSalaireNet|number_format(2, ',', ' ') }}</b></p></td>
+
+
+            </tr>
+        </table>
+
+
+    </div>
+    <div id="piedpage">
+        <div id="piedg">
+
+        </div>
+        <div id="piedd">
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

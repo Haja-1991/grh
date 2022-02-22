@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Formulaire modification{% endblock %}
+
+{% block body %}
+        <style>
+            form {
+                background: -webkit-linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
+                background: -moz-linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
+                background: linear-gradient(bottom, #CCCCCC, #EEEEEE 175px);
+                margin: auto;
+                position: relative;
+                width: 550px;
+                height: 450px;
+                padding: 10px;
+                -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+                -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+                box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+            }
+
+            input {
+                width: 375px;
+                display: block;
+                border: 1px solid #999;
+                height: 40px;
+                -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+                -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+                box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+            }
+            textarea#feedback {
+                width: 375px;
+                height: 150px;
+            }
+            a {
+                color: #fff;
+            }
+            textarea#feedback {
+                width: 375px;
+                height: 150px;
+                display: block;
+            }
+            #button {
+                width: 100px;
+                position: absolute;
+                right: 10px;
+                bottom: 90px;
+                background: #09C;
+                color: #fff;
+                font-family: Tahoma, Geneva, sans-serif;
+                height: 30px;
+                border-radius: 0px;
+                border: 1p solid #999;
+            }
+            #button1 {
+                width: 100px;
+                position: absolute;
+                right: 10px;
+                bottom: 50px;
+                background: #b31a17;
+                color: #fff;
+                font-family: Tahoma, Geneva, sans-serif;
+                height: 30px;
+                border-radius: 0px;
+                border: 1p solid #999;
+            }
+
+            textarea:focus, input:focus {
+                border: 1px solid #09C;
+            }
+            input.button:hover {
+                background: #fff;
+                color: #09C;
+            }
+        </style>
+
+<form action="#" method="post">
+    <div>
+
+        <h1 class="text-primary ">Modification historique paie </h1>
+        <br>
+        <input id="date_as" autocomplete="off" type="hidden" value="{{ histo_paie.id }}" name="id" />
+        <input id="date_as" autocomplete="off" type="hidden" value="{{ histo_paie.type }}" name="type" />
+        <input id="date_as" autocomplete="off" type="hidden" value="{{ histo_paie.comptePaie.id }}" name="comptepaie" />
+        <label>
+            <span>Date de demande</span>
+        </label>
+        <input id="date_hp" value="{{ histo_paie.date|date('d/m/Y') }}" autocomplete="off" type="datetime" name="date_hp" />
+        <script>
+
+            $('#date_hp').datetimepicker({
+                format: 'DD/MM/YYYY',
+            });
+
+        </script>
+        <label>
+            <span>Montant</span>
+        </label>
+        <input id="montant"  value="{{ histo_paie.montant|number_format(2,',','') }}" type="text" autocomplete="off" name="montant" />
+        <label>
+            <span>Libellé</span>
+
+        </label>
+        <textarea id="feedback"  name="libelle" autocomplete="off">{{ histo_paie.libelle }}</textarea>
+        <button type="submit" id="button"><i class="fa fa-save"></i> Enregistrer</button>
+        <button  id="button1" type="button" data-toggle="modal" data-target="#ModalDelete"><i class="fa fa-warning"></i> Supprimer</button>
+
+
+        <div class="modal fade"  id="ModalDelete" role="dialog">
+            <form action="" method="post">
+
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"> </button>
+                            <h4 class="modal-title">Formulaire Crédit :</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <div>
+                                <h3 class="text-primary ">Souhaitez vous supprimer cette information !</h3>
+
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <a href="{{ path('delete_histo_paie', { 'id': histo_paie.id }) }}" class="btn-lg btn-danger">Valider</a>
+                            <button class="btn-lg btn-default" data-dismiss="modal">Annuler</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+
+</form>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Confirmation Direction{% endblock %}
+
+{% block body %}
+    <h1 class="text-primary">Demande en attente de confirmation</h1>
+    <hr>
+    <ul class="list-inline">
+        <li>
+            <button type="button" data-toggle="modal" data-target="#modalToutConfirmer" class="btn btn-success btn-lg" ><i class="fa fa-check"></i>Tout Confirmer</button>
+        </li>
+
+    </ul>
+    <hr>
+
+    {% if (app.user.ifRole('ROLE_RH') or app.user.ifRole('ROLE_ADMIN')) and demandeAvanceSpecials|length > 0  %}
+        <h3 class="text-danger">Demande d'avance spécial:</h3>
+        <table class="table table-striped">
+            {% for demandeAvanceSpecial in demandeAvanceSpecials %}
+
+                {% set s =(demandeAvanceSpecial.montant / demandeAvanceSpecial.parMois) %}
+                <tr>
+                    <td class="text-center">
+                        <img src="{{ asset('document/imagesEmployes/') }}{{ demandeAvanceSpecial.empoye.imageUrl }}" alt="" class="img-circle" width="50" height="50">
+                    </td>
+                    <td><a href="{{ path('avanceSpeciel_detail', { 'id' : demandeAvanceSpecial.id }) }}" target="_blank">{{ demandeAvanceSpecial.numero }}</a></td>
+                    <td class="text-center"> <a href="{{ path('avanceSpeciel_detail', { 'id' : demandeAvanceSpecial.id }) }}" target="_blank">{{ demandeAvanceSpecial.empoye.nomComplet }}</a></td>
+                    <td class="text-center">{{ demandeAvanceSpecial.date|date('d/m/Y') }}</td>
+                    <td class="text-right">Montant demandé: {{ demandeAvanceSpecial.montant|number_format(2, ',', ' ') }}</td>
+                    <td class="text-right">Pour {{ s|round }} mois</td>
+                    <td class="alert-warning text-center">{{ demandeAvanceSpecial.etatDemande }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <hr>
+        <h3 class="text-primary">Liste des avances quinzaines:</h3>
+    {% endif %}
+
+    <table class="table table-striped">
+        <tbody>
+        {% for demande in demandes %}
+            {% if not demande.userConfirme2 and demande.userConfirme1 != app.user and not demande.userRefuser %}
+                <tr>
+                    <td>
+                        <div class="row">
+                            <div class="col-md-3 text-center">
+                                <img width="115" height="115" class="img-circle" src="{{ asset('document/imagesEmployes/') }}{{ demande.empoye.imageUrl }}" alt="">
+                                <br>
+                                <h4>{{ demande.empoye.nomComplet }}</h4>
+                                <h5>(Salaire: <b>{{ demande.empoye.salaire|number_format(2, ',', ' ') }}</b>)</h5>
+                            </div>
+                            <div class="col-md-7">
+                                <h3>Demande d'avance {{ demande.numero }} </h3>
+                                <h4><b>Date :</b> {{ demande.date|date('d/m/Y') }}</h4>
+                                <h4><b>Montant :</b> {{ demande.montant|number_format(2, ',', ' ') }}</h4>
+                                <h4><b>Etat :</b> {{ demande.etat }}</h4>
+                                {% if demande.etat == "En attente 2 eme confirmation" %}
+                                    1<sup>ère</sup> confirmation par: {{ demande.userConfirme1.nom }}
+                                {% endif %}
+
+                                {% if demande.description %}
+                                    <div class="">
+                                        <h4><b>Motif :</b></h4>
+                                        <h4>{{ demande.description|nl2br }}</h4>
+
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-2" >
+                                <div dmd="{{ demande.id }}">
+                                    <br><br>
+                                    <button class="btn btn-success btn-lg btn-block confirmer_demande" id_demande="{{ demande.id }}" ><i class="fa fa-check"></i> Confirmer</button>
+                                    <button class="btn btn-danger btn-lg btn-block refuser_demande" id_demande="{{ demande.id }}" ><i class="fa fa-minus-circle"></i> Refuser</button>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal Suppression -->
+    <div class="modal fade" id="modalToutConfirmer" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Voulez-vous confirmer toute les demandes?</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ path('demandeAvance_tout_confirmer') }}" id="lien_supprimer" class="btn btn-danger"> Confirmer</a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    {#SCRIPT ACCEPTER DEMANDE#}
+    <script>
+        $('.confirmer_demande').click(function () {
+
+            btn = $(this);
+
+            my_id = btn.attr('id_demande');
+
+            $.post("{{ path('api_demande_confirmer_avance') }}",
+                {
+                    id_demande: my_id
+                },
+                function(data, status){
+
+                    if(status == 'success'){
+                        $("[dmd='"+ my_id +"']").html("<br><br><h3 class='text-success text-center'><i class='fa fa-check'></i> Demande acceptée</h3>")
+
+                    }else{
+                        alert('Erreur! Veuillez réessayer..');
+                    }
+
+                    // alert("Data: " + data + "\nStatus: " + test);
+                });
+        });
+    </script>
+
+    {#SCRIPT REFUSER DEMANDE#}
+    <script>
+        $('.refuser_demande').click(function () {
+
+            btn = $(this);
+
+            my_id = btn.attr('id_demande');
+
+            $.post("{{ path('api_demande_refuser_avance') }}",
+                {
+                    id_demande: my_id
+                },
+                function(data, status){
+
+                    if(status == 'success'){
+                        $("[dmd='"+ my_id +"']").html("<br><br><h3 class='text-danger text-center'><i class='fa fa-minus-circle'></i> Demande refusée</h3>")
+
+                    }else{
+                        alert('Erreur! Veuillez réessayer..');
+                    }
+
+                    // alert("Data: " + data + "\nStatus: " + test);
+                });
+        });
+    </script>
+
+
+
+
+{% endblock %}

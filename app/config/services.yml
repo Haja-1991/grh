@@ -1,0 +1,17 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+#    parameter_name: value
+
+services:
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+
+#Service Type Facture
+    my_twig:
+        class: AppBundle\Twig\AppExtension
+        arguments:
+            doctrine: "@doctrine"
+        tags:
+            - {name: twig.extension }

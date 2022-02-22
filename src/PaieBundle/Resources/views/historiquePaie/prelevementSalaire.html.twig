@@ -1,0 +1,30 @@
+{#----------MODAL COMPTABILISER PRISE SALAIRE----------#}
+<div class="modal fade"  id="ModalPrelevementSalaire" role="dialog">
+    <form action="{{ path('paie_deduction_salaire', { 'slug':compte_Paie.slug }) }}" method="post">
+
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Les déductions sur salaire</h4>
+                </div>
+                <div class="modal-body">
+
+                    Voulez-vous ajouter les déductions sur le salaire?
+
+                    <input type="hidden" name="mois" value="{{ mois }}" id="soldeReste">
+                    <input type="hidden" name="annee" value="{{ annee }}" id="soldeReste">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" >Déduire</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+</div>

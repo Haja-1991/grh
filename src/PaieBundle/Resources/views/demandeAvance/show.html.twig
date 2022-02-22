@@ -1,0 +1,509 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Demande Avance: {{ demande.numero }}  {{ demande.empoye.prenom }}{% endblock %}
+{% block stylesheets %}
+    <style>
+
+
+        .card {
+            padding-top: 20px;
+            margin: 10px 0 20px 0;
+            background-color: rgba(214, 224, 226, 0.2);
+            border-top-width: 0;
+            border-bottom-width: 2px;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .card .card-heading {
+            padding: 0 20px;
+            margin: 0;
+        }
+
+        .card .card-heading.simple {
+            font-size: 20px;
+            font-weight: 300;
+            color: #777;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .card .card-heading.image img {
+            display: inline-block;
+            width: 46px;
+            height: 46px;
+            margin-right: 15px;
+            vertical-align: top;
+            border: 0;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+        }
+
+        .card .card-heading.image .card-heading-header {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .card .card-heading.image .card-heading-header h3 {
+            margin: 0;
+            font-size: 14px;
+            line-height: 16px;
+            color: #262626;
+        }
+
+        .card .card-heading.image .card-heading-header span {
+            font-size: 12px;
+            color: #999999;
+        }
+
+        .card .card-body {
+            padding: 0 20px;
+            margin-top: 20px;
+        }
+
+        .card .card-media {
+            padding: 0 20px;
+            margin: 0 -14px;
+        }
+
+        .card .card-media img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .card .card-actions {
+            min-height: 30px;
+            padding: 0 20px 20px 20px;
+            margin: 20px 0 0 0;
+        }
+
+        .card .card-comments {
+            padding: 20px;
+            margin: 0;
+            background-color: #f8f8f8;
+        }
+
+        .card .card-comments .comments-collapse-toggle {
+            padding: 0;
+            margin: 0 20px 12px 20px;
+        }
+
+        .card .card-comments .comments-collapse-toggle a,
+        .card .card-comments .comments-collapse-toggle span {
+            padding-right: 5px;
+            overflow: hidden;
+            font-size: 12px;
+            color: #999;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .card-comments .media-heading {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .card.people {
+            position: relative;
+            display: inline-block;
+            width: 170px;
+            height: 300px;
+            padding-top: 0;
+            margin-left: 20px;
+            overflow: hidden;
+            vertical-align: top;
+        }
+
+        .card.people:first-child {
+            margin-left: 0;
+        }
+
+        .card.people .card-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: inline-block;
+            width: 170px;
+            height: 150px;
+            background-color: #ffffff;
+        }
+
+        .card.people .card-top.green {
+            background-color: #53a93f;
+        }
+
+        .card.people .card-top.blue {
+            background-color: #427fed;
+        }
+
+        .card.people .card-info {
+            position: absolute;
+            top: 150px;
+            display: inline-block;
+            width: 100%;
+            height: 101px;
+            overflow: hidden;
+            background: #ffffff;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .card.people .card-info .title {
+            display: block;
+            margin: 8px 14px 0 14px;
+            overflow: hidden;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 18px;
+            color: #404040;
+        }
+
+        .card.people .card-info .desc {
+            display: block;
+            margin: 8px 14px 0 14px;
+            overflow: hidden;
+            font-size: 12px;
+            line-height: 16px;
+            color: #737373;
+            text-overflow: ellipsis;
+        }
+
+        .card.people .card-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            display: inline-block;
+            width: 100%;
+            padding: 10px 20px;
+            line-height: 29px;
+            text-align: center;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .card.hovercard {
+            position: relative;
+            padding-top: 0;
+            overflow: hidden;
+            text-align: center;
+            background-color: rgba(214, 224, 226, 0.2);
+        }
+
+        .card.hovercard .cardheader {
+            background: url("{{ asset('images/fond-profil.png') }}");
+            background-size: cover;
+            height: 135px;
+        }
+
+        .card.hovercard .avatar {
+            position: relative;
+            top: -50px;
+            margin-bottom: -50px;
+        }
+
+        .card.hovercard .avatar img {
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+            max-height: 100px;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            border: 5px solid rgba(255,255,255,0.5);
+        }
+
+        .card.hovercard .info {
+            padding: 4px 8px 10px;
+        }
+
+        .card.hovercard .info .title {
+            margin-bottom: 4px;
+            font-size: 24px;
+            line-height: 1;
+            color: #262626;
+            vertical-align: middle;
+        }
+
+        .card.hovercard .info .desc {
+            overflow: hidden;
+            font-size: 12px;
+            line-height: 20px;
+            color: #737373;
+            text-overflow: ellipsis;
+        }
+
+        .card.hovercard .bottom {
+            padding: 0 20px;
+            margin-bottom: 17px;
+        }
+
+
+    </style>
+{% endblock %}
+
+ {% if demande.modifiable == '1'  %}
+     {% set statut = 'oui' %}
+ {% endif %}
+
+{% if demande.modifiable == '0' %}
+    {% set statut = 'non' %}
+{% endif %}
+
+{% block sidemenu %}{% endblock %}
+
+{% block container_sansmenu %}
+    {% set lien_profil = path('employe_voir', { 'slug' : employe.slug }) %}
+
+    {% if not app.user.ifRole("ROLE_PAIE") %}
+        {% set lien_profil = "#" %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1 align="center"><a href="{{ path('liste_demande') }}">Validation de la demande d'avance</a></h1>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+
+        <div class="col-md-3">
+            <br>
+            <div class="">
+
+                <div class="card hovercard">
+
+                    <div class="cardheader"></div>
+
+                    <div class="avatar">
+                        <img alt="" src="{{ asset('document/imagesEmployes/') }}{{ demande.empoye.imageUrl }}">
+                    </div>
+                    <div class="info">
+                        <div class="title">
+                            <a {% if  lien_profil != "#" %} target="_blank" {% endif %}  href="{{ lien_profil }}">{{ employe.nom }} {{ employe.prenom }}</a>
+                        </div>
+                        <div class="desc"><h4><b>Poste: </b> {{ demande.empoye.poste }}</h4></div>
+
+                        {% if app.user.ifRole('ROLE_PAIE') %}
+                            <div class="desc"><h4><b>Salaire: </b> {{ demande.empoye.salaire|number_format('2', ',', ' ') }}</h4></div>
+                        {% endif %}
+
+                        <div class="desc"><h4><b>Addresse: </b> {{ demande.empoye.adresse }}</h4></div>
+
+                        <div class="desc"><h4><b>Contact: </b> {{ demande.empoye.contact }}</h4></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            {% if app.user.ifRole('ROLE_ADMIN') or app.user.ifRole('ROLE_GRH') %}
+                <div class="row">
+                    <div class="col-md-10">
+                        <div align="center">
+
+                            {% if demande.etat == "En attente 2 eme confirmation" and app.user == demande.userConfirme1 %}
+                                <h2 class="dir">Controle de la direction</h2>
+                                <h4>Vous avez confirmer cette demande</h4>
+                            {% endif %}
+
+                            {% if demande.etat == "En attente 2 eme confirmation" and app.user != demande.userConfirme1 %}
+                                <h2 class="dir">Controle de la direction</h2>
+                                <div class="dir">
+                                    <a  class="btn btn-lg btn-success" href="{{ path('confirmer_avance', { 'id':demande.id }) }}"><i class="fa fa-check"></i> Valider</a>
+                                </div>
+                                <br>
+                                <div class="dir">
+                                    <a  class="btn btn-lg btn-danger" href="{{ path('refuser_avance', { 'id':demande.id }) }}"><i class="fa fa-close"></i> Refuser</a>
+                                </div>
+                            {% endif %}
+
+                            {% if demande.etat == 'Retour (Demande Refusée)' and app.user != demande.userConfirme1 %}
+                                <h2 class="dir">Controle de la direction</h2>
+                                <div class="dir">
+                                    <a  class="btn btn-lg btn-success" href="{{ path('confirmer_avance', { 'id':demande.id }) }}"><i class="fa fa-check"></i> Revalider</a>
+                                </div>
+                            {% endif %}
+
+                            {% if demande.etat == 'En attente de confirmation' %}
+                                <h2 class="dir">Controle de la direction</h2>
+                                <div class="dir">
+                                    <a  class="btn btn-lg btn-success" href="{{ path('confirmer_avance', { 'id':demande.id }) }}"><i class="fa fa-check"></i> Valider</a>
+                                </div>
+                                <br>
+                                <div class="dir">
+                                    <a  class="btn btn-lg btn-danger" href="{{ path('refuser_avance', { 'id':demande.id }) }}"><i class="fa fa-close"></i> Refuser</a>
+                                </div>
+                                {% if app.user== demande.userCreer %}
+                                    <br>
+                                    <div class="dir">
+                                        <a  class="btn btn-lg btn-danger" href="{{ path('modifier_avance', { 'id':demande.id }) }}"><i class="fa fa-edit"></i> Modifier</a>
+                                    </div>
+                                {% endif %}
+
+                            {% endif %}
+
+                            {% if demande.etat == 'En attente de comptabilisation' and not app.user.ifRole('ROLE_GRH') %}
+                                <h2 class="dir">Comptabilisation</h2>
+                                <div>
+                                    <form method="post" action="{{ path('comptabilisation_demande_avance', {'id' : demande.id}) }}" id="formComptabiliser">
+                                        <div class="row ">
+                                            <div class="form-group col-md-6 col-md-offset-3">
+                                                <label for="caisse_debiter">Caisse de débit <b class="text-danger" id="err_caisse_debiter"></b></label>
+                                                <select required type="text" class="form-control" name="caisse_debiter" id="caisse_debiter" >
+
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                        {% if app.user== demande.userCreer %}
+
+                                            <div class="dir">
+                                                <a  class="btn btn-lg btn-danger" href="{{ path('modifier_avance', { 'id':demande.id }) }}"><i class="fa fa-edit"></i> Modifier</a>
+                                            </div>
+                                        {% endif %}
+                                        <br>
+                                        <button type="submit" class="btn btn-lg btn-primary" id="btnComptabiliser"><i class="fa fa-money"></i> Comptabiliser</button>
+                                    </form>
+                                </div>
+                            {% endif %}
+
+
+                            <br><br>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+
+            {% if demande.etat == 'En attente de comptabilisation' and not app.user.ifRole('ROLE_ADMIN') and app.user.ifRole('ROLE_PAIE') %}
+                <div class="row">
+                    <div class="col-md-10">
+                        <div align="center">
+                            <h2 class="dir">Comptabilisation</h2>
+                            <div>
+                                <form method="post" action="{{ path('comptabilisation_demande_avance', {'id' : demande.id}) }}" id="formComptabiliser">
+                                    <div class="row ">
+                                        <div class="form-group col-md-6 col-md-offset-3">
+                                            <label for="caisse_debiter">Caisse de débit <b class="text-danger" id="err_caisse_debiter"></b></label>
+                                            <select required type="text" class="form-control" name="caisse_debiter" id="caisse_debiter" >
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-lg btn-primary" id="btnComptabiliser"><i class="fa fa-money"></i> Comptabiliser</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br><br>
+            {% endif %}
+
+            <div class="row">
+                <div class="col-md-10">
+                    <style>#well{border-radius: 0px;}</style>
+                    <div class="container-fluid well span6" id="well">
+                        <div class="">
+                            {% if demande.etat == 'Retour (Demande Refusée)' %}
+                                <div class="">
+                                    <h3 class="text-danger">Demande Refusée: </h3>
+                                    <h4>
+                                        Refusé par: {{ demande.userRefuser.nom }}
+                                    </h4>
+                                </div>
+                                <hr style="border-style: groove">
+                            {% endif %}
+
+                            <div class="">
+                                <h3 class="text-primary">Confirmation: </h3>
+                                <h4><b>1<sup>ère</sup> Confirmation par :</b>
+                                    {% if (demande.userConfirme1)%}
+                                        {{ demande.userConfirme1.nom }}<i class="fa fa-check text-success"></i>
+                                    {% else %}
+                                        <i class="fa fa-close text-danger"></i>
+                                    {% endif %}
+
+                                </h4>
+                                <h4><b>2<sup>ème</sup> Confirmation par :</b>
+                                    {% if (demande.userConfirme2)%}
+                                        {{ demande.userConfirme2.nom }}<i class="fa fa-check text-success"></i>
+                                    {% else%}
+                                        <i class="fa fa-close text-danger"></i>
+                                    {% endif %}
+                                </h4>
+                                <h4><b>Comptabilisation :</b>
+                                    {% if (demande.userCompta)%}
+                                        {{ demande.userCompta.nom }} ({{ demande.nomCaisse }})<i class="fa fa-check text-success"></i>
+                                    {% else%}
+                                        <i class="fa fa-close text-danger"></i>
+                                    {% endif %}
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                    <style>#well{border-radius: 0px;}</style>
+                    <div class="container-fluid well span6" id="well">
+                        <div class="row-fluid">
+
+
+                            <div class="">
+                                <h3>Demande d'avance {{ demande.numero }} </h3>
+                                <h4><b>Date :</b> {{ demande.date|date('d/m/Y') }}</h4>
+                                <h4><b>Montant :</b> {{ demande.montant|number_format(2, ',', ' ') }}</h4>
+                                <h4><b>Etat :</b> {{ demande.etat }}</h4>
+
+                                {% if demande.description %}
+                                <div class="">
+                                    <h4><b>Motif :</b></h4>
+                                    <h4>{{ demande.description|nl2br }}</h4>
+
+                                </div>
+                                {% endif %}
+
+                                {% if app.user == demande.userCreer and not demande.userConfirme1 %}
+                                    <br>
+                                    <a href="{{ path('modif_demande',{ 'id' : demande.id}) }}" class="btn btn-primary btn-lg write"><i class="fa fa-edit"></i> Modifier la demande</a>
+                                {% endif %}
+                                <br>
+                                <p class="text-right">Créer par: <mark>{{ demande.userCreer.nom }}</mark></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        $('#date_debit').datetimepicker({
+            format: 'DD/MM/YYYY',
+            date: new Date()
+        });
+        $('#date_credit').datetimepicker({
+            format: 'DD/MM/YYYY',
+            date: new Date()
+        });
+    </script>
+
+    {#COMPTABILISATION#}
+    {% include '@Paie/demande/comptabilisation_demande.html.twig' %}
+   
+{% endblock %}

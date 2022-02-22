@@ -1,0 +1,321 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Confirmation Direction{% endblock %}
+
+{% block body %}
+    <style>
+        .funkyradio div {
+            clear: both;
+            overflow: hidden;
+        }
+
+        .funkyradio label {
+            width: 100%;
+            border-radius: 3px;
+            border: 1px solid #D1D3D4;
+            font-weight: normal;
+        }
+
+        .funkyradio input[type="radio"]:empty,
+        .funkyradio input[type="checkbox"]:empty {
+            display: none;
+        }
+
+        .funkyradio input[type="radio"]:empty ~ label,
+        .funkyradio input[type="checkbox"]:empty ~ label {
+            position: relative;
+            line-height: 2.5em;
+            text-indent: 3.25em;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .funkyradio input[type="radio"]:empty ~ label:before,
+        .funkyradio input[type="checkbox"]:empty ~ label:before {
+            position: absolute;
+            display: block;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            content: '';
+            width: 2.5em;
+            background: #D1D3D4;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .funkyradio input[type="radio"]:hover:not(:checked) ~ label,
+        .funkyradio input[type="checkbox"]:hover:not(:checked) ~ label {
+            color: #888;
+        }
+
+        .funkyradio input[type="radio"]:hover:not(:checked) ~ label:before,
+        .funkyradio input[type="checkbox"]:hover:not(:checked) ~ label:before {
+            content: '\2714';
+            text-indent: .9em;
+            color: #C2C2C2;
+        }
+
+        .funkyradio input[type="radio"]:checked ~ label,
+        .funkyradio input[type="checkbox"]:checked ~ label {
+            color: #777;
+        }
+
+        .funkyradio input[type="radio"]:checked ~ label:before,
+        .funkyradio input[type="checkbox"]:checked ~ label:before {
+            content: '\2714';
+            text-indent: .9em;
+            color: #333;
+            background-color: #ccc;
+        }
+
+        .funkyradio input[type="radio"]:focus ~ label:before,
+        .funkyradio input[type="checkbox"]:focus ~ label:before {
+            box-shadow: 0 0 0 3px #999;
+        }
+
+        .funkyradio-default input[type="radio"]:checked ~ label:before,
+        .funkyradio-default input[type="checkbox"]:checked ~ label:before {
+            color: #333;
+            background-color: #ccc;
+        }
+
+        .funkyradio-primary input[type="radio"]:checked ~ label:before,
+        .funkyradio-primary input[type="checkbox"]:checked ~ label:before {
+            color: #fff;
+            background-color: #337ab7;
+        }
+
+        .funkyradio-success input[type="radio"]:checked ~ label:before,
+        .funkyradio-success input[type="checkbox"]:checked ~ label:before {
+            color: #fff;
+            background-color: #5cb85c;
+        }
+
+        .funkyradio-danger input[type="radio"]:checked ~ label:before,
+        .funkyradio-danger input[type="checkbox"]:checked ~ label:before {
+            color: #fff;
+            background-color: #d9534f;
+        }
+
+        .funkyradio-warning input[type="radio"]:checked ~ label:before,
+        .funkyradio-warning input[type="checkbox"]:checked ~ label:before {
+            color: #fff;
+            background-color: #f0ad4e;
+        }
+
+        .funkyradio-info input[type="radio"]:checked ~ label:before,
+        .funkyradio-info input[type="checkbox"]:checked ~ label:before {
+            color: #fff;
+            background-color: #5bc0de;
+        }
+    </style>
+
+    <h1 class="text-primary">Demande en attente de confirmation</h1>
+    <hr>
+    <ul class="list-inline">
+        <li>
+            <button type="button" data-toggle="modal" data-target="#modalToutConfirmer" class="btn btn-success btn-lg" ><i class="fa fa-check"></i>Tout Confirmer</button>
+        </li>
+    </ul>
+    <hr>
+    <table class="table table-striped">
+        <tbody>
+        {% for key, demande in demandes %}
+
+            {% set prix = 0 %}
+
+            {% if not demande.userConfirme and not demande.userRefuser %}
+            {% if demande.type == 'Congé sur salaire' %}
+                {% set prix = employe.salaire / 30 * demande.nombreJour %}
+            {% endif %}
+                <tr>
+                    <td>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-3 text-center">
+                                    <img width="115" height="115" class="img-circle" src="{{ asset('document/imagesEmployes/') }}{{ demande.employe.imageUrl }}" alt="">
+                                    <br>
+                                    <h4>{{ demande.employe.nomComplet }}</h4>
+                                    <h4>(Reste congé: <b>{{ demande.employe.comptePresence.resteConge }}</b>)</h4>
+                                </div>
+                                <div class="col-md-7">
+                                    <h3 class="text-center">Type de la Demande</h3>
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="funkyradio">
+                                                <div class="funkyradio-success">
+                                                    <input type="radio" name="radio{{ demande.id }}" id="radio{{ demande.id }}" class="radioType" id_demande="{{ demande.id }}" value="Congé" {% if demande.type =='Congé' or demande.type == 'Congé sur salaire' %}checked{% endif %} />
+                                                    <label for="radio{{ demande.id }}" class="text-success">Congé</label>
+                                                </div>
+                                                <div class="funkyradio-primary">
+                                                    <input type="radio" name="radio{{ demande.id }}" id="radio_{{ demande.id }}" class="radioType" id_demande="{{ demande.id }}" value="Permission" {% if demande.type == 'Permission' %}checked{% endif %} />
+                                                    <label for="radio_{{ demande.id }}" class="text-primary">Permission</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <h4 class="text-danger" ><b data-radio="{{ demande.id }}"></b></h4>
+                                        </div>
+                                    </div>
+
+                                    <h4>- <b>Date de début:</b> {{ demande.dateDebut|date('d/m/Y') }}</h4>
+                                    <h4>- <b>Date de fin:</b> {{ demande.dateFin|date('d/m/Y') }}</h4>
+                                    <h4>- <b>Date de retour:</b> {{ demande.dateRetour|date('d/m/Y') }}</h4>
+                                    <h4>- <b>Nombre de jour:</b> {{ demande.nombreJour }} jour(s)
+                                        {% if prix %}
+                                            - <strong class="text-danger"> Soit: {{ prix|number_format(2, ',', ' ') }} Ar</strong>
+                                        {% endif %}
+                                    </h4>
+                                    {% if demande.motif %}
+                                        <h4>- <b>Motif:</b> {{ demande.motif|nl2br }}</h4>
+                                    {% endif %}
+                                    <br>
+                                    <p class="text-right">Créer par: <mark>{{ demande.userCreer.nom }}  - {{ demande.dateDemande|date('d/m/Y') }}</mark></p>
+                                </div>
+                                <div class="col-md-2" >
+                                    <div dmd="{{ demande.id }}">
+                                        <br><br>
+                                        <button class="btn btn-success btn-lg btn-block confirmer_demande" id_demande="{{ demande.id }}" ><i class="fa fa-check"></i> Confirmer</button>
+
+                                       <button class="btn btn-danger btn-lg btn-block refuser_demande" id_demande="{{ demande.id }}" ><i class="fa fa-minus-circle"></i> Refuser</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </td>
+                </tr>
+            {% endif %}
+
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal Suppression -->
+    <div class="modal fade" id="modalToutConfirmer" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Voulez-vous confirmer toute les demandes?</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ path('dcp_tout_confirmer') }}" id="lien_supprimer" class="btn btn-danger"> Confirmer</a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {#SCRIPT ACCEPTER DEMANDE#}
+    <script>
+        $('.confirmer_demande').click(function () {
+
+            btn = $(this);
+
+            my_id = btn.attr('id_demande');
+
+            $.post("{{ path('api_dcp_accepter') }}",
+                {
+                    id_demande: my_id
+                },
+                function(data, status){
+
+                    if(status == 'success'){
+                        $("[dmd='"+ my_id +"']").html("<br><br><h3 class='text-success text-center'><i class='fa fa-check'></i> Demande acceptée</h3>");
+                        $("[id_demande='"+ my_id +"']").attr('disabled', true);
+
+                    }else{
+                        alert('Erreur! Veuillez réessayer..');
+                    }
+
+                    // alert("Data: " + data + "\nStatus: " + test);
+                });
+        });
+    </script>
+
+    {#SCRIPT REFUSER DEMANDE#}
+    <script>
+        $('.refuser_demande').click(function () {
+
+            btn = $(this);
+
+            my_id = btn.attr('id_demande');
+
+            $.post("{{ path('api_dcp_refuser') }}",
+                {
+                    id_demande: my_id
+                },
+                function(data, status){
+
+                    if(status == 'success'){
+                        $("[dmd='"+ my_id +"']").html("<br><br><h3 class='text-danger text-center'><i class='fa fa-minus-circle'></i> Demande refusée</h3>");
+                        $("[id_demande='"+ my_id +"']").attr('disabled', true);
+
+                    }else{
+                        alert('Erreur! Veuillez réessayer..');
+                    }
+
+                    // alert("Data: " + data + "\nStatus: " + test);
+                })
+            ;
+        });
+    </script>
+
+{#SCRIPT CHANGER TYPE DEMANDE#}
+    <script>
+        function changerTypeDemande(id, type, messagePrix) {
+            $.post("{{ path('api_dcp_changer_type') }}",
+                {
+                    id_demande: id,
+                    type: type
+                },
+                function(data, status){
+
+                    if(status == 'success'){
+                        var prix = jQuery.parseJSON(data);
+
+                        if (prix != 'OK'){
+                            messagePrix.html('Les jours de la demande dépasse le reste du congé de l\'employé <br> Coût: '+prix.prix);
+                        }
+                        if (type == 'Permission'){
+                            messagePrix.html('');
+                        }
+                    }else{
+                        alert('Erreur! Veuillez réessayer..');
+                    }
+
+                    // alert("Data: " + data + "\nStatus: " + test);
+                })
+            ;
+        }
+
+        $('.radioType').change(function () {
+            btn = $(this);
+
+            my_id = btn.attr('id_demande');
+            type = btn.val();
+
+            dataRadio = $("[data-radio='"+ my_id +"']");
+
+            changerTypeDemande(my_id, type, dataRadio);
+        })
+    </script>
+
+
+
+
+
+
+
+{% endblock %}

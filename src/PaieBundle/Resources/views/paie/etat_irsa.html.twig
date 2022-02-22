@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Etat nominatif</title>
+    <style>
+
+
+        div#contenu {
+            margin-top:10px;
+            width: auto;
+            height:auto;
+
+        }
+        div#piedpage {
+
+
+            width: 1659px;
+            height:160px;
+            border: 1px solid black;
+            margin-left: 0px;
+            margin-top: -50px;
+        }
+        div#tetepage {
+
+
+            width: auto;
+            height:180px;
+
+            margin-left: 0px;
+            margin-top: 0px;
+        }
+        div#teteg {
+            float: left;
+            width: 250px;
+            height:auto;
+            margin-top: -20px;
+
+        }
+        div#teted {
+            float: right;
+            width:750PX;
+            height:auto;
+
+        }
+        div#piedg {
+            float: left;
+            width:auto;
+            height:auto;
+            margin-top: -25px;
+
+        }
+        div#piedd {
+            float: right;
+            width: 850px;
+            height:auto;
+
+        }
+        div#gauche {
+            float: left;
+            width:500px;
+            height:auto;
+
+        }
+        div#droit {
+            float: right;
+            width:450px;
+            height:50px;
+
+
+        }
+        div#titre1 {
+            float: left;
+            width:250px;
+            height:150px;
+
+        }
+        div#titre2 {
+            float: right;
+            width:450px;
+            height:150px;
+
+        }
+        div#Scontenu {
+
+            width: auto;
+            height:auto;
+
+
+        }
+        img {
+            border: 1px solid #ddd;
+
+            margin-left: 45px;
+            margin-top: 45px;
+
+        }
+        div#sgauche {
+            margin-left: 30px;
+            padding-left: 20px;
+            border: 1px solid black;
+            margin-top:20px;
+
+        }
+        div#sdroit {
+
+            width:450px;
+            margin-left: 80px;
+            margin-top:20px;
+        }
+        div#stitre1 {
+            height:auto;
+            width:auto;
+            margin-left: 30px;
+            margin-top: 35px;
+
+
+        }
+        p{line-height: 1}
+
+        h2{
+            margin: 10px;
+        }
+        div#stitre2 {
+
+            margin-top: 60px;
+            margin-left: 0px;}
+        #table {
+
+            border-collapse:collapse;
+            border-style:solid;
+            border-color:black;
+            width: auto;
+            text-align: left;
+
+
+        }
+
+        th{
+            text-align:center;
+            font-size:0.8em;
+            height:200px;
+            width:150px;
+
+
+        }
+
+        #footer {
+            border:0px;
+            width: 900px;
+            margin-top:10px;
+
+        }
+        td{
+            height: 0px;
+            padding: 0px 5px 0px 5px;
+
+        }
+        #cas{border-left: hidden;}
+        #partage{border-right :hidden;}
+        h2{
+            padding-left:10px
+        }
+        .mat{
+            padding-left:135px
+        }
+
+        #piedtr{
+            border-bottom: 1px solid black;
+
+        }
+        #piedtrc{
+            border-bottom: 1px solid black;border-right:hidden;
+
+        }
+        #souligne{
+            border-bottom: 1px solid black;
+
+        }
+        #total{text-align:center}
+        #retenu{text-align:right;}
+        #flg{line-height: 0.5;}
+        #fld{line-height: 0.5;}
+        #fltg{line-height: 0;}
+        #fltd{line-height: 0;}
+
+        b,label{font-size: 1em; line-height: 1.5;}
+        .align-d {text-align:left;}
+
+        .rotate {
+
+            position: absolute;
+
+
+            margin: 95px -10px 15px -60px;
+            /* Rotate from top left corner (not default) */
+            transform-origin: 0 0;
+            transform: rotate(-90deg);
+
+        }
+        .rotate1 {
+
+            position: absolute;
+
+
+            margin: 95px 0px 15px -38px;
+            /* Rotate from top left corner (not default) */
+            transform-origin: 0 0;
+            transform: rotate(-90deg);
+
+        }
+        .rotate0 {
+
+            position: absolute;
+
+
+            margin: 95px -10px 15px -25px;
+            /* Rotate from top left corner (not default) */
+            transform-origin: 0 0;
+            transform: rotate(-90deg);
+
+        }
+        .rotate00 {
+
+            position: absolute;
+
+
+            margin: 95px 0px 15px -10px;
+            /* Rotate from top left corner (not default) */
+            transform-origin: 0 0;
+            transform: rotate(-90deg);
+
+        }
+        .rotate2 {
+
+            position: absolute;
+
+
+            margin:95px 0px 15px 3px;
+            /* Rotate from top left corner (not default) */
+            transform-origin: 0 0;
+            transform: rotate(-90deg);
+
+        }
+        #saut
+        {
+            /* saut de page apres le bloc*/
+            page-break-after : always;
+            /* saut de page avant le bloc*/
+            page-break-before : always;
+        }
+        .bien{
+            text-align: left;
+            width: 95%;
+            margin-top:20px;
+            page-break-inside: avoid;
+
+        }
+        .no-saut{
+            white-space: nowrap;
+            text-align: right;
+        }
+    </style>
+</head>
+<body  style="zoom:90%">
+
+<div id="contenu">
+
+    <div id="Scontenu">
+
+        <div id="tetepage">
+            <img style="float: left;margin-top: 10px" src="{{ asset('images/MFB.png') }}" width="70px" height="55px" alt="">
+
+            <div id="teteg" style="margin: 2px 5px 0px 40px">
+                <h6 style="margin-top: 10px">MINISTERE DES FINANCES ET DU BUDGET <br>
+                    <span style="line-height: 1; padding-top:-10px; margin-left: 65px; border: 1px dashed ; border-top: hidden;border-left:hidden;border-right: hidden;white-space: pre; ">						</span>
+                </h6>
+                <h6 style="margin-left: 55px;margin-top: -10px">SECRETARIAT GENERAL <br>
+                    <span style="line-height: 1; margin-left: 4px;padding-top:-10px; margin-top: 0px; border: 1px dashed ; border-top: hidden;border-left:hidden;border-right: hidden;white-space: pre; ">						   </span>
+                </h6>
+                <h6 style="margin-left: 20px;margin-top: -10px">DIRECTION GENERALE DES IMPOTS <br>
+                    <span style="line-height: 1; padding-top:-10px;  margin-left: 40px;margin-top: 0px; border: 1px dashed ; border-top: hidden;border-left:hidden;border-right: hidden;white-space: pre; ">  						 </span>
+                </h6>
+            </div>
+            <div id="teted" style="margin: -25px 29px 10px 15px;">
+                <h5  style="margin-left:-45px">REPOBLIKAN'IMADAGASIKARA</h5>
+                <p  style="margin-left:-55px;margin-bottom: 30px">Fitiavana - Tanindrazana - Fandrosoana</p>
+                <h2 style="font-size: 22px;margin-left:-250px;">ETAT NOMINATIF DES TRAITEMENTS, SALAIRES ET ASSIMILES</h2>
+                <p style="margin-left: -145px;margin-bottom: -10px" ><b>ANNEE: {{ annee }}</b><span style=" width:450px; margin:0px 0px 0px 2px ; border: 1px  dotted ; border-top: hidden;border-left:hidden;border-right: hidden;white-space: pre; "></span><p>
+                <p style="margin-left: -145px;margin-bottom: 10px;margin-top: -20px"><b> Mois de : {{ mois|monmois }} </b> <span style=" width:450px; margin:0px 0px 0px 2px ; border: 1px  dotted ; border-top: hidden;border-left:hidden;border-right: hidden;white-space: pre; "></span> <p>
+                    <img style="float: right;margin-top: -175px" src="{{ asset('images/DGI.png') }}" width="70px" height="55px" alt="">
+            </div>
+
+        </div>
+        <BR>
+        <br>
+
+        <div id="piedpage">
+
+
+            <div id="piedg" style="margin: 50px 5px 0px 20px">
+                <p id="flg" style="display: inline">N° d'identification fiscal : <table style="white-space: pre;   border-collapse:collapse; border-style:solid; border-color:black;display: inline-block;border-top:hidden;" border="1"><tr>
+                        {% for var in varNif %}
+                            <td>{{ var }}</td>
+                        {% endfor %}
+                    </tr>
+                </table></p>
+                <p id="flg" style="display: inline">N° Statistique : <table style="white-space: pre;   border-collapse:collapse; border-style:solid; border-color:black;display: inline-block;border-top:hidden;" border="1"><tr>
+                        {% for var in varStat %}
+                            <td>{{ var }}</td>
+                        {% endfor %}
+
+                    </tr>
+                </table>
+                <p>
+            </div>
+
+
+
+
+
+
+
+            <div id="piedd" >
+                <div style="margin-right: 100px;margin-top: -5px">
+                    <h3 style="text-align: left; margin-top: -15px;margin-bottom: -10px;margin-left: -40px"> IDENTIFICATION DE L'ENTREPRISE</h3>
+                    <p style="margin-top: 15px ;padding-left:140px" id="fld">Raison social : <b> {{ societe.raisonSocial }} </b></p>
+                    <p  style="margin-top: 15px ;padding-left:140px" id="fld">Activité : <b> {{ societe.activite }} </b><p>
+                    <p style="margin-top: 15px ;padding-left:140px" id="fld">Adresse : <b> {{ societe.adresse2 }} </b> <p>
+                </div>
+
+            </div>
+
+        </div>
+        <br>
+
+        <table border="1" id="table" >
+            <thead >
+
+            <tr style="text-align: center">
+
+                <th class="top" ><span >
+				NOM ET PRÉNOM </br> DU TRAVAILLEUR </br>(ANARANA SY </br> FANAMPIN'ANARAN'NY MPIASA)
+				</span></th>
+                <th >FONCTION </br>(ASANY)</th>
+                <th  >NUMÉRO CARTE  </br>D'IDENTITÉ NATIONALE   </br>OU DE RÉSIDENT (LAHARAN'NY  </br> KARAPANONDROM-PIRENENA NA KARA-BAHINY)</th>
+                <th  >NUMÉRO D'IDENTIFICATION </br> À LA CNAPS </br>(LAHARAM-PAMANTARANA CNAPS)</th>
+                <th  >RÉMUNÉRATION BRUTE </br> EN NUMÉRAIRE (KARAMA </br> TSY AFA-KARATSAKA RAISINA LELAVOLA) ( B )</th>
+                <th >VALEUR DES AVANTAGES  </br>EN NATURE IMPOSABLES  </br>(SANDAN'NY TOMBOTSOA  </br>TSY ARA-BOLA IHARAN'NY HETRA) ( C )</th>
+
+                <th style="width:150px;">RETENUE ET VERSEMENT</br> EN VUE DE LA CONSTITUTION</br> DE PENSION OU DE RETRAITE </br> (LATSAKEMBOKA ESORINA </br>HO AN'NY FISOTROAN-DRONONO) ( D )</th>
+                <th >RETENUE AU TITRE </br> DE COTISATION OUVRIÈRE </br> DUE À UNE ORGANISATION </br>SANITAIRE (LATSAKEMBOKA </br>HO AN'NY FAHASALAMAN'NY MPIASA) ( E )</th>
+                <th >REVENUS NETS IMPOSABLES </br> (KARAMA SY NY TOA </br> AZY AFA-KARATSAKA</br>  AMERANA NY HETRA) ( F = B + C - D - E )</th>
+                <th >IMPÔT BRUT </br>CORRESPONDANT (HETRA</br> TANDRIFIN'IZANY) ( G )</th>
+                <th  >NOMBRE DE PERSONNES </br>À CHARGE (ISAN'OLONA IADIDIANA)</th>
+
+                <th >RÉDUCTION POUR PERSONNES</br> À CHARGE (FAMPIHENAN-KETRA </br>NOHO NY OLONA IADIDIANA) ( H )</th>
+                <th  >IMPÔT NET RETENU </br>(HETRA ALOA AFA-KARATSAKA) </br>( I = G - H ) </th>
+
+
+            </tr>
+
+
+            </thead>
+            <tbody >
+            {% set gTotalBrut = 0 %}
+            {% set gTotalAvantage = 0 %}
+            {% set gTotalCnaps = 0 %}
+            {% set gTotalOstie = 0 %}
+            {% set gTotalRevenuImposable = 0 %}
+            {% set gTotalIrsaBrut = 0 %}
+            {% set gTotalIrsa = 0 %}
+            {% set gTotalEnfant = 0 %}
+            {% set gTotalDeductionEnfant = 0 %}
+
+            {% for liste in listes %}
+                <tr  >
+                    <td ><p>{{ liste.nom }} {{ liste.prenom }}</p></td>
+                    <td ><p>{{ liste.poste }}</p></td>
+                    <td><p>{{ liste.numeroCin }}</p></td>
+                    <td><p>{{ liste.numeroCnaps }}</p></td>
+                    <td class="no-saut">
+                        <p>
+
+                            {% set brutDuMois = liste.brutDuMois - liste.totalAvantage %}
+                            {% set gTotalBrut = gTotalBrut + brutDuMois %}
+                            {{ brutDuMois|number_format(2, ',', ' ') }}
+                        </p>
+                    </td>
+                    <td  class="no-saut">
+                        <p>
+                            {% set gTotalAvantage = gTotalAvantage + liste.totalAvantage %}
+                            {% if liste.totalAvantage %}
+                                {{ liste.totalAvantage|number_format(2, ',', ' ') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td  class="no-saut">
+                        <p>
+                            {% set totalCnaps = 0 %}
+                            {% if liste.cnaps %}
+                                {{ liste.cnaps.montant|number_format(2, ',', ' ') }}
+                                {% set totalCnaps = totalCnaps + liste.cnaps.montant %}
+                                {% set gTotalCnaps = gTotalCnaps + liste.cnaps.montant %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no-saut">
+                        <p>
+                            {% set totalOstie = 0 %}
+                            {% if liste.ostie %}
+                                {{ liste.ostie.montant|number_format(2, ',', ' ') }}
+                                {% set totalOstie = totalOstie + liste.ostie.montant %}
+                                {% set gTotalOstie = gTotalOstie + liste.ostie.montant %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no-saut">
+                        {% set revenuImposable = brutDuMois - totalOstie - totalCnaps %}
+                        {% set gTotalRevenuImposable = gTotalRevenuImposable + revenuImposable %}
+                        <p>
+                            {{ revenuImposable|number_format(2, ',', ' ') }}
+                        </p>
+                    </td>
+
+                    <td class="no-saut">
+                        {% set irsaBrut = 0 %}
+                        {% if liste.irsa %}
+                            {% set irsaBrut = liste.irsa.montant %}
+                            {% if irsaBrut > 2000 %}
+                                {% set irsaBrut = liste.irsa.montant %}
+                                {% if liste.tmpNbEnfant %}
+                                    {% set irsaBrut = liste.irsa.montant + (liste.tmpMinimumPerception.montant * liste.tmpNbEnfant.montant) %}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+
+                        {% set gTotalIrsaBrut = gTotalIrsaBrut + irsaBrut %}
+
+                        <p>
+                            {{ irsaBrut|number_format(2, ',', ' ') }}
+                        </p>
+                    </td>
+                    <td style="text-align: center">
+                        <p>
+                            {% if liste.tmpNbEnfant %}
+                                {{ liste.tmpNbEnfant.montant }}
+                                {% set gTotalEnfant = gTotalEnfant + liste.tmpNbEnfant.montant %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no-saut">
+                        <p>
+                            {% set deductionEnfant = 0 %}
+                            {% if liste.tmpNbEnfant and liste.irsa %}
+                                {% set deductionEnfant = liste.tmpMinimumPerception.montant * liste.tmpNbEnfant.montant %}
+                                {% set gTotalDeductionEnfant = gTotalDeductionEnfant + deductionEnfant %}
+                                {% if deductionEnfant != 0 %}
+                                    {{ deductionEnfant|number_format(2, ',', ' ') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="no-saut">
+                        <p>
+                            {% if liste.irsa %}
+                                {% set gTotalIrsa = gTotalIrsa + liste.irsa.montant %}
+                                {{ liste.irsa.montant|number_format(2, ',', ' ') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </td>
+                </tr>
+            {% endfor %}
+
+
+
+            <tr style="text-align: center;">
+                <td colspan="4" style="height: 25px;">
+                    <b>TOTAL</b>
+                </td>
+
+                <td class="no-saut"><b> {{ gTotalBrut|number_format(2, ',', ' ') }} </b></td>
+                <td class="no-saut"><b> {{ gTotalAvantage|number_format(2, ',', ' ') }} </b></td>
+                <td class="no-saut"><b> {{ gTotalCnaps|number_format(2, ',', ' ') }} </b></td>
+                <td class="no-saut"><b> {{ gTotalOstie|number_format(2, ',', ' ') }} </b></td>
+                <td class="no-saut"><b> {{ gTotalRevenuImposable|number_format(2, ',', ' ') }} </b></td>
+                <td class="no-saut"><b> {{ gTotalIrsaBrut|number_format(2, ',', ' ') }} </b></td>
+                <td ><b> {{ gTotalEnfant }} </b></td>
+                <td ><b> {{ gTotalDeductionEnfant|number_format(2, ',', ' ') }} </b></td>
+                <td class="no-saut"><b> {{ gTotalIrsa|number_format(2, ',', ' ') }} </b></td>
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div >
+    <br><br>
+    <div style="margin-left: 1050px">
+
+        <p>A Tomamasina,
+            le
+            {{ "now"|date('d') }} {{ "now"|date('m')|monmois }} {{ "now"|date('Y') }}
+        </p>
+        Cachet, signature et titre
+    </div>
+
+
+
+
+    <br>
+
+
+</div>
+
+</body>
+</html>

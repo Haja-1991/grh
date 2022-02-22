@@ -1,0 +1,4 @@
+services:
+#    presence.example:
+#        class: PresenceBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]

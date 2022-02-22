@@ -1,0 +1,204 @@
+{% extends 'base.html.twig' %}
+{% block titre %}GRAPH ABSENCE{% endblock %}
+
+{% block stylesheets %}
+
+    {% include '@Presence/comptePresence/style_card.css.twig' %}
+
+{% endblock %}
+
+
+
+
+{% block body %}
+    {% set prec = annee-1 %}
+
+
+    {% set suiv = annee+1 %}
+
+    <h1 class="text-primary text-center"><a href="{{ path('absence_index') }}">Statistique d'absence</a></h1>
+    <hr>
+    <div class="row">
+    <div class="col-md-6">
+        <ul class="pagination align-content-center ">
+            <li class="page-item"><a class="page-link" href="#" data-id="{{ prec }}" id="prec"> <i class="fa fa-arrow-left" aria-hidden="true"></i> <label id="vprec">{{ prec }}</label></a></li>
+            <li class="page-item active" style="z-index: -2;"><a id="encours" data-id="{{ annee }}" class="page-link" href="#">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>   <label id="vencours">{{ annee }}</label></a></li>
+            <li class="page-item"><a   class="page-link" href="#"  data-id="{{ suiv }}" id="suiv"><label id="vsuiv">{{ suiv }}</label> <i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+
+    </div>
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="center-block text-center">
+                <h3 class="text-danger"></h3>
+                <div id="piechart_3d" ></div>
+
+            </div>
+            <br>
+
+
+
+        </div>
+
+
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {#SCRIPT DE L'AUTEUR TABLEAU#}
+    <script>
+        hhh = $(window).height();
+
+        maTable = hhh - 375;
+
+        $('#maTable').height(maTable);
+
+    </script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+    <script type="text/javascript">
+
+        $(function() {
+            google.charts.load("current", {packages:["corechart"]});
+            google.charts.setOnLoadCallback(drawChart);
+
+            // Callback that creates and populates a data table,
+            // instantiates the pie chart, passes in the data and
+            // draws it.
+
+            function drawChart()
+            {
+                var jsonData =null;
+                 jsonData = $.ajax({
+                    url: "{{ path('graph_datas') }}",
+                    type: "GET",
+                    dataType: 'json',
+                    async: false,
+                    success: function(data) {
+                        jsonData = data;
+                    }
+                }).responseText
+
+                //var data = google.visualization.arrayToDataTable(jsonData);
+                    var data1 = JSON.parse(jsonData);
+               console.log(data1);
+
+
+                var data = google.visualization.arrayToDataTable(data1);
+                var options = {
+
+                    pieHole: 0.3,
+                    width:1200,
+                    height:500,
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+                chart.draw(data, options);
+
+            }
+
+
+        });
+
+
+    </script>
+
+    <script type="text/javascript">
+
+       $('#suiv').click(function () {
+
+           graph($('#suiv').attr("data-id"));
+
+           var encours =$('#encours').attr("data-id");
+           var suiv= $('#suiv').attr("data-id");
+
+           $('#suiv').attr("data-id",eval(suiv)+1);
+           $('#vsuiv').html(eval(suiv)+1);
+
+           $('#vencours').html(suiv);
+
+           $('#encours').attr("data-id",suiv);
+           $('#vprec').html(eval(encours));
+
+           $('#prec').attr("data-id",eval(encours));
+
+
+       });
+
+       $('#prec').click(function () {
+
+           graph($('#prec').attr("data-id"));
+
+           var encours =$('#encours').attr("data-id");
+           var prec= $('#prec').attr("data-id");
+
+           $('#prec').attr("data-id",prec-1);
+           $('#vprec').html(prec-1);
+
+           $('#vencours').html(prec);
+
+           $('#encours').attr("data-id",prec);
+           $('#vsuiv').html(eval(prec)+1);
+
+           $('#suiv').attr("data-id",eval(prec)+1);
+
+       });
+
+      function graph(param) {
+          google.charts.load("current", {packages:["corechart"]});
+          google.charts.setOnLoadCallback(drawChart);
+
+          // Callback that creates and populates a data table,
+          // instantiates the pie chart, passes in the data and
+          // draws it.
+
+          function drawChart()
+          {
+              var jsonData =null;
+              var annee =param;
+              jsonData = $.ajax({
+                  url: "{{ path('graph_datas') }}",
+                  type: "GET",
+                  data: "annee=" + annee ,
+                  dataType: 'json',
+                  async: false,
+                  success: function(data) {
+                      jsonData = data;
+
+                  }
+              }).responseText;
+
+
+              var data1 = JSON.parse(jsonData);
+
+              if( data1.length==1){
+                  $("#piechart_3d").html( '<h3 class="text-right text-danger"> Aucune donnée</h3>');
+
+              }
+              else
+              {
+                  var data = google.visualization.arrayToDataTable(data1);
+                  var options = {
+
+                      pieHole: 0.3,
+                      width:1200,
+                      height:500,
+                  };
+
+                  var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+                  chart.draw(data, options);
+              }
+
+          }
+
+
+      }
+    </script>
+{% endblock %}

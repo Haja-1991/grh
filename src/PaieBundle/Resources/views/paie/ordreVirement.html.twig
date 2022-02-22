@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        div#bandeau {
+            width: 1000px;
+            height:250px;
+
+
+        }
+        div#contenu {
+            width:1000px;
+            height:400px;
+
+
+        }
+        div#piedpage {
+            width:1000px;
+            height:50px;
+
+
+        }
+        div#gauche {
+            float: left;
+            width:500px;
+            height:50px;
+
+
+        }
+        div#droit {
+            float: right;
+            width:360px;
+            height:50px;
+
+
+        }
+        div#titre1 {
+            float: left;
+            width:500px;
+            height:150px;
+
+
+        }
+        div#titre2 {
+            float: right;
+            width:500px;
+            height:150px;
+
+
+        }
+        div#Scontenu {
+
+            width:920px;
+            height:auto;
+
+
+            margin-left: 20px;
+
+
+        }
+        img {
+            border: 1px solid #ddd;
+
+            margin-left: 45px;
+            margin-top: 45px;
+
+        }
+        div#sgauche {
+            margin-left: 0px;
+            border: 1px solid black;
+            margin-top: 30px;
+            width:350px;
+            text-align:center;
+            padding-top: 10px;
+            height:auto;
+        }
+        div#sdroit {
+            border: 1px solid black;
+            width:300px;
+            text-align:center;
+            padding-top: 10px;
+            height:50px;
+            margin-top: 125px;
+
+        }
+        div#stitre1 {
+            border: 1px solid black;
+            width:400px;
+            margin-left: 30px;
+
+            font-style: italic;
+        }
+        p{
+            line-height: 1;
+        }
+        h2{
+            margin: 10px;
+        }
+        div#stitre2 {
+
+            margin-top: 50px;
+            margin-left: 20px;}
+
+        table {
+            border-collapse:collapse;
+            border-style:solid;
+            border-color:black;
+            width:920px;
+            text-align: left;
+        }
+        #footer {
+            border:0px;
+            width:920px;
+
+        }
+        td{
+            height:50px;
+            padding-left: 10px;
+            text-align:left;
+            white-space:nowrap;
+        }
+        th{text-align:center;}
+
+
+    </style>
+</head>
+<body>
+<div id="bandeau">
+
+
+    <div id="gauche">
+        <br>
+
+        <div id="sgauche">
+
+            <p style="display:inline;font-size:1.2em;"> DENOMINATION : <b>{{ societe.raisonSocial|upper }}</b> </p>
+{#            <h3 style="display:inline"> {{ societe.nom }}</h3>#}
+        </div>
+        <h2 style="margin-top:30px;width:270px;border-left:hidden;border-right:hidden;border-top:hidden;border-bottom:1px solid black">ORDRE DE VIREMENT </h2>
+        <div style="margin-top:50px;margin-left:10px">
+            <b style="font-size:1.2em;">O.V réf. : {{ societe.abreviation }}/{{ 'now'|date('y') }}-0{{ 'now'|date('m') }} </b>
+
+        </div>
+
+    </div>
+    <div id="droit">
+        <p style="font-size:1.2em;">
+            Antananarivo, le <b >{{ 'now'|date('d/m/Y') }}</b>
+        </p>
+        <div id="sdroit">
+            <p style="display:inline;font-size:1.2em;"> BANQUE :</p>
+            <h3 style="display:inline"> {{ societe.banque }} </h3>
+        </div>
+    </div>
+</div>
+<div id="contenu">
+    <br>
+    <div style="margin-left:10px;font-size:1.2em;">
+        Par le débit de notre compte <b>{{ societe.compteBanquaire }}</b>, nous vous prions de bien vouloir effectuer les  opérations </br>
+        ci-dessous :
+
+    </div>
+    <br>
+    <div id="Scontenu">
+        <table border="1">
+            <thead>
+            <tr>
+                <th>N°</th>
+                <th>BENEFICIAIRE</th>
+                <th>N° DE COMPTE</th>
+                <th>BANQUE</th>
+                <th>MONTANT</th>
+                <th>OBJET</th>
+            </tr>
+
+            </thead>
+            <tbody>
+            {% set i =0 %}
+            {% set totalMontant =0 %}
+            {% for liste in listes %}
+                {%  set i =i+1%}
+                {%  set montant = liste.totalCredit-liste.totalDebit %}
+
+                <tr>
+                    <td style="text-align: center">
+                        {{ i }}
+                    </td>
+                    <td>
+                        {{ liste.beneficiaire }}
+                    </td>
+                    <td>
+                        {{ liste.numero }}
+                    </td>
+                    <td>
+                        {{ liste.banque }}
+
+                    </td>
+                    <td style="text-align:right; white-space:nowrap;">
+                        {% set totalMontant =totalMontant+montant|arrondir %}
+
+                        {{ montant|arrondir|number_format('2', ',',' ') }}
+                    </td>
+                    <td>
+                        Virement salaire
+                    </td>
+                </tr>
+            {% endfor %}
+            {% set j=i+1 %}
+            {% for j in j..16-listes|length %}
+                <tr>
+                    <td style="text-align: center">
+                        {{ j }}
+                    </td>
+                    <td>
+
+                    </td>
+                    <td  style="text-align:right; white-space:nowrap;">
+
+                    </td>
+
+                    <td  style="text-align:right; white-space:nowrap;">
+
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+            <tfoot  style="border-left:hidden;">
+            <tr >
+
+                <th colspan="4" style="text-align:right; border-bottom: hidden">TOTAL :</th>
+                <td style="text-align:center; white-space:nowrap; ">
+                    <b>{{ totalMontant|number_format('2', ',',' ') }}</b>
+                </td>
+
+            </tr>
+            </tfoot>
+        </table>
+        <br>
+
+    </div>
+
+    <div style="margin-left:10px">
+        <p style="font-size:1.2em;">  Arrêté à la somme de :<b> {{ totalLettre }}  Ariary</b></p>
+
+        <p style="font-size:1.2em;margin-left:800px;margin-top:50px;padding:5px;width:100px;border:hidden;border-bottom:1px solid black;text-align:center"> Le Directeur</p>
+
+
+    </div>
+
+</div>
+<div id="piedpage">
+
+</div>
+</body>
+</html>

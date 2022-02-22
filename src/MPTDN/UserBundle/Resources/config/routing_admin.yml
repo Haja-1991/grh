@@ -1,0 +1,37 @@
+admin_homepage:
+    path:     /
+    defaults: { _controller: UserBundle:UserAdmin:index }
+
+admin_inscription:
+    path:     /inscrire
+    defaults: { _controller: UserBundle:UserAdmin:inscription }
+
+admin_user_modifier:
+    path:     /modifier/{id}
+    defaults: { _controller: UserBundle:UserAdmin:modifier }
+
+admin_user_modifier_role:
+  path:     /modifier/role/{id}
+  defaults: { _controller: UserBundle:UserAdmin:choixRole }
+
+admin_user_modifier_mdp:
+  path:     /modifier/mot-de-passe/{id}
+  defaults: { _controller: UserBundle:UserAdmin:modifierMDP }
+
+admin_user_supprimer:
+    path:     /supprimer/{id}
+    defaults: { _controller: UserBundle:UserAdmin:supprimer }
+    requirements:
+          id: \d+
+
+admin_user_activer:
+    path:     /activer/{id}
+    defaults: { _controller: UserBundle:UserAdmin:activer }
+    requirements:
+          id: \d+
+
+admin_user_desactiver:
+    path:     /desactiver/{id}
+    defaults: { _controller: UserBundle:UserAdmin:desactiver }
+    requirements:
+          id: \d+

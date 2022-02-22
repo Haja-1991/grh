@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1 class="text-primary">Vos Profils d'employés</h1>
+    <hr>
+
+    <div class="row">
+        {% for employe in listeEmploye %}
+            <div class="col-md-3 well center-block text-center">
+                <a href="{{ path('employe_voir', { 'slug' : employe.slug } ) }}">
+                    <img src="{{ asset('document/imagesEmployes/') }}{{ employe.imageUrl }}" alt="" class="img-circle" width="200" height="200">
+                    <h2>{{ employe.nomComplet }}</h2>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+
+
+{% endblock %}

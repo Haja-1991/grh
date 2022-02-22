@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Liste des Demandes{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/DataTables/datatables.css') }}">
+
+{% endblock %}
+
+
+{% block body %}
+    <div class="row">
+        <h1 class="text-primary">
+            Liste des Demandes de Permission/Congé
+        </h1>
+
+        {#{% if dateJour|date('Y-m-d')|monjour == 'samedi' %}#}
+            {#<hr>#}
+            {#<a href="{{ path('dcp_ajouter') }}" class="btn btn-primary btn-lg"><i class="fa fa-question"></i> Nouvelle Demande</a>#}
+        {#{% endif %}#}
+        <hr>
+        <a href="{{ path('dcp_ajouter') }}" class="btn btn-primary btn-lg"><i class="fa fa-question"></i> Nouvelle Demande</a>
+
+        {% if app.user.ifRole('ROLE_ADMIN') or app.user.ifRole('ROLE_GRH') %}
+             -|-
+            <a href="{{ path('dcp_indexMultiple') }}" class="btn btn btn-warning btn-lg">En attente de confirmation</a>
+        {% endif %}
+
+        <hr>
+
+
+        <table class="table table-striped" id="myTable">
+            <thead>
+            <tr>
+                <th class="text-center" width="25"></th>
+                <th class="text-center" >Date de la Demande</th>
+                <th class="text-center" >Nom</th>
+                <th class="text-center" >Date Début</th>
+                <th class="text-center" >Date Retour</th>
+                <th class="text-center" >Nombre de jour</th>
+                <th class="text-center" >Type</th>
+
+                <th class="text-center" >Etat</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for dcp in dcps %}
+                {% set couleur = '' %}
+                {% if dcp.etat == 'confirmer' or dcp.etat == "En attente de confirmation" %}
+                    {% set couleur = 'warning' %}
+                {% endif %}
+                {% if dcp.etat == 'confirmer' or dcp.etat == "En attente 2 eme confirmation" %}
+                    {% set couleur = 'warning' %}
+                {% endif %}
+
+                {% if dcp.etat == 'okok' or dcp.etat == 'Demande confirmée' %}
+                    {% set couleur = 'success' %}
+                {% endif %}
+
+                {% if dcp.etat == '2-confirmer' or dcp.etat == 'En attente de comptabilisation' %}
+                    {% set couleur = 'info' %}
+                {% endif %}
+
+                {% if dcp.etat == 'Retour (Demande Annulée)' or dcp.etat == 'Demande Refusée' %}
+                    {% set couleur = 'danger' %}
+                {% endif %}
+
+                <tr>
+                    <td class="text-center"><a href="{{ path('dcp_voir', { 'id' : dcp.id } ) }}" class="btn btn-default"><i class="fa fa-info-circle"></i></a></td>
+                    <td class="text-center">{{ dcp.dateDemande|date('d/m/Y') }}</td>
+                    <td class="text-left"><a href="{{ path('dcp_voir', { 'id' : dcp.id } ) }}"><img width="50" height="50" class="img-circle" src="{{ asset('document/imagesEmployes/') }}{{ dcp.employe.imageUrl }}" alt=""> {{ dcp.employe.nomComplet }}</a></td>
+                    <td class="text-center"><span class="hide">{{ dcp.dateDebut|date('Ymd') }}</span>{{ dcp.dateDebut|date('d/m/Y') }}</td>
+                    <td class="text-center">{{ dcp.dateRetour|date('d/m/Y') }}</td>
+                    <td class="text-center">{{ dcp.nombreJour }} jr</td>
+                    <td class="text-center">{{ dcp.type }}</td>
+
+                    <td class="text-center {{ couleur }}" >{{ dcp.etat }}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+    </div>
+
+
+    {#SORT DU TABLE#}
+    <script src="{{ asset('assets/DataTables/datatables.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable({
+                paging: false,
+                order: [[ 3, "desc" ]],
+                info: false,
+                language: {
+                    processing:     "Traitement en cours...",
+                    search:         "Rechercher&nbsp;:",
+                    lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix:    "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable:     "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first:      "Premier",
+                        previous:   "Pr&eacute;c&eacute;dent",
+                        next:       "Suivant",
+                        last:       "Dernier"
+                    },
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+        } );
+    </script>
+
+{% endblock %}

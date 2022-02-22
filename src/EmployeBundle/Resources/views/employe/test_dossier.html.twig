@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Liste Employé{% endblock %}
+
+{% block body %}
+    <h1 class="text-primary">Liste des Employés</h1>
+    <hr>
+
+    <table class="table-striped table" id="myTable">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Nom</th>
+                <th>Prénom(s)</th>
+                <th>Adresse</th>
+                <th>Poste</th>
+                <th>Contact</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tabEmploye in tabEmployes %}
+            {% set employe = tabEmploye.employe %}
+            <tr>
+                <td><a href="{{ path('employe_voir', { 'slug': employe.slug }) }}"><img src="{{ asset('document/imagesEmployes/') }}{{ employe.imageUrl }}" alt="" class="img-circle" width="50" height="50"></a></td>
+                <td><a  href="{{ path('employe_voir', { 'slug': employe.slug }) }}">{{ employe.nom }}</a></td>
+                <td>{{ employe.prenom }}</td>
+                <td>{{ employe.adresse }}</td>
+                <td>{{ employe.poste }}</td>
+                <td>{{ employe.contact }}</td>
+                <td>
+                    <ul>
+                        {% for erreur in tabEmploye.erreurs %}
+                            <li>{{ erreur }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+
+{% endblock %}

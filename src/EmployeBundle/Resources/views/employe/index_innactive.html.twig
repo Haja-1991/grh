@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Liste Employé désactivé{% endblock %}
+
+{% block body %}
+    <h1 class="text-danger">Liste des Employés désactivé</h1>
+    <h3>Les comptes suivants sont désactivés.. <br>Veuillez voir les détails pour la réactivation.</h3>
+    <hr>
+
+    <table class="table-striped table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Nom</th>
+                <th>Prénom(s)</th>
+                <th>Adresse</th>
+                <th>Poste</th>
+                <th>Contact</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for employe in employes %}
+            <tr>
+                <td><a href="{{ path('employe_voir', { 'slug': employe.slug }) }}"><img src="{{ asset('document/imagesEmployes/') }}{{ employe.imageUrl }}" alt="" class="img-circle" width="50" height="50"></a></td>
+                <td><a  href="{{ path('employe_voir', { 'slug': employe.slug }) }}">{{ employe.nom }}</a></td>
+                <td>{{ employe.prenom }}</td>
+                <td>{{ employe.adresse }}</td>
+                <td>{{ employe.poste }}</td>
+                <td>{{ employe.contact }}</td>
+                <td>
+                    <a href="{{ path('employe_voir', { 'slug': employe.slug }) }}" class="btn btn-default"><i class="fa fa-info-circle"></i> </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if not employes %}
+        <h5>Aucun résultat</h5>
+    {% endif %}
+
+    {% if not app.user.ifRole('ROLE_RH') or not app.user.ifRole('ROLE_PAIE') %}
+        <script>
+            $('.write').addClass('hide');
+        </script>
+    {% endif %}
+
+{% endblock %}

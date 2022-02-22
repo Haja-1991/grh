@@ -1,0 +1,187 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Formulaire Avance{% endblock %}
+
+{% block body %}
+<div >
+    <form action="#" method="post" autocomplete="off">
+
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Formulaire de Demande d'Avance Spécial:</h3>
+                </div>
+                <div class="modal-body ">
+
+                    <div>
+                        <div class="row">
+                            <div class="col-md-6 ">
+                                <div class="">
+                                    <label for="">Numéro de demande:</label>
+                                    <input readonly type="text" value="{{ num }}" class="form-control form-control-moyen" name="numero" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="">
+                                        <label for="reference">Employer:</label>
+                                        <input  list="employes" name="employe" id="employe" class="form-control form-control-moyen">
+                                        <datalist id="employes" disabled="on">
+                                            {% for employe in employes %}
+                                            <option value="{{ employe.nomComplet }}">
+                                                {% endfor %}
+                                        </datalist>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <div class="form-group">
+                                <label for="montant">Montant à prendre <b class="text-danger" id="err_montant"></b></label>
+                                <input required type="text" class="form-control" name="montant" id="montant"  />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="montantParMois">Montant à remboursser par mois <b class="text-danger" id="err_montantParMois"></b></label>
+                                <input required type="text" onkeyup="afficherValeurMois()" class="form-control" name="montantParMois" id="montantParMois"  />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 text-danger text-center">
+                            <h3 id="moisPaiement"></h3>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="reference" >Motif (facultatif):</label>
+
+                            <textarea name="desc" id="" cols="65" rows="5" required></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-lg" id="btn_valider">Envoyer la Demande</button>
+                    <a type="button" class="btn btn-default btn-lg" href="{{ path('listeAvanceSpeciale') }}">Annuler</a>
+                </div>
+            </div>
+
+        </div>
+        <input type="text" value="debit" class="hide" name="type">
+    </form>
+</div>
+
+{#TEST NOM EMPLOYE#}
+<script>
+    function testNomEmploye() {
+        var val=$("#employe").val();
+
+        var obj=$("#employes").find("option[value='"+val+"']");
+
+        if(obj !=null && obj.length>0){
+
+            return true;
+        }
+        else{
+            alert("Nom de l'employé non-reconnu"); // don't allow form submission
+            return false;
+        }
+    }
+
+    $('#btn_valider').click(function () {
+        return testNomEmploye();
+    });
+
+</script>
+
+<script>
+    function valeurParMois(){
+        var montant = $('#montant').val();
+        var parMois = $('#montantParMois').val();
+
+        return nbmois = montant / parMois;
+
+    }
+
+    function afficherValeurMois(){
+
+        nbmois = valeurParMois();
+
+        if(nbmois < 1){
+            $('#moisPaiement').text('Erreur! Vérifier les montants.')
+        }else {
+            $('#moisPaiement').text('Soit: '+Math.round(nbmois)+' mois')
+
+        }
+    }
+</script>
+
+{#<script src="{{ asset('assets/NumeralJs/numeral.js') }}"></script>#}
+{#<script>#}
+    {#// load a locale#}
+    {#numeral.register('locale', 'fr', {#}
+        {#delimiters: {#}
+            {#thousands: ' ',#}
+            {#decimal: '.'#}
+        {#},#}
+        {#abbreviations: {#}
+            {#thousand: 'k',#}
+            {#million: 'm',#}
+            {#billion: 'b',#}
+            {#trillion: 't'#}
+        {#},#}
+        {#ordinal : function (number) {#}
+            {#return number === 1 ? 'er' : 'ème';#}
+        {#},#}
+        {#currency: {#}
+            {#symbol: '€'#}
+        {#}#}
+    {#});#}
+
+    {#// switch between locales#}
+    {#numeral.locale('fr');#}
+
+    {#var myFormat = '0,0.00';#}
+
+    {#function vraiFormat(option){#}
+        {#var montant = $(option).val();#}
+
+        {#if(montant != ''){#}
+            {#montant = numeral(montant);#}
+
+            {#$(option).val(montant.format('0.00'));#}
+        {#}#}
+    {#}#}
+
+    {#function affichageFormat(option) {#}
+        {#var montant = $(option).val();#}
+        {#montant = numeral(montant);#}
+        {#$(option).val(montant.format(myFormat));#}
+    {#}#}
+{#</script>#}
+{#<script>#}
+    {#$('#montant').focusout(function () {#}
+        {#affichageFormat('#montant')#}
+    {#});#}
+
+    {#$('#montant').focusin(function () {#}
+        {#vraiFormat('#montant');#}
+    {#})#}
+
+    {#$('#montant').submit(function () {#}
+        {#vraiFormat('#montant')#}
+    {#})#}
+
+{#</script>#}
+
+{% endblock %}

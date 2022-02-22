@@ -1,0 +1,269 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Demande d'explication{% endblock %}
+
+{% block stylesheets %}
+
+    {% include '@Presence/comptePresence/style_card.css.twig' %}
+
+{% endblock %}
+
+{% block sidemenu %}{% endblock %}
+
+{% block container_sansmenu %}
+    <h1 class="text-primary text-center"><a href="{{ path('absence_index') }}">Explication/Justification d'Absence</a></h1>
+    <hr>
+    <div class="row">
+        <div class="col-md-3">
+
+
+            {% set lien_profil = path('employe_voir', { 'slug' : employe.slug }) %}
+
+            {% if not app.user.ifRole("ROLE_PAIE") %}
+                {% set lien_profil = "#" %}
+            {% endif %}
+
+            <br>
+            <div class="">
+
+                <div class="card hovercard">
+                    <div class="cardheader"></div>
+                    <div class="avatar">
+                        <img alt="" src="{{ asset('document/imagesEmployes/') }}{{ employe.imageUrl }}">
+                    </div>
+                    <div class="info">
+                        <div class="title">
+                            <a {% if  lien_profil != "#" %} target="_blank" {% endif %}  href="{{ lien_profil }}">{{ employe.nom }} {{ employe.prenom }}</a>
+                        </div>
+                        <div class="desc"><h4><b>Poste: </b> {{ employe.poste }}</h4></div>
+                        <div class="desc"><h4><b>Reste congé: </b> {{ comptePresence.resteConge }}</h4></div>
+                        <div class="desc"><h4><b>Addresse: </b> {{ employe.adresse }}</h4></div>
+                        <div class="desc"><h4><b>Contact: </b> {{ employe.contact }}</h4></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="center-block text-center">
+                <h3>Contrôle de la Direction:</h3>
+                {#{% if etat == 'Confirmer' or etat == 'Confirmer par vous' %}#}
+                    {#<h4 class="text-success"><b>Confirmé par: {{ absence.userConfirme.nom }}</b></h4>#}
+                {#{% elseif etat == 'Refuser' %}#}
+                    {#<h4 class="text-danger"><b>Refusé par: {{ absence.userRefuser.nom }}</b></h4>#}
+                    {#{% if absence.texteRefuser %}#}
+                        {#<h5>#}
+                            {#<span>Motif:</span>#}
+                            {#{{ absence.texteRefuser }}#}
+                        {#</h5>#}
+                    {#{% endif %}#}
+                    {#{% if app.user.ifRole('ROLE_ADMIN') %}#}
+                        {#<a href="{{ path('absence_accepter', { 'id' : absence.id } ) }}" class="btn btn-success btn-lg"><i class="fa fa-check"></i> Reconfirmer</a> <br> <br>#}
+
+                    {#{% endif %}#}
+                {#{% elseif app.user.ifRole('ROLE_ADMIN') %}#}
+                    {#<a href="{{ path('absence_accepter', { 'id' : absence.id } ) }}" class="btn btn-success btn-lg"><i class="fa fa-check"></i> Accepter</a> <br> <br>#}
+                    {#<button class="btn btn-danger btn-lg" data-toggle="modal" data-target="#ModalRefuser"><i class="fa fa-close"></i> Refuser</button>#}
+                {#{% else %}#}
+                    {#<h5 class="text-warning">#}
+                        {#{{ absence.etat }}#}
+                    {#</h5>#}
+                {#{% endif %}#}
+
+                {% if app.user.ifRole('ROLE_ADMIN') %}
+                    {% if absence.etat == 'Absence signalée' or absence.etat == 'Absence signalée' %}
+                        <a href="{{ path('absence_accepter', { 'id' : absence.id } ) }}" class="btn btn-success btn-lg"><i class="fa fa-check"></i> Accepter (Sans sanction)</a> <br> <br>
+                        <button class="btn btn-danger btn-lg" data-toggle="modal" data-target="#ModalRefuser"><i class="fa fa-close"></i> Refuser (avec sanction)</button>
+
+                    {% endif %}
+                    {% if absence.etat == 'Absence Justifiée' %}
+                        <h4 class="text-success"><b>Confirmé par: {{ absence.userConfirme.nom }}</b></h4>
+                    {% endif %}
+                    {% if absence.etat == 'Justification Refusée' %}
+                        <h4 class="text-danger"><b>Refusé par: {{ absence.userRefuser.nom }}</b></h4>
+                        {% if absence.texteRefuser %}
+                            <h5>
+                                <span>Motif:</span>
+                                {{ absence.texteRefuser }}
+                            </h5>
+                        {% endif %}
+                        {% if app.user.ifRole('ROLE_ADMIN') %}
+                            <a href="{{ path('absence_accepter', { 'id' : absence.id } ) }}" class="btn btn-success btn-lg"><i class="fa fa-check"></i> Reconfirmer (supprimer la sanction)</a> <br> <br>
+                        {% endif %}
+                    {% endif %}
+
+                {% else %}
+                    {% if absence.etat == 'Absence Justifiée' %}
+                        <h4 class="text-success"><b>Confirmé par: {{ absence.userConfirme.nom }}</b></h4>
+                    {% endif %}
+                    {% if absence.etat == 'Justification Refusée' %}
+                        <h4 class="text-danger"><b>Refusé par: {{ absence.userRefuser.nom }}</b></h4>
+                        {% if absence.texteRefuser %}
+                            <h5>
+                                <span>Motif:</span>
+                                {{ absence.texteRefuser }}
+                            </h5>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                {% if app.user.ifRole('ROLE_RH')%}
+                    <br>
+                    <br>
+                    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#ModalModifier"><i class="fa fa-edit"></i> Modifier </button>
+
+                    <button class="btn btn-warning btn-lg" data-toggle="modal" data-target="#ModalDelete"><i class="fa fa-trash"></i> Supprimer </button>
+
+                {% endif %}
+
+            </div>
+            <br>
+
+            <div class="well">
+                <h2 class="text-center"><ins>Information sur l'absence</ins></h2>
+                <br>
+                <h4>- <b>Date de début:</b> {{ absence.dateDebut|date('d/m/Y') }}</h4>
+                <h4>- <b>Date de retour:</b> {{ absence.dateRetour|date('d/m/Y') }}</h4>
+                <h4>- <b>Nombre de jour:</b> {{ absence.nombreJour }} jour(s)</h4>
+                {% if absence.motif %}
+                    <h4>- <b>Motif:</b> {{ absence.motif|nl2br }}</h4>
+                {% endif %}
+
+                <p class="text-right">Signaler par: <mark>{{ absence.userCreer.nom }}</mark></p>
+            </div>
+
+        </div>
+        <div class="col-md-3 ">
+            {% include '@Document/document/file_manager.html.twig' %}
+
+            <style>
+                .file-box {
+                    width: 140px;
+                }
+
+                .my_file{
+                    height: 185px;
+                }
+            </style>
+        </div>
+
+
+    </div>
+
+    {#Modal UPLOAD #}
+    <div class="modal fade " id="modalUpload" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content ">
+                <form action="{{ path('absence_upload_fichier', { 'id' : absence.id }) }}" method="post" autocomplete="off" enctype="multipart/form-data">
+                    <div class="modal-header" style="background-color: #e9e9e9">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title text-danger"><i class="fa fa-minus-circle"></i> Ajouter Pièce jointe</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row " >
+                            <div class="col-md-offset-2 col-md-8 text-center">
+                                <div class="form-group">
+                                    <label for="nomUpload">Nom:</label>
+                                    <input type="text" name="nom" id="nomUpload" class="form-control" required="required">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="fichierUpload">Fichier:</label>
+                                    <input type="file" name="fichier" id="fichierUpload" class="form-control" required="required">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <input type="submit" value="Enregistrer" class="btn btn-danger" id="enregistrer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal REFUSER -->
+    <div class="modal fade" id="ModalRefuser" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content brd modal-lg">
+                <form action="{{ path('absence_refuser', { 'id': absence.id }) }}" method="post" autocomplete="off">
+                    <div class="modal-header" style="background-color: #e9e9e9">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title text-danger"><i class="fa fa-warning"></i> Refuser la Justification</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <div class="row">
+                                <div class="col-sm-offset-3 col-md-offset-3 col-lg-offset-3 col-lg-6 col-md-6">
+                                    <label for="">Motif du refus:</label>
+                                    <textarea class="form-control" name="texte_refuser" rows="10"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <input type="submit" value="Confirmer" class="btn btn-danger">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal SUPPRIMER-->
+    <div class="modal fade"  id="ModalDelete" role="dialog">
+        <form action="" method="post">
+
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"> </button>
+                        <h4 class="modal-title"><i class="fa fa-info-circle"></i> information </h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div>
+                            <h3 class="text-primary ">Souhaitez vous supprimer cette information !</h3>
+
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{{ path('absence_supprimer',{'id':absence.id}) }}" class="btn-lg btn-danger">Valider</a>
+                        <button class="btn-lg btn-default" data-dismiss="modal">Annuler</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+    {#MODAL MODIFIER ABSENCE#}
+    {% include '@Presence/Absence/modalModifierAbsence.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+
+    {#SCRIPT DE L'AUTEUR TABLEAU#}
+    <script>
+        hhh = $(window).height();
+
+        maTable = hhh - 375;
+
+        $('#maTable').height(maTable);
+    </script>
+
+
+    <script src="{{ asset('assets/table_fix_header/table.js') }}"></script>
+{% endblock %}

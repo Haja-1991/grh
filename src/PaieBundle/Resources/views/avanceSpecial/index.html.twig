@@ -1,0 +1,131 @@
+    {% extends 'base.html.twig' %}
+{% block titre %}Liste Employé{% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" href="{{ asset('assets/DataTables/datatables.css') }}">
+    <h1 class="text-success text-center">Liste des Avances Spéciales </h1>
+    <hr>
+
+    {% if app.user.ifRole('ROLE_ADMIN') %}
+        <div class="row">
+            <ul class="list-inline">
+                <li>
+                    <a  href="{{ path('ajouter_avancespeciale') }}" class="btn btn-block btn-lg btn-info " >  Créer Avance Spéciale</a>
+                </li>
+                <li>
+                    <a  href="{{ path('faire_demande_avancespeciale') }}" class="btn btn-block btn-lg btn-primary " >  Faire une Demande Avance Spéciale</a>
+                </li>
+            </ul>
+        </div>
+        <hr>
+    {% endif %}
+
+    {% if demandeAvanceSpecials|length > 0 %}
+        <h3 class="text-danger">Demande d'avance spécial:</h3>
+        <table class="table table-striped">
+            {% for demandeAvanceSpecial in demandeAvanceSpecials %}
+
+                {% set s =(demandeAvanceSpecial.montant / demandeAvanceSpecial.parMois) %}
+                <tr>
+                    <td class="text-center">
+                        <img src="{{ asset('document/imagesEmployes/') }}{{ demandeAvanceSpecial.empoye.imageUrl }}" alt="" class="img-circle" width="50" height="50">
+                    </td>
+                    <td><a href="{{ path('avanceSpeciel_detail', { 'id' : demandeAvanceSpecial.id }) }}">{{ demandeAvanceSpecial.numero }}</a></td>
+                    <td class="text-center"> <a href="{{ path('avanceSpeciel_detail', { 'id' : demandeAvanceSpecial.id }) }}">{{ demandeAvanceSpecial.empoye.nomComplet }}</a></td>
+                    <td class="text-center">{{ demandeAvanceSpecial.date|date('d/m/Y') }}</td>
+                    <td class="text-right">Montant demandé: {{ demandeAvanceSpecial.montant|number_format(2, ',', ' ') }}</td>
+                    <td class="text-right">Pour {{ s|round }} mois</td>
+                    <td class="alert-warning text-center">{{ demandeAvanceSpecial.etatDemande }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <hr>
+        <h3 class="text-primary">Liste des avances spéciales en cour:</h3>
+
+    {% endif %}
+
+    <table class="table-striped table" id="myAvanceSpecial">
+        <thead>
+        <tr>
+            <th class="text-center">Photo</th>
+            <th class="text-center">Nom et Prénom</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Montant</th>
+            <th class="text-right">Somme Rembourssée</th>
+            <th class="text-center">Reste à payer</th>
+            <th class="text-center">Reste tranche</th>
+            <th></th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for avanceSpecial in avanceSpecials %}
+
+            {% set reste = avanceSpecial.montant - avanceSpecial.sommePaier %}
+            {% if avanceSpecial.parMois == 0 %}
+                {% set resteTranche = reste / 1  %}
+            {% else %}
+                {% set resteTranche = reste / avanceSpecial.parMois %}
+            {% endif %}
+            
+            
+
+            <tr>
+                <td class="text-center">
+                    <img src="{{ asset('document/imagesEmployes/') }}{{ avanceSpecial.empoye.imageUrl }}" alt="" class="img-circle" width="50" height="50">
+                </td>
+                <td class="text-center"> <a href="{{ path('avanceSpeciel_detail', { 'id' : avanceSpecial.id }) }}">{{ avanceSpecial.empoye.nomComplet }}</a></td>
+                <td class="text-center">{{ avanceSpecial.date|date('d/m/Y') }}</td>
+                <td class="text-right">{{ avanceSpecial.montant|number_format(2, ',', ' ') }}</td>
+                <td class="text-right">{{ avanceSpecial.sommePaier|number_format(2, ',', ' ') }}</td>
+                <td class="text-right">{{ reste|number_format(2, ',', ' ') }}</td>
+                <td class="text-center">{{ resteTranche|round }} mois</td>
+                <td style="width: 100px">
+                    {% set s =(avanceSpecial.sommePaier / avanceSpecial.montant)*100 %}
+
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                             style="width:{{ s }}%">
+                            {{ s|round }}%
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {#SORT DU TABLE#}
+    <script src="{{ asset('assets/DataTables/datatables.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#myAvanceSpecial').DataTable({
+                paging: false,
+                info: false,
+                language: {
+                    processing:     "Traitement en cours...",
+                    search:         "Rechercher&nbsp;:",
+                    lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix:    "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable:     "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first:      "Premier",
+                        previous:   "Pr&eacute;c&eacute;dent",
+                        next:       "Suivant",
+                        last:       "Dernier"
+                    },
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+        } );
+    </script>
+
+{% endblock %}

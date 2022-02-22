@@ -1,0 +1,61 @@
+{% if (app.user.ifRole('ROLE_ADMIN' or app.user.ifRole('ROLE_PAIE'))) and demande.etat == "En attente de comptabilisation"  %}
+    <script>
+
+        // initialisation des caisses
+        $.post("http://{{ servIP }}/FATEMI/web/api/grh/liste-caisse",
+            {
+                username: "{{ app.user.username }}"
+            },
+            function(result){
+                listeCaisse = jQuery.parseJSON(result);
+                // console.log(listeCaisse);
+
+                $.each(listeCaisse, function( key, caisse ) {
+                    console.log(caisse);
+
+                    $('#caisse_debiter').append("<option value='"+caisse['nom']+"'>"+caisse['nom']+" - "+"("+caisse['solde']+")"+"</option>");
+
+
+                });
+            }
+        );
+
+        var var_btn = 0;
+
+        var retour = false;
+        $('#btnComptabiliser').click(function () {
+            var_btn = var_btn + 1;
+            var nom_caisse = $('#caisse_debiter').children("option:selected").val();
+
+            if(var_btn == 1){
+
+                $.post("http://{{ servIP }}/FATEMI/web/api/grh/test",
+                    {
+                        username: "{{ app.user.username }}",
+                        caisse: nom_caisse,
+                        num_avance: "demande_dpc",
+                        montant: "{{ demande.montant }}",
+                        employe: "{{ demande.empoye.nomComplet }}",
+
+                    },
+                    function(result){
+
+                        if(result){
+                            console.log(result);
+
+                            retour = true;
+
+                            $('#btnComptabiliser').click();
+                        }
+                    }
+                );
+            }
+        });
+
+        $('#btnComptabiliser').click(function () {
+            return retour;
+        });
+
+
+    </script>
+{% endif %}

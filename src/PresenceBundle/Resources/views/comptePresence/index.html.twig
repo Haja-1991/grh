@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Liste Employé - Gestion RH{% endblock %}
+
+{% block body %}
+    <h1 class="text-primary">Liste des Employés</h1>
+    <hr>
+
+    <ul class="list-inline">
+        <li>
+            <a href="{{ path('absence_index') }}" class="btn btn-warning btn-lg">Liste des Absences</a>
+        </li>
+        <li>
+            {% if app.user.ifRole('ROLE_ADMIN') %}
+                <a href="{{ path('compte_presence_modifierResteCongé') }}" class="btn btn-danger btn-lg">Modifier reste congé</a>
+            {% endif %}
+        </li>
+    </ul>
+
+
+    <table class="table table-striped " id="myTable">
+        <thead>
+        <tr class="text-center">
+            <th></th>
+            <th>Matricule</th>
+            <th>Nom</th>
+            <th>Poste</th>
+            <th>Adresse</th>
+            <th>Reste congé</th>
+            <th>Nombre retard</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for employe in employes %}
+            <tr >
+                <td>
+                    <strong class="hide">
+                        {% if employe.matricul %}
+                            1
+                        {% else %}
+                            0
+                        {% endif %}
+                    </strong>
+                    <a href="{{ path('compte_employe_voir', { 'slug' : employe.comptePresence.slug }) }}"><img src="{{ asset('document/imagesEmployes/') }}{{ employe.imageUrl }}" alt="" class="img-circle" width="50" height="50"></a>
+                </td>
+                <td>{{ employe.matricul }}</td>
+                <td><a  href="{{ path('compte_employe_voir', { 'slug' : employe.comptePresence.slug }) }}">{{ employe.nom }} {{ employe.prenom }}</a></td>
+                <td>{{ employe.poste }}</td>
+                <td>{{ employe.adresse }}</td>
+                <td>{{ employe.comptePresence.resteConge }}</td>
+                <td>{{ employe|nbrRetard() }}</td>
+                <td>
+                    <a href="{{ path('compte_employe_voir', { 'slug' : employe.comptePresence.slug }) }}" class="btn btn-default"><i class="fa fa-bar-chart-o"></i> </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {#SORT DU TABLE#}
+    <link rel="stylesheet" href="{{ asset('assets/DataTables/datatables.css') }}">
+    <script src="{{ asset('assets/DataTables/datatables.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable({
+                paging: false,
+                info: false,
+                order: [ [0, "desc"], [1, "asc"] ],
+                language: {
+                    processing:     "Traitement en cours...",
+                    search:         "Rechercher&nbsp;:",
+                    lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix:    "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable:     "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first:      "Premier",
+                        previous:   "Pr&eacute;c&eacute;dent",
+                        next:       "Suivant",
+                        last:       "Dernier"
+                    },
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+        } );
+    </script>
+
+{% endblock %}
+

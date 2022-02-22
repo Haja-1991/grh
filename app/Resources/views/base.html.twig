@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block titre %}Gestion RH{% endblock %}</title>
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/sidemenu.css') }}">
+    {% block stylesheets %}{% endblock %}
+    <style>
+        .btn{
+            border-radius: 0%;
+        }
+
+        .modal-content{
+            border-radius: 0%;
+        }
+
+        .form-control{
+            border-radius: 0%;
+        }
+
+        .well{
+            border-radius: 0%;
+        }
+    </style>
+
+    {#CSS DATEPICKER#}
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.css') }}">
+    <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+
+    {#JS DATEPICKER#}
+    <script src="{{ asset('assets/js/moment-with-locales.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-datetimepicker.js') }}"></script>
+
+    {#SCRIPT CONTRAINTE DE SAISIE#}
+    <script src="{{ asset('assets/js/input_constraint.js') }}"></script>
+
+    {#----------------NUMERAL JS----------------#}
+    <script src="{{ asset('assets/NumeralJs/numeral.js') }}"></script>
+    <script src="{{ asset('assets/NumeralJs/numeralByAllin.js') }}"></script>
+
+</head>
+<body>
+
+
+<nav class="navbar navbar-default navbar-fixed-top" style="margin-bottom: 0px; z-index: 1">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{ path('historique_global_homepage') }}" style='font-family: "Times New Roman", Times, serif; font-size: 26px'><b>Gestion RH <img src="{{ asset('images/logo_min.jpg') }}" alt="" width="75" height="35"></b>
+
+            </a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li style="margin-right: 10px; margin-top: 5px"><h4>Connecter en tant que: <kbd>{{ app.user.nom }} - {{ app.user.username }}</kbd></h4></li>
+            <li><a href="{{ path('fos_user_security_logout') }}" class="btn btn-danger" style="color: #020202; .hover{color: #000} ;"><i class="fa fa-sign-out"></i> Déconnexion</a></li>
+        </ul>
+    </div>
+</nav>
+
+{% block sidemenu %}
+<div class="row">
+    <!-- uncomment code for absolute positioning tweek see top comment in css -->
+    <!-- <div class="absolute-wrapper"> </div> -->
+    <!-- Menu -->
+
+        <div class="side-menu" style="z-index: 1">
+
+            <nav class="navbar navbar-default" role="navigation">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <div class="brand-wrapper">
+                        <!-- Hamburger -->
+                        <button type="button" class="navbar-toggle">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+
+                        <!-- Brand -->
+                        <div class="brand-name-wrapper">
+                            <a class="navbar-brand" href="{{ path('historique_global_homepage') }}" style='font-family: "Times New Roman", Times, serif; font-size: 26px'>
+                                <b>Gestion RH <img src="{{ asset('images/logo_min.jpg') }}" alt="" width="75" height="35"></b>
+
+                            </a>
+                        </div>
+
+                        <!-- Search -->
+                        <a data-toggle="collapse" href="#search" class="btn btn-default" id="search-trigger">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </a>
+
+                        <!-- Search body -->
+                        <div id="search" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <form class="navbar-form" role="search">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Recherche">
+                                    </div>
+                                    <button type="submit" class="btn btn-default "><span class="glyphicon glyphicon-ok"></span></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Main Menu -->
+                <div class="side-menu-container">
+                    <ul class="nav navbar-nav" style="font-size: 17px">
+
+                        <li><a href="{{ path('employe_mon_profil') }}"><span class="glyphicon glyphicon-user"></span> Mon Profil</a></li>
+
+                        {% if app.user.ifRole('ROLE_RH') %}
+                            <!-- Dropdown-->
+                            <li class="panel panel-default" id="dropdown">
+                                <a data-toggle="collapse" href="#dropdown-lvl1">
+                                    <span class="fa fa-clock-o"></span> Menu Présence <span class="caret"></span>
+                                </a>
+                                <!-- Dropdown level 1 -->
+                                <div id="dropdown-lvl1" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <ul class="nav navbar-nav">
+                                            <li><a href="{{ path('absence_index') }}"><i class="glyphicon glyphicon-warning-sign"></i>Liste Absence</a></li>
+                                            <li><a href="{{ path('dcp_index') }}"><i class="fa fa-hourglass-end"></i> Liste Demande Congé</a></li>
+                                            <li><a href="{{ path('compte_employe_index') }}"><i class="fa fa-list"></i> Journal présence employés</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endif %}
+
+                        {% if app.user.ifRole('ROLE_PAIE') %}
+                            <!-- Dropdown-->
+                            <li class="panel panel-default" id="dropdown">
+                                <a data-toggle="collapse" href="#dropdown-lvl2">
+                                    <span class="fa fa-money"></span> Menu Paie <span class="caret"></span>
+                                </a>
+                                <!-- Dropdown level 1 -->
+                                <div id="dropdown-lvl2" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <ul class="nav navbar-nav">
+                                            <li><a href="{{ path('liste_demande') }}"><i class="glyphicon glyphicon-adjust"></i>Liste Demande d'Avance</a></li>
+                                            {% if app.user.ifRole('ROLE_PAIE') %}
+                                                <li><a href="{{ path('listeAvanceSpeciale') }}"><i class="fa fa-star"></i> Liste Avance Spécial</a></li>
+                                            {% endif %}
+                                            <li><a href="{{ path('paie_homepage') }}"><i class="fa fa-money"></i> Journal paie employés</a></li>
+                                            <li><a href="{{ path('paie_reste_salaire') }}"><i class="fa fa-minus-circle"></i> Reste Salaire du mois</a></li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endif %}
+
+                        {% if app.user.ifRole('ROLE_RH') %}
+                            <li><a href="{{ path('employe_index') }}"><span class="fa fa-group"></span> Fiche des Employés</a></li>
+                        {% endif %}
+
+                        <li><a href="{{ path('calendrier_index') }}"><span class="fa fa-calendar"></span> Calendrier des Employés</a></li>
+
+                        {% if app.user.ifRole('ROLE_ADMIN') %}
+                            <!-- Dropdown-->
+                            <li class="panel panel-default" id="dropdown">
+                                <a data-toggle="collapse" href="#dropdown-lvl3">
+                                    <span class="fa fa-edit"></span> Menu Administrateur <span class="caret"></span>
+                                </a>
+                                <!-- Dropdown level 1 -->
+                                <div id="dropdown-lvl3" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <ul class="nav navbar-nav">
+                                            <li><a href="{{ path('admin_homepage') }}"><i class="fa fa-group"></i> Gestion Utilisateur</a></li>
+                                            <li><a href="{{ path('demande_configuration') }}"><i class="fa fa-server"></i> Nombre de confirmation</a></li>
+                                            {#<li><a href="#"><i class="fa fa-hourglass-end"></i> Liste des Sociétés</a></li>#}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endif %}
+
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </nav>
+        </div>
+
+
+    <!-- Main Content -->
+    <div class="container-fluid">
+
+        <div class="side-body">
+            <br><br><br>
+
+            {% block body %}
+                <h1> Main Content here </h1>
+                <pre> Resize the screen to view the left slide menu </pre>
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<div class="container-fluid">
+    <br><br><br>
+    {% block container_sansmenu %}
+    {% endblock %}
+
+</div>
+
+
+
+
+<script>
+    $(function () {
+        $('.navbar-toggle').click(function () {
+            $('.navbar-nav').toggleClass('slide-in');
+            $('.side-body').toggleClass('body-slide-in');
+            $('#search').removeClass('in').addClass('collapse').slideUp(200);
+
+            /// uncomment code for absolute positioning tweek see top comment in css
+            //$('.absolute-wrapper').toggleClass('slide-in');
+
+        });
+
+        // Remove menu for searching
+        $('#search-trigger').click(function () {
+            $('.navbar-nav').removeClass('slide-in');
+            $('.side-body').removeClass('body-slide-in');
+
+            /// uncomment code for absolute positioning tweek see top comment in css
+            //$('.absolute-wrapper').removeClass('slide-in');
+        });
+    });
+</script>
+
+{% if not app.user.ifRole('ROLE_PAIE') %}
+    <script>
+        $('.not_paie').addClass('hide');
+    </script>
+{% endif %}
+
+{% block javascripts %}{% endblock %}
+
+</body>
+</html>

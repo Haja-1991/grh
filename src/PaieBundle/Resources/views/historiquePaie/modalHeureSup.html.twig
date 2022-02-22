@@ -1,0 +1,84 @@
+<div class="modal fade"  id="ModalHeureSup" role="dialog">
+    <form action="{{ path('paie_heure_supp', {"slug" : compte_Paie.slug}) }}" method="post">
+
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Formulaire Heure Supplémentaire:</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="row">
+                            <div class='col-sm-6'>
+                                <div class="form-group">
+                                    <label for="">Date:</label>
+                                    <div class='input-group date' id='date_heureSup'>
+                                        <input type='datetime' class="form-control "  name="date_heureSup" required/>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <div class="">
+                                <label for="">Libellé:</label>
+                                <input type="text" class="form-control form-control-moyen" name="libelle" required value="Heure Supp. ">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <div class="">
+                                <label for="">Heure de travail:</label>
+                                <input type="text" class="form-control form-control-moyen" name="nb_heureSup" required >
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <div class="">
+                                <label for="">Majoration:</label>
+                                <div class="radio">
+                                    <label><input type="radio" name="majoration" value="30" checked>30%</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="majoration" value="40">40% - Repos hebdomadaire (Samedi)</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="majoration" value="50">50% - Travail de nuit occasionnel</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="majoration" value="100">100% - Jour férié et Dimanche</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" >Valider</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+
+    $('#date_heureSup').datetimepicker({
+        format: 'DD/MM/YYYY',
+        date: new Date()
+    });
+
+</script>

@@ -1,0 +1,180 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <link rel="stylesheet" href="{{ asset('assets/DataTables/datatables.css') }}">
+    <style>
+        /*RECHERCHE*/
+        .stylish-input-group .input-group-addon{
+            background: white !important;
+        }
+        .stylish-input-group .form-control{
+            border-right:0;
+            box-shadow:0 0 0;
+            border-color:#ccc;
+        }
+        .stylish-input-group button{
+            border:0;
+            background:transparent;
+        }
+    </style>
+
+    <h1 class="text-success text-center">Liste des Demandes:</h1> <br>
+
+    <hr>
+    <div class="row">
+        <ul class="list-inline">
+            <li>
+                <a href="{{ path('ajouter_avance') }}" class="btn btn-block btn-lg btn-warning " >  Nouvelle Demande d'Avance</a>
+            </li>
+            {% if app.user.ifRole('ROLE_ADMIN') %}
+                <li>
+                    <a href="{{ path('demandeAvance_multiple_confirmation') }}" class="btn btn btn-primary btn-lg">En attente de confirmation</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    <hr>
+
+    {% if (app.user.ifRole('ROLE_RH') or app.user.ifRole('ROLE_ADMIN')) and demandeAvanceSpecials|length > 0  %}
+        <h3 class="text-danger">Demande d'avance spécial:</h3>
+        <table class="table table-striped">
+            {% for demandeAvanceSpecial in demandeAvanceSpecials %}
+                {% set couleur = 'alert-warning' %}
+                {% if demandeAvanceSpecial.etatDemande == 'En attente de comptabilisation' %}
+                    {% set couleur = 'alert-info' %}
+                {% endif %}
+                
+                {% set s =(demandeAvanceSpecial.montant / demandeAvanceSpecial.parMois) %}
+                <tr>
+                    <td class="text-center">
+                        <img src="{{ asset('document/imagesEmployes/') }}{{ demandeAvanceSpecial.empoye.imageUrl }}" alt="" class="img-circle" width="50" height="50">
+                    </td>
+                    <td><a href="{{ path('avanceSpeciel_detail', { 'id' : demandeAvanceSpecial.id }) }}">{{ demandeAvanceSpecial.numero }}</a></td>
+                    <td class="text-center"> <a href="{{ path('avanceSpeciel_detail', { 'id' : demandeAvanceSpecial.id }) }}">{{ demandeAvanceSpecial.empoye.nomComplet }}</a></td>
+                    <td class="text-center">{{ demandeAvanceSpecial.date|date('d/m/Y') }}</td>
+                    <td class="text-right">Montant demandé: {{ demandeAvanceSpecial.montant|number_format(2, ',', ' ') }}</td>
+                    <td class="text-right">Pour {{ s|round }} mois</td>
+                    <td class="{{ couleur }} text-center">{{ demandeAvanceSpecial.etatDemande }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <hr>
+        <h3 class="text-primary">Liste des avances quinzaines:</h3>
+
+    {% endif %}
+
+    <form action="" method="post">
+        <div class="row">
+
+
+
+            <table class="table table-striped" id="myDemande">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th >Date </th>
+                    <th>Numéro</th>
+                    <th >Nom et prénom </th>
+                    <th class="text-right">Montant</th>
+                    <th class="text-center" >Etat </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for key, demande in demandes %}
+
+                    {% set couleur = '' %}
+                    {% set noir = '' %}
+                    {% if demande.etat == 'confirmer' or demande.etat == "En attente de confirmation" %}
+                        {% set couleur = 'warning' %}
+                    {% endif %}
+                    {% if demande.etat == 'confirmer' or demande.etat == "En attente 2 eme confirmation" %}
+                        {% set couleur = 'warning' %}
+                    {% endif %}
+
+                    {% if demande.etat == 'creation' or demande.etat == 'En cour de création'  %}
+                        {% set noir = 'dz' %}
+                    {% endif %}
+
+                    {% if demande.etat == 'okok' or demande.etat == 'Demande acceptée' %}
+                        {% set couleur = 'success' %}
+                    {% endif %}
+
+                    {% if demande.etat == '2-confirmer' or demande.etat == 'En attente de comptabilisation' %}
+                        {% set couleur = 'info' %}
+                    {% endif %}
+
+                    {% if demande.etat == 'Retour (Demande Annulée)' or demande.etat == 'Retour (Demande Refusée)' %}
+                        {% set couleur = 'danger' %}
+                    {% endif %}
+
+
+                    <tr>
+
+                        <td><img src="{{ asset('document/imagesEmployes/') }}{{ demande.empoye.imageUrl }}" alt="" class="img-circle" width="50" height="50"></td>
+
+                        <td style="text-align: center"><strong class="hide">{{ demande.date|date('Ymd') }}</strong>{{ demande.date|date('d/m/Y') }}</td>
+
+                        <td><a href="{{ path('formulaire_confirme',{ 'id' : demande.id}) }}"><b>{{ demande.numero }}</b></a></td>
+
+                        <td>{{ demande.empoye.nomComplet }}</td>
+
+                        <td style="text-align: right">{{ demande.montant|number_format(2, ',', ' ') }}</td>
+
+                        <td class="{{ couleur }} text-center" style="text-align: center;  {% if noir != "" %}background-color: #dddddd; {% endif %}">
+                            {{ demande.etat|trans }}
+                        </td>
+
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+    </form>
+
+    {#----------RIEN--------------#}
+    <div class="row">
+        <div class="col-lg-3" style="width: 250px; height: 500px; text-align: center">
+
+
+        </div>
+    </div>
+
+    {#SORT DU TABLE#}
+    <script src="{{ asset('assets/DataTables/datatables.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#myDemande').DataTable({
+                paging: false,
+                info: false,
+                order: [[ 1, "desc" ], [2, "desc"]],
+                language: {
+                    processing:     "Traitement en cours...",
+                    search:         "Rechercher&nbsp;:",
+                    lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix:    "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable:     "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first:      "Premier",
+                        previous:   "Pr&eacute;c&eacute;dent",
+                        next:       "Suivant",
+                        last:       "Dernier"
+                    },
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+        } );
+    </script>
+
+{% endblock %}

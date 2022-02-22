@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Societe list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Adresse</th>
+                <th>Contact</th>
+                <th>Nif</th>
+                <th>Stat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for societe in societes %}
+            <tr>
+                <td><a href="{{ path('societe_show', { 'id': societe.id }) }}">{{ societe.id }}</a></td>
+                <td>{{ societe.nom }}</td>
+                <td>{{ societe.adresse }}</td>
+                <td>{{ societe.contact }}</td>
+                <td>{{ societe.nif }}</td>
+                <td>{{ societe.stat }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('societe_show', { 'id': societe.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('societe_edit', { 'id': societe.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('societe_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

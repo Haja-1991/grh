@@ -1,0 +1,7 @@
+document_afficher:
+    path:     /voir/{url}
+    defaults: { _controller: DocumentBundle:Default:index }
+
+document_supprimer:
+    path:     /effacer
+    defaults: { _controller: DocumentBundle:Default:effacer }

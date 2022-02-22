@@ -1,0 +1,385 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Liste des Absences{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/DataTables/datatables.css') }}">
+
+{% endblock %}
+
+
+{% block body %}
+    <div class="row">
+        <h1 class="text-primary">
+            Liste des Absences et Retards
+        </h1>
+
+        {% if app.user.ifRole('ROLE_RH') or app.user.ifRole('ROLE_SEC') %}
+            <hr>
+            <button class="btn btn-lg btn-warning" data-toggle="modal" data-target="#modalSignalerAbsence"><i class="fa fa-warning"></i> Signaler Absence/Retard</button> -|-
+{#            <button class="btn btn-lg btn-danger" data-toggle="modal" data-target="#modalSignalerRetard"><i class="fa fa-hourglass-end"></i> Signaler Retard</button> -|-#}
+        {% endif %}
+        <a href="{{ path('graph_index') }}" class="btn btn-lg btn-primary"><i class="fa fa-bar-chart-o"></i> Statistique d'absence</a>
+
+        <hr>
+        {#<button class="btn btn-warning btn-lg"><i class="fa fa-warning"></i> Signaler une absence</button>#}
+        {#<hr>#}
+
+        <table class="table table-striped" id="myTable">
+            <thead>
+            <tr>
+                <th class="text-center" width="25"></th>
+                <th class="text-center" >Nom</th>
+                <th class="text-center" >Date Début</th>
+                <th class="text-center" >Date Retour</th>
+                <th class="text-center" >Intervalle</th>
+                <th class="text-center" >Poste occupé</th>
+                <th class="text-center" >Etat</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for absence in absences %}
+                <tr>
+                    <td class="text-center"><a href="{{ path('absence_voir', { 'id' : absence.id }) }}" class="btn btn-default"><i class="fa fa-info-circle"></i></a></td>
+                    <td class="text-left"><a href="{{ path('absence_voir', { 'id' : absence.id }) }}"><img width="50" height="50" class="img-circle" src="{{ asset('document/imagesEmployes/') }}{{ absence.employe.imageUrl }}" alt=""> {{ absence.employe.nomComplet }}</a></td>
+                    <td class="text-center"><span class="hide">{{ absence.dateDebut|date('Ymd') }}</span>{{ absence.dateDebut|date('d/m/Y') }}</td>
+                    <td class="text-center">{{ absence.dateRetour|date('d/m/Y') }}</td>
+                    <td class="text-center">{{ absence.nombreJour }} jr</td>
+                    <td class="text-center">{{ absence.employe.poste }}</td>
+                    <td class="text-center">{{ absence.etat }}</td>
+                </tr>
+            {% endfor %}
+
+            {% for retard in retards %}
+                <tr>
+                    <td class="text-center"><a href="{{ path('compte_employe_voir', { 'slug' : retard.employe.comptePresence.slug }) }}" class="btn btn-default"><i class="fa fa-info-circle"></i></a></td>
+                    <td class="text-left"><a href="{{ path('compte_employe_voir', { 'slug' : retard.employe.comptePresence.slug }) }}"><img width="50" height="50" class="img-circle" src="{{ asset('document/imagesEmployes/') }}{{ retard.employe.imageUrl }}" alt=""> {{ retard.employe.nomComplet }}</a></td>
+                    <td class="text-center"><span class="hide">{{ retard.dateHeure|date('Ymd') }}</span>{{ retard.dateHeure|date('d/m/Y') }}</td>
+                    <td class="text-center">{{ retard.dateHeure|date('à H:i') }}</td>
+                    <td class="text-center">{{ retard.dateHeure|retard }}</td>
+                    <td class="text-center">{{ retard.employe.poste }}</td>
+                    <td class="text-center">Retard</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+    </div>
+
+{#----------------------------------------------------------------------------------#}
+    {#MODAL SIGNALER ABSENCE#}
+
+    <div class="modal fade"  id="modalSignalerAbsence" role="dialog">
+        <form action="{{ path('absence_signaler_personne') }}" method="post">
+
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title text-warning"><i class="fa fa-warning"></i> Signaler Absence:</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="employe">Nom de l'employé: </label>
+                                        <input list="listEmploye" id="employe" class="form-control" name="employe" required>
+                                        <datalist id="listEmploye">
+                                            {% for employe in employes %}
+                                                <option value="{{ employe.nomComplet }}">{{ employe.poste }}</option>
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+                                </div>
+                                <div class='col-md-6'>
+                                    <div class="form-group">
+                                        <label for="date_debut_absence">Date de début:</label>
+                                        <div class='input-group date' id='_date_debut_absence'>
+
+                                            <input type='datetime' class="form-control date_absence" id="date_debut_absence"  name="date_debut_absence" required/>
+                                            <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                        </div>
+                                        <script>
+                                            $('#_date_debut_absence').datetimepicker({
+                                                format: 'DD/MM/YYYY',
+                                            }).on('dp.change', function () {
+                                                changementIntervalleAbsence();
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                                <div class='col-md-6'>
+                                    <div class="form-group">
+                                        <label for="date_retour_absence">Date de retour:</label>
+                                        <div class='input-group date' id='_date_retour_absence'>
+
+                                            <input type='datetime' class="form-control date_absence" id="date_retour_absence"  name="date_retour_absence" required/>
+                                            <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                        </div>
+                                        <script>
+                                            $('#_date_retour_absence').datetimepicker({
+                                                format: 'DD/MM/YYYY',
+                                            }).on('dp.change', function () {
+                                                changementIntervalleAbsence();
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="intervalle_absence">Intervalle (en jour):</label>
+                                    <input type="text" class="form-control only_float" name="intervalle_absence" id="intervalle_absence" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="motif_retard">Motif:</label>
+                                    <textarea id="motif_retard" class="form-control" name="motif_absence" rows="5"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-warning" id="enregistrer_absence" >Enregistrer</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    {#SCRIPT DE L'INTERVALLE DE DATE#}
+    <script>
+        function stringToDate(str_date) {
+            splitStr = str_date.split('/');
+
+            return dateConverted = new Date(splitStr[2], splitStr[1]-1, splitStr[0]);
+
+
+        }
+
+        function dateDiff(dateold, datenew)
+        {
+            var WNbJours = -1*(dateold.getTime() - datenew.getTime());
+            return Math.ceil(WNbJours/(1000*60*60*24));
+        }
+
+        function changementIntervalleAbsence() {
+            dt1 = $('#date_debut_absence').val();
+            dt2 = $('#date_retour_absence').val();
+
+            date_debut = stringToDate(dt1);
+            date_retour = stringToDate(dt2);
+
+            intervalle = dateDiff(date_debut, date_retour);
+
+            if(intervalle > 0){
+                $('#intervalle_absence').val(intervalle);
+            }
+
+            // console.log(dateDiff(date_debut, date_retour));
+        }
+
+    </script>
+
+{#----------------------------------------------------------------------------------#}
+    {#---------------------- MODAL RETARD ----------------------#}
+    <div class="modal fade"  id="modalSignalerRetard" role="dialog">
+        <form action="{{ path('retard_signaler_personne') }}" method="post">
+
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title text-danger"><i class="fa fa-hourglass-end"></i> Signaler Retard:</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="employe_2">Nom de l'employé: </label>
+                                        <input list="listEmploye_2" id="employe_2" class="form-control" name="employe" required>
+                                        <datalist id="listEmploye_2">
+                                            {% for employe in employes %}
+                                                <option value="{{ employe.nomComplet }}">{{ employe.poste }}</option>
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+                                </div>
+                                <div class='col-sm-6'>
+                                    <div class="form-group">
+                                        <label for="">Date et heure du Retard:</label>
+                                        <div class='input-group date' id='date_retard'>
+
+                                            <input type='datetime' class="form-control "  name="date_retard" required/>
+                                            <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                        </div>
+                                        <script>
+                                            $('#date_retard').datetimepicker({
+                                                format: 'DD/MM/YYYY HH:mm',
+                                                date: new Date()
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="">
+                                <div class="">
+                                    <label for="motif_retard">Motif:</label>
+                                    <textarea id="motif_retard" class="form-control" name="motif_retard" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger" id="enregistrer_retard" >Enregistrer</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{#----------------------------------------------------------------------------------#}
+
+    {#TEST NOM EMPLOYE#}
+    <script>
+        function testNomEmploye() {
+            var val=$("#employe").val();
+
+            var obj=$("#listEmploye").find("option[value='"+val+"']");
+
+            if(obj !=null && obj.length>0){
+
+                return true;
+            }
+            else{
+                alert("Nom de l'employé non-reconnu"); // don't allow form submission
+                return false;
+            }
+        }
+
+        $('#enregistrer_absence').click(function () {
+            return testNomEmploye();
+        });
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        function testNomEmploye_2() {
+            var val=$("#employe_2").val();
+
+            var obj=$("#listEmploye_2").find("option[value='"+val+"']");
+
+            if(obj !=null && obj.length>0){
+
+                return true;
+            }
+            else{
+                alert("Nom de l'employé non-reconnu"); // don't allow form submission
+                return false;
+            }
+        }
+
+        $('#enregistrer_retard').click(function () {
+            return testNomEmploye_2();
+        });
+
+
+    </script>
+
+    {#SCRIPT DE L'INTERVALLE DE DATE#}
+    <script>
+        function stringToDate(str_date) {
+            splitStr = str_date.split('/');
+
+            return dateConverted = new Date(splitStr[2], splitStr[1]-1, splitStr[0]);
+
+
+        }
+
+        function dateDiff(dateold, datenew)
+        {
+            var WNbJours = -1*(dateold.getTime() - datenew.getTime());
+            return Math.ceil(WNbJours/(1000*60*60*24));
+        }
+
+        function changementIntervalleAbsence() {
+            dt1 = $('#date_debut_absence').val();
+            dt2 = $('#date_retour_absence').val();
+
+            date_debut = stringToDate(dt1);
+            date_retour = stringToDate(dt2);
+
+            intervalle = dateDiff(date_debut, date_retour);
+
+            if(intervalle > 0){
+                $('#intervalle_absence').val(intervalle);
+            }
+
+            // console.log(dateDiff(date_debut, date_retour));
+        }
+
+    </script>
+
+    {#SORT DU TABLE#}
+    <script src="{{ asset('assets/DataTables/datatables.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable({
+                paging: false,
+                info: false,
+                order: [[ 2, "desc" ]],
+                language: {
+                    processing:     "Traitement en cours...",
+                    search:         "Rechercher&nbsp;:",
+                    lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix:    "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable:     "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first:      "Premier",
+                        previous:   "Pr&eacute;c&eacute;dent",
+                        next:       "Suivant",
+                        last:       "Dernier"
+                    },
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+        } );
+    </script>
+
+{% endblock %}

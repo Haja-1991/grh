@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Formulaire Avance Spécial{% endblock %}
+
+    {% block body %}
+        <div >
+            <form action="#" method="post" autocomplete="off">
+
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"></button>
+                            <h3 class="modal-title">Formulaire Avance Spécial :</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="">
+                                            <label for="reference">Employer:</label>
+                                            <input  list="employes" name="employe" id="employe" class="form-control form-control-moyen">
+                                            <datalist id="employes" disabled="on">
+                                                {% for employe in employes %}
+                                                    <option value="{{ employe.nomComplet }}">
+                                                {% endfor %}
+                                            </datalist>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 ">
+                                        <div class="form-group">
+                                            <label for="montant">Montant à prendre <b class="text-danger" id="err_montant"></b></label>
+                                            <input required type="text" class="form-control" name="montant" id="montant"  />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="montantParMois">A remboursser par mois <b class="text-danger" id="err_montantParMois"></b></label>
+                                            <input required type="text" onkeyup="afficherValeurMois()" class="form-control" name="montantParMois" id="montantParMois"  />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-6 text-danger text-center">
+                                        <h3 id="moisPaiement"></h3>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 ">
+                                        <div class="">
+                                            <label for="">Inclure ce mois dans le reboursement: <input type="checkbox" value="1" name="mois_inclu"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="reference">Motif (facultatif):</label>
+
+                                        <textarea name="desc" id="" cols="65" rows="5"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-danger" id="btn_valider">Valider</button>
+                                <a type="button" class="btn btn-default" href="{{ path('listeAvanceSpeciale') }}" >Annuler</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {#TEST NOM EMPLOYE#}
+        <script>
+            function testNomEmploye() {
+                var val=$("#employe").val();
+
+                var obj=$("#employes").find("option[value='"+val+"']");
+
+                if(obj !=null && obj.length>0){
+
+                    return true;
+                }
+                else{
+                    alert("Nom de l'employé non-reconnu"); // don't allow form submission
+                    return false;
+                }
+            }
+
+            function valeurParMois(){
+                var montant = $('#montant').val();
+                var parMois = $('#montantParMois').val();
+
+                return nbmois = montant / parMois;
+
+            }
+
+            function afficherValeurMois(){
+
+                nbmois = valeurParMois();
+
+                if(nbmois < 1){
+                    $('#moisPaiement').text('Erreur! Vérifier les montants.')
+                }else {
+                    $('#moisPaiement').text('Soit: '+Math.round(nbmois)+' mois')
+
+                }
+            }
+
+            $('#btn_valider').click(function () {
+
+                nbmois = valeurParMois();
+                if(nbmois < 1){
+                    alert('Erreur! Vérifier les montants.')
+                    return false;
+                }
+            });
+
+            $('#btn_valider').click(function () {
+                return testNomEmploye();
+            });
+        </script>
+
+    {% endblock %}
+

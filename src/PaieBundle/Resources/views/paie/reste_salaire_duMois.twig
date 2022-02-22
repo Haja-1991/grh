@@ -1,0 +1,248 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Reste Salaire du mois{% endblock %}
+
+{% block stylesheets %}
+
+    <link rel="stylesheet" href="{{ asset('assets/DataTables/datatables.css') }}">
+
+{#    STYLE POUR NE PAS SAUTER A LA LIGNE#}
+    <style>
+        .no_saut{
+            white-space: nowrap;
+        }
+    </style>
+
+
+{% endblock %}
+
+{% block body %}
+
+    {% set prec = (mois-1)|monmois ~ ' ' ~ annee %}
+    {% set path_prec = path('paie_reste_salaire', {'mois' : (mois-1), 'année' : annee}) %}
+
+    {% if mois == 1 %}
+        {% set prec = '12'|monmois ~ ' ' ~ (annee-1) %}
+        {% set path_prec = path('paie_reste_salaire', {'mois' : '12', 'année' : (annee-1)}) %}
+
+    {% endif %}
+    {% set suiv = (mois+1)|monmois ~ ' ' ~ annee %}
+    {% set path_suiv = path('paie_reste_salaire', {'mois' : (mois+1), 'année' : annee}) %}
+
+    {% if mois == 12 %}
+        {% set suiv = '01'|monmois ~ ' ' ~ (annee+1) %}
+        {% set path_suiv = path('paie_reste_salaire', {'mois' : '1', 'année' : (annee+1)}) %}
+
+    {% endif %}
+
+    <link rel="stylesheet" href="{{ asset('assets/DataTables/datatables.css') }}">
+    <h1 class="text-primary">
+        Reste Salaire du mois {{ mois|monmois }} {{ annee }}
+    </h1>
+    <ul class="pagination align-content-center ">
+        <li class="page-item"><a class="page-link" href="{{ path_prec }}"><i class="fa fa-arrow-left" aria-hidden="true"></i> {{ prec }}</a></li>
+        <li class="page-item active"><a class="page-link" href="#">{{ mois|monmois ~ ' ' ~ annee }}</a></li>
+        <li class="page-item"><a class="page-link" href="{{ path_suiv }}">{{ suiv }} <i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
+
+
+
+    </ul>
+    <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle btn-lg" type="button" data-toggle="dropdown">Méthode de paiement
+        <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+        <li><a href="{{ path('paie_reste_salaire', {'paiement' : 'Espèce'}) }}">Espèce</a></li>
+        <li><a href="{{ path('paie_reste_salaire', {'paiement' : 'Chèque'}) }}">Chèque</a></li>
+        <li><a href="{{ path('paie_reste_salaire', {'paiement' : 'Virement'}) }}">Virement</a></li>
+        <li><a href="{{ path('paie_reste_salaire') }}">Tout voir</a></li>
+    </ul>
+</div>
+    <br>
+    <ul class="list-inline">
+        <li>
+            <a href="{{ path('paie_etat_imprimer', {'mois' : mois, 'année' : annee}) }}" class="btn btn-warning btn-lg">
+                <i class="fa fa-print"></i> Imprimer Etat
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('paie_etat_imprimer', {'mois' : mois, 'année' : annee, type : 'irsa'}) }}" class="btn btn-primary btn-lg">
+                <i class="fa fa-print"></i> Etat nominatif
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('paie_etat_imprimer', {'mois' : mois, 'année' : annee, type : 'avances'}) }}" class="btn btn-info btn-lg">
+                <i class="fa fa-print"></i> Etat avances
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('paie_etat_imprimer', {'mois' : mois, 'année' : annee, type : 'virement'}) }}" class="btn btn-success btn-lg">
+                <i class="fa fa-print"></i> Ordre de virement
+            </a>
+        </li>
+    </ul>
+    <hr>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table-striped table" id="myTable">
+            <thead>
+            <tr>
+                <th class="text-center">Matricule</th>
+                <th class="text-center">Nom et Prénom</th>
+                <th class="text-center">Salaire de base</th>
+                <th class="text-center">Avance Qz</th>
+                <th class="text-center">Avance Spc.</th>
+                <th class="text-center">IRSA Du</th>
+                <th class="text-center">CNAPS</th>
+                <th class="text-center">OSTIE</th>
+                <th class="text-center">Autre</th>
+                <th>Solde</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set soldeTotal = 0  %}
+
+            {% for liste in listes %}
+                <tr class="text-right">
+                    <td class="text-center">{{ liste.matricule }}</td>
+                    <td class="text-left"> <a href="{{ path('paie_detail', {'slug' : liste.slug, 'mois' : mois, 'année' : annee }) }}" target="_blank">{{ liste.nom }} {{ liste.prenom }}</a></td>
+                    <td>
+                        {% if liste.tmpSalaireBase %}
+                            {{ liste.tmpSalaireBase.montant|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if liste.avanceQz %}
+                            {{ liste.avanceQz|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if liste.avanceSp %}
+                            {{ liste.avanceSp|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if liste.irsa %}
+                            {{ liste.irsa.montant|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if liste.cnaps %}
+                            {{ liste.cnaps.montant|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if liste.ostie %}
+                            {{ liste.ostie.montant|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% set tmpAutreDeduction = 0 %}
+
+                        {% for deduction in liste.autreDeduction %}
+                            {% set tmpAutreDeduction = tmpAutreDeduction + deduction.montant %}
+                        {% endfor %}
+                        {% if tmpAutreDeduction %}
+                            {{ tmpAutreDeduction|number_format(2, ',', ' ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td nowrap="">
+                        {% set tmpSolde = liste.totalCredit - liste.totalDebit %}
+                        {% set tmpSolde = tmpSolde|arrondir %}
+                        {{ tmpSolde|number_format(2, ',', ' ') }}
+                        {% set soldeTotal = soldeTotal + tmpSolde %}
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+            <tfoot>
+            <tr>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-right" ><b>TOTAL:</b></td>
+                <td class="text-right" nowrap><b>{{ soldeTotal|number_format(2, ',', ' ') }}</b></td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+    {#SORT DU TABLE#}
+    <script src="{{ asset('assets/DataTables/datatables.js') }}"></script>
+    <script>
+        jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+            "formatted-num-pre": function ( a ) {
+                a = (a === "-" || a === "") ? 0 : a.replace( /[^\d\-\.]/g, "" );
+                return parseFloat( a );
+            },
+
+            "formatted-num-asc": function ( a, b ) {
+                return a - b;
+            },
+
+            "formatted-num-desc": function ( a, b ) {
+                return b - a;
+            }
+        } );
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable({
+                paging: false,
+                info: false,
+                columnDefs: [
+                    {type : 'formatted-num', targets: 9 }
+                ],
+                order: [ [9, "desc"], [0, "desc"] ],
+                language: {
+                    processing:     "Traitement en cours...",
+                    search:         "Rechercher&nbsp;:",
+                    lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix:    "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable:     "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first:      "Premier",
+                        previous:   "Pr&eacute;c&eacute;dent",
+                        next:       "Suivant",
+                        last:       "Dernier"
+                    },
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+        } );
+    </script>
+
+    <script>
+        $('#btnToutDeduire').click(function () {
+            return confirm('Confirmation de déduction des salaires?')
+        })
+    </script>
+
+{% endblock %}

@@ -1,0 +1,652 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Détail paie de {{ employe.prenom }}{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/table_fix_header/table.css') }}">
+
+    <style>
+
+
+        .card {
+            padding-top: 20px;
+            margin: 10px 0 20px 0;
+            background-color: rgba(214, 224, 226, 0.2);
+            border-top-width: 0;
+            border-bottom-width: 2px;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .card .card-heading {
+            padding: 0 20px;
+            margin: 0;
+        }
+
+        .card .card-heading.simple {
+            font-size: 20px;
+            font-weight: 300;
+            color: #777;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .card .card-heading.image img {
+            display: inline-block;
+            width: 46px;
+            height: 46px;
+            margin-right: 15px;
+            vertical-align: top;
+            border: 0;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+        }
+
+        .card .card-heading.image .card-heading-header {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .card .card-heading.image .card-heading-header h3 {
+            margin: 0;
+            font-size: 14px;
+            line-height: 16px;
+            color: #262626;
+        }
+
+        .card .card-heading.image .card-heading-header span {
+            font-size: 12px;
+            color: #999999;
+        }
+
+        .card .card-body {
+            padding: 0 20px;
+            margin-top: 20px;
+        }
+
+        .card .card-media {
+            padding: 0 20px;
+            margin: 0 -14px;
+        }
+
+        .card .card-media img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .card .card-actions {
+            min-height: 30px;
+            padding: 0 20px 20px 20px;
+            margin: 20px 0 0 0;
+        }
+
+        .card .card-comments {
+            padding: 20px;
+            margin: 0;
+            background-color: #f8f8f8;
+        }
+
+        .card .card-comments .comments-collapse-toggle {
+            padding: 0;
+            margin: 0 20px 12px 20px;
+        }
+
+        .card .card-comments .comments-collapse-toggle a,
+        .card .card-comments .comments-collapse-toggle span {
+            padding-right: 5px;
+            overflow: hidden;
+            font-size: 12px;
+            color: #999;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .card-comments .media-heading {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .card.people {
+            position: relative;
+            display: inline-block;
+            width: 170px;
+            height: 300px;
+            padding-top: 0;
+            margin-left: 20px;
+            overflow: hidden;
+            vertical-align: top;
+        }
+
+        .card.people:first-child {
+            margin-left: 0;
+        }
+
+        .card.people .card-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: inline-block;
+            width: 170px;
+            height: 150px;
+            background-color: #ffffff;
+        }
+
+        .card.people .card-top.green {
+            background-color: #53a93f;
+        }
+
+        .card.people .card-top.blue {
+            background-color: #427fed;
+        }
+
+        .card.people .card-info {
+            position: absolute;
+            top: 150px;
+            display: inline-block;
+            width: 100%;
+            height: 101px;
+            overflow: hidden;
+            background: #ffffff;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .card.people .card-info .title {
+            display: block;
+            margin: 8px 14px 0 14px;
+            overflow: hidden;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 18px;
+            color: #404040;
+        }
+
+        .card.people .card-info .desc {
+            display: block;
+            margin: 8px 14px 0 14px;
+            overflow: hidden;
+            font-size: 12px;
+            line-height: 16px;
+            color: #737373;
+            text-overflow: ellipsis;
+        }
+
+        .card.people .card-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            display: inline-block;
+            width: 100%;
+            padding: 10px 20px;
+            line-height: 29px;
+            text-align: center;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .card.hovercard {
+            position: relative;
+            padding-top: 0;
+            overflow: hidden;
+            text-align: center;
+            background-color: rgba(214, 224, 226, 0.2);
+        }
+
+        .card.hovercard .cardheader {
+            background: url("{{ asset('images/fond-profil.png') }}");
+            background-size: cover;
+            height: 135px;
+        }
+
+        .card.hovercard .avatar {
+            position: relative;
+            top: -50px;
+            margin-bottom: -50px;
+        }
+
+        .card.hovercard .avatar img {
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+            max-height: 100px;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            border: 5px solid rgba(255,255,255,0.5);
+        }
+
+        .card.hovercard .info {
+            padding: 4px 8px 10px;
+        }
+
+        .card.hovercard .info .title {
+            margin-bottom: 4px;
+            font-size: 24px;
+            line-height: 1;
+            color: #262626;
+            vertical-align: middle;
+        }
+
+        .card.hovercard .info .desc {
+            overflow: hidden;
+            font-size: 12px;
+            line-height: 20px;
+            color: #737373;
+            text-overflow: ellipsis;
+        }
+
+        .card.hovercard .bottom {
+            padding: 0 20px;
+            margin-bottom: 17px;
+        }
+
+
+    </style>
+{% endblock %}
+
+
+{% block sidemenu %}{% endblock %}
+
+{% set prec = (mois-1)|monmois ~ ' ' ~ annee %}
+{% set path_prec = path('paie_detail', {'slug' : compte_Paie.slug, 'mois' : (mois-1), 'année' : annee}) %}
+{% if mois == 1 %}
+    {% set prec = '12'|monmois ~ ' ' ~ (annee-1) %}
+    {% set path_prec = path('paie_detail', {'slug' : compte_Paie.slug, 'mois' : '12', 'année' : (annee-1)}) %}
+{% endif %}
+{% set suiv = (mois+1)|monmois ~ ' ' ~ annee %}
+{% set path_suiv = path('paie_detail', {'slug' : compte_Paie.slug, 'mois' : (mois+1), 'année' : annee}) %}
+{% if mois == 12 %}
+    {% set suiv = '01'|monmois ~ ' ' ~ (annee+1) %}
+    {% set path_suiv = path('paie_detail', {'slug' : compte_Paie.slug, 'mois' : '1', 'année' : (annee+1)}) %}
+{% endif %}
+
+
+{% block container_sansmenu %}
+    <div class="row">
+
+    <div class="col-md-3">
+        <br>
+        <div class="">
+
+            <div class="card hovercard">
+
+                <div class="cardheader"></div>
+
+                <div class="avatar">
+                    <img alt="" src="{{ asset('document/imagesEmployes/') }}{{ employe.imageUrl }}">
+                </div>
+                <div class="info">
+                    <div class="title">
+                        <a target="_blank" href="{{ path('employe_voir', { 'slug' : employe.slug } ) }}">{{ employe.nom }} {{ employe.prenom }}</a>
+                    </div>
+                    <div class="desc"><h4><b>Poste: </b> {{ employe.poste }}</h4></div>
+
+                    <div class="desc"><h4><b>Salaire de base: </b> {{ employe.salaire|number_format(2, ',', ' ') }}</h4></div>
+
+                    <div class="desc"><h4><b>Addresse: </b> {{ employe.adresse }}</h4></div>
+
+                    <div class="desc"><h4><b>Contact: </b> {{ employe.contact }}</h4></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+
+        <div class="row caher_btn">
+
+            <div class="col-md-12" >
+                <div class="row">
+                    <div class="col-md-4">
+                        <a target="_blank" href="{{ path('paie_fiche_test', {'slug' : compte_Paie.slug, 'mois' : mois, 'année' : annee}) }}" class="btn btn-block btn-lg btn-warning " > <i class="fa fa-th-list"></i> Imprimer Fiche de paie</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <h1 class="text-primary text-center">Information sur le paie de l'employé(e)</h1>
+
+        <div class="row ">
+
+        <div class="col-md-2">
+            <br><br>
+            <div class="caher_btn">
+
+                <button type="button" class="btn btn-block btn-lg btn-success mesActions" data-toggle="modal" data-target="#ModalCredit" ><i class="fa fa-plus"></i> Revenu</button>
+                <button type="button" class="btn btn-block btn-lg btn-success mesActions" data-toggle="modal" data-target="#ModalHeureSup"> <i class="fa fa-plus-circle"></i> Heure Supp.</button>
+                <button type="button" class="btn btn-block btn-lg btn-danger mesActions" data-toggle="modal" data-target="#ModalDebit" > <i class="fa fa-minus"></i> Retenue </button>
+
+                <button data-toggle="modal" data-target="#ModalPrelevementSalaire" id="btnPrelevement" class="btn btn-block btn-lg caher_btn btn-danger"><i class="fa fa-minus-circle"></i> Prélèvement
+                    <br>sur salaire</button>
+
+                <button data-toggle="modal" data-target="#ModalAnnulerPrelevementSalaire" id="btnAnnulerPrelevement" class="btn btn-block btn-lg caher_btn_1 btn-info"><i class="fa fa-undo"></i> Annulation
+                    <br>du Prélèvement<br> sur salaire </button>
+                <button data-toggle="modal" data-target="#ModalConge" id="btnConge" class="btn btn-block btn-lg caher_btn btn-success"><i class="fa fa-edit"></i> Modifier congé
+                </button>
+                <button data-toggle="modal" data-target="#ModalComptabiliser" id="btnModalComptabiliser" class="btn btn-block btn-lg caher_btn btn-primary"><i class="fa fa-money"></i> Comptabiliser
+                    <br>prise de salaire</button>
+                <button data-toggle="modal" data-target="#ModalVirement" id="btnModalVirement" class="btn btn-block btn-lg caher_btn btn-primary"><i class="fa fa-money"></i> Comptabiliser
+                    <br>par virement</button>
+
+
+            </div>
+        </div>
+
+            <div class="col-md-10">
+
+                <div class="tbl-header">
+                    <table cellpadding="0" cellspacing="0" border="0">
+
+                        <thead >
+                            <tr>
+                                <th>Date</th>
+                                <th>Libellé</th>
+                                <th>Revenu</th>
+                                <th>Retenue</th>
+                                <th>Solde</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="tbl-content" id="maTable">
+                    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped ">
+                        <tbody>
+                        {% set solde = 0 %}
+
+                        {% set comptabiliser_salaire = 1 %}
+                        {% set testIrsa = 1 %}
+                        {% set btnEtat = '' %}
+
+                        {% if not verification %}
+
+                            {% for historique in historiques %}
+                                {% if historique.type == "credit" %}
+                                    {% set solde = solde + historique.montant %}
+                                    <tr>
+                                        <td>{{ historique.date|date('d/m/Y') }}</td>
+                                        <td>
+                                            {{ historique.libelle }}
+                                            {% if historique.salaireBase %}
+                                                mois de {{ historique.date|date('m')|monmois }} {{ historique.date|date('Y') }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-left success">{{ historique.montant|number_format(2, ',', ' ') }}</td>
+                                        <td class="text-left success"></td>
+                                        <td class="text-left success">{{ solde|number_format(2, ',', ' ') }}</td>
+                                        <td><a href="{{ path('modif_histo_paie',{'id':historique.id}) }}" class="btn btn-primary caher_btn {{ btnEtat }}"><i class="fa fa-edit"></i></a></td>
+                                    </tr>
+                                {% endif %}
+                                {% if historique.type == "debit" %}
+                                    {% set solde = solde - historique.montant %}
+                                    {% set caissePaie = '' %}
+                                    {% if historique.priseSalaire == 1 %}
+                                        {% set comptabiliser_salaire = 0 %}
+                                        {% set caissePaie = historique.caisse %}
+                                    {% endif %}
+                                    {% if historique.irsa %}
+                                        {% set testIrsa = 0 %}
+                                    {% endif %}
+                                    <tr>
+                                        <td>{{ historique.date|date('d/m/Y') }}</td>
+                                        <td>
+                                            {{ historique.libelle }}
+                                            {% if caissePaie != '' %}
+                                                - {{ caissePaie }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-left danger"></td>
+                                        <td class="text-left danger">{{ historique.montant|number_format(2, ',', ' ') }}</td>
+                                        <td class="text-left danger">{{ solde|number_format(2, ',', ' ') }}</td>
+                                        <td><a href="{{ path('modif_histo_paie',{'id':historique.id}) }}" class="btn btn-primary caher_btn {{ btnEtat }}"><i class="fa fa-edit"></i></a></td>
+                                    </tr>
+                                {% endif %}
+                                {% if historique.absence %}
+                                    {% set solde = solde - historique.montant %}
+                                    <tr>
+                                        <td>{{ historique.date|date('d/m/Y') }}</td>
+                                        <td>
+                                            {{ historique.libelle }}
+                                            - <a href="{{ path('absence_voir', {"id" : historique.absence.id}) }}"><b>{{ historique.absence.nombreJour }} jour{% if historique.absence.nombreJour > 1 %}{{ 's' }}{% endif %}</b></a>
+                                        </td>
+                                        <td class="text-left danger"></td>
+                                        <td class="text-left danger">{{ historique.montant|number_format(2, ',', ' ') }}</td>
+                                        <td class="text-left danger">{{ solde|number_format(2, ',', ' ') }}</td>
+                                        <td><a href="{{ path('modif_histo_paie',{'id':historique.id}) }}" class="btn btn-primary caher_btn {{ btnEtat }}"><i class="fa fa-edit"></i></a></td>
+                                    </tr>
+                                {% endif %}
+                                {% if historique.type=="heureSup" %}
+                                    {% set solde = solde + historique.montant %}
+                                    <tr>
+                                        <td>{{ historique.date|date('d/m/Y') }}</td>
+                                        <td>{{ historique.libelle }}</td>
+                                        <td class="text-left success">{{ historique.montant|number_format(2, ',', ' ') }}</td>
+                                        <td class="text-left success"></td>
+                                        <td class="text-left success">{{ solde|number_format(2, ',', ' ') }}</td>
+                                        <td><a href="{{ path('modif_histo_paie',{'id':historique.id}) }}" class="btn btn-primary caher_btn {{ btnEtat }}"><i class="fa fa-edit"></i></a></td>
+                                    </tr>
+
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if verification %}
+                            {% for historique in historiques %}
+                                {% if historique.salaireBase and historique.type == "base_final" %}
+                                    {% set solde = solde + historique.montant %}
+                                    <tr>
+                                        <td>{{ historique.date|date('d/m/Y') }}</td>
+                                        <td>
+                                            {{ historique.libelle }}
+                                            {% if historique.salaireBase %}
+                                                mois de {{ historique.date|date('m')|monmois }} {{ historique.date|date('Y') }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-left success">{{ historique.montant|number_format(2, ',', ' ') }}</td>
+                                        <td class="text-left success"></td>
+                                        <td class="text-left success">{{ solde|number_format(2, ',', ' ') }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if historique.type == "alloc_final" %}
+                                    {% set solde = solde + historique.montant %}
+                                    <tr>
+                                        <td>{{ historique.date|date('d/m/Y') }}</td>
+                                        <td>
+                                            {{ historique.libelle }}
+                                        </td>
+                                        <td class="text-left success">{{ historique.montant|number_format(2, ',', ' ') }}</td>
+                                        <td class="text-left success"></td>
+                                        <td class="text-left success">{{ solde|number_format(2, ',', ' ') }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if historique.type == "exonerer" or historique.type == "deductible" %}
+                                    {% set solde = solde + historique.montant %}
+                                    <tr>
+                                        <td>{{ historique.date|date('d/m/Y') }}</td>
+                                        <td>
+                                            {{ historique.libelle }}
+                                            {% if historique.salaireBase %}
+                                                mois de {{ historique.date|date('m')|monmois }} {{ historique.date|date('Y') }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-left success">{{ historique.montant|number_format(2, ',', ' ') }}</td>
+                                        <td class="text-left success"></td>
+                                        <td class="text-left success">{{ solde|number_format(2, ',', ' ') }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if historique.type == "credit" %}
+                                    {% set solde = solde + historique.montant %}
+                                    <tr>
+                                        <td>{{ historique.date|date('d/m/Y') }}</td>
+                                        <td>
+                                            {{ historique.libelle }}
+                                            {% if historique.salaireBase %}
+                                                mois de {{ historique.date|date('m')|monmois }} {{ historique.date|date('Y') }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-left success">{{ historique.montant|number_format(2, ',', ' ') }}</td>
+                                        <td class="text-left success"></td>
+                                        <td class="text-left success">{{ solde|number_format(2, ',', ' ') }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if historique.type == "debit" %}
+                                    {% set solde = solde - historique.montant %}
+                                    {% set caissePaie = '' %}
+                                    {% if historique.priseSalaire == 1 %}
+                                        {% set comptabiliser_salaire = 0 %}
+                                        {% set caissePaie = historique.caisse %}
+                                    {% endif %}
+                                    {% if historique.irsa %}
+                                        {% set testIrsa = 0 %}
+                                    {% endif %}
+                                    <tr>
+                                        <td>{{ historique.date|date('d/m/Y') }}</td>
+                                        <td>
+                                            {{ historique.libelle }}
+                                            {% if caissePaie != '' %}
+                                                - {{ caissePaie }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-left danger"></td>
+                                        <td class="text-left danger">{{ historique.montant|number_format(2, ',', ' ') }}</td>
+                                        <td class="text-left danger">{{ solde|number_format(2, ',', ' ') }}</td>
+                                    </tr>
+                                {% endif %}
+
+                            {% endfor %}
+                        {% endif %}
+
+                        
+                        {% set solde = solde|arrondir %}
+
+                        <tr>
+                            <td></td>
+                            <td>
+                                Solde
+                            </td>
+                            <td class="text-left danger"></td>
+                            <td class="text-left danger"></td>
+                            <td class="text-left danger">{{ solde|number_format(2, ',', ' ') }}</td>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+                </div>
+                    <hr>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="pagination align-content-center ">
+                            <li class="page-item"><a class="page-link" href="{{ path_prec }}"><i class="fa fa-arrow-left" aria-hidden="true"></i> {{ prec }}</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">{{ mois|monmois ~ ' ' ~ annee }}</a></li>
+                            <li class="page-item"><a class="page-link" href="{{ path_suiv }}">{{ suiv }} <i class="fa fa-arrow-right" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+{#                    <div class="col-md-4">#}
+{#                        <ul class="pagination align-content-center ">#}
+{#                            <li class="page-item"><a href="{{ path('paie_detail', { 'slug' : compte_Paie.slug, 'global' : 'tout' } ) }}" >Tout Afficher</a></li>#}
+{#                        </ul>#}
+{#                    </div>#}
+                </div>
+
+
+
+        </div>
+        </div>
+    </div>
+    </div>
+
+
+    {#---------MODAL DEBIT----------#}
+    {% include '@Paie/historiquePaie/modalDebit.html.twig' %}
+
+    {#---------MODAL CREDIT----------#}
+    {% include '@Paie/historiquePaie/modalCredit.html.twig' %}
+
+    {#-------------RESTE SALAIRE-------------#}
+    {% include '@Paie/paie/comptabilisation_reste_salaire.html.twig' %}
+
+{#    RESTE PAR VIREMENT#}
+    {% include '@Paie/historiquePaie/modalVirement.twig' %}
+
+{#    DEDUCTION SALAIRE#}
+    {% include '@Paie/historiquePaie/prelevementSalaire.html.twig' %}
+    {% include '@Paie/historiquePaie/annulationPrelevementSalaire.html.twig' %}
+
+    {#-------------HEURE SUPP-------------#}
+    {% include '@Paie/historiquePaie/modalHeureSup.html.twig' %}
+    {#-------------MODIFER CONGE-------------#}
+    {% if resteConge!="" %}
+    {% include '@Paie/historiquePaie/modalMofierConge.html.twig' %}
+        <script>
+            $('#btnConge').removeClass('hide');
+        </script>
+      {% else %}
+          <script>
+              $('#btnConge').addClass('hide');
+          </script>
+    {% endif %}
+
+    {#CACHER BOUTTON IF NOT ROLE_PAIE#}
+    {% if not app.user.ifRole('ROLE_PAIE') %}
+        <script>
+            $('.caher_btn').addClass('hide');
+            $('.caher_btn1').addClass('hide');
+        </script>
+
+    {% endif %}
+
+    {#CACHER BTN COMPTABILISER#}
+
+    {% if comptabiliser_salaire == 0 %}
+        <script>
+            $('#btnModalComptabiliser').prop('disabled', 'disabled');
+            $('#btnModalVirement').prop('disabled', 'disabled');
+        </script>
+    {% endif %}
+
+    {% if testIrsa == 0 %}
+        <script>
+            $('#btnPrelevement').prop('disabled', 'disabled');
+        </script>
+        <script>
+            $('.mesActions').prop('disabled', 'disabled');
+
+        </script>
+        <script>
+            $('#btnAnnulerPrelevement').prop('disabled', '');
+        </script>
+        {% else %}
+            <script>
+                $('#btnAnnulerPrelevement').prop('disabled', 'disabled');
+            </script>
+    {% endif %}
+    {% if employe.methodePaiement != 'Virement' %}
+        <script>
+            $('#btnModalVirement').addClass('hide');
+        </script>
+    {% endif %}
+
+{% endblock %}
+{% block javascripts %}
+
+    {#SCRIPT DE L'AUTEUR TABLEAU#}
+    <script>
+        hhh = $(window).height();
+
+        maTable = hhh - 375;
+
+        $('#maTable').height(maTable);
+    </script>
+    <script src="{{ asset('assets/table_fix_header/table.js') }}"></script>
+
+{% endblock %}

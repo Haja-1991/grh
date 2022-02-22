@@ -1,0 +1,56 @@
+<div class="modal fade"  id="modalSignalerRetard" role="dialog">
+    <form action="{{ path('retard_signaler', { 'slug' : comptePresence.slug }) }}" method="post">
+
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title text-danger"><i class="fa fa-hourglass-end"></i> Signaler Retard:</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div>
+                        <div class="row">
+                            <div class='col-sm-6'>
+                                <div class="form-group">
+                                    <label for="">Date et heure du Retard:</label>
+                                    <div class='input-group date' id='date_retard'>
+
+                                        <input type='datetime' class="form-control "  name="date_retard" required/>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                    <script>
+                                        $('#date_retard').datetimepicker({
+                                            format: 'DD/MM/YYYY HH:mm',
+                                            date: new Date()
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="">
+                            <div class="">
+                                <label for="motif_retard">Motif:</label>
+                                <textarea id="motif_retard" class="form-control" name="motif_retard" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" id="enregistrer_retard" >Enregistrer</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+</div>

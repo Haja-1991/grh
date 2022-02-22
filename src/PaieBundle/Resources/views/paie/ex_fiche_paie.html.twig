@@ -1,0 +1,177 @@
+<head>
+    <title>Fiche de paie {{ employe.nomComplet }} - {{ 'now'|date('m')|monmois }} {{ 'now'|date('Y') }}</title>
+</head>
+<body onload="window.print()">
+<table align="center" border="1" cellpadding="0" cellspacing="0" style="border-collapse:collapse; border:none; width:577px">
+    <tbody>
+    <tr>
+        <td style="width:294px;border:solid windowtext 1.0pt;padding:0cm 5.4pt 0cm 5.4pt;vertical-align:top;">
+            <h3 align="center" style="text-align:center;"><strong><u>SOCIETE</u></strong></h3>
+
+            <p><strong><u>Nom:</u></strong> {{ employe.societe.nom }}</p>
+            <p><strong><u>Adresse:</u></strong> {{ employe.societe.adresse }}</p>
+            <p><strong><u>Contact:</u></strong> {{ employe.societe.contact }}</p>
+            <p><strong><u>NIF:</u></strong> {{ employe.societe.nif }}</p>
+            <p><strong><u>STAT:</u></strong> {{ employe.societe.stat }}</p>
+            <p style="line-height:normal;">&nbsp;</p>
+        </td>
+
+        <td style="width:284px;border:solid windowtext 1.0pt;border-left:none;padding:0cm 5.4pt 0cm 5.4pt;vertical-align:top;">
+            <h3 align="center" style="text-align:center;"><strong><u>EMPLOYE</u></strong></h3>
+
+            <p><strong><u>Nom&nbsp;:</u></strong> {{ employe.nom }}</p>
+            {% if employe.prenom %}
+                <p><strong><u>Pr&eacute;nom:</u></strong> {{ employe.prenom }}</p>
+            {% endif %}
+            <p><strong><u>Adresse&nbsp;:</u></strong> {{ employe.adresse }}</p>
+            <p><strong><u>Contact&nbsp;:</u></strong> {{ employe.contact }}</p>
+            <p style="line-height:normal;">&nbsp;</p>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div style="clear:both;">&nbsp;</div>
+
+<p style="line-height:normal;">&nbsp;</p>
+
+<h1 align="center" style="text-align:center;"><strong>BULLETIN DE PAIE</strong></h1>
+
+
+<p style="margin-left:14.2pt;line-height:normal;"><strong>P&eacute;riode&nbsp;:</strong> <strong>du </strong><strong>{{ date_Debut|date('d/m/Y') }}</strong><strong> au </strong><strong>{{ date_Fin|date('d/m/Y') }}</strong><strong>&nbsp; </strong></p>
+
+<p style="margin-left:7.1pt;line-height:normal;">&nbsp;</p>
+
+<table align="center" border="1" cellpadding="0" cellspacing="0" style="border-collapse:collapse; border:none; width:0px">
+    <thead>
+    <tr style="page-break-inside:avoid;height:16px;">
+        <th style="width:282px;border:solid windowtext 1.0pt;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+            <p align="center" style="text-align:center; font-size: 18px"><b>Libellé</b></p>
+        </th>
+        <th style="width:136px;border:solid windowtext 1.0pt;border-left:none;background:white;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+            <p align="center" style="text-align:center; font-size: 18px"><b>Solde en MGA</b></p>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% set salaire_net = 0 %}
+    {% for historique in historiques %}
+        {% if historique.libelle == 'Salaire de base' %}
+
+            {% set salaireBrut = historique.montant %}
+            {% if employe.salaireMin %}
+                {% set salaireBrut = employe.salaireMin %}
+            {% endif %}
+
+            <tr style="page-break-inside:avoid;height:16px;">
+                <td style="width:282px;border:solid windowtext 1.0pt;border-top:none;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+                    <p><strong>Salaire brut</strong></p>
+                </td>
+                <td style="width:136px;border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+                    <p align="right" style="margin-top:0cm;margin-right:.75pt;margin-bottom:0cm;margin-left:15.7pt;margin-bottom:.0001pt;text-align:right;"><strong>{{ salaireBrut|number_format(2, ',', ' ') }} </strong></p>
+                </td>
+            </tr>
+
+            {% set salaire_net = salaire_net + salaireBrut %}
+        {% endif %}
+    {% endfor %}
+
+    {% for historique in historiques %}
+        {% if historique.type == 'credit' and historique.libelle != 'Salaire de base'  %}
+            <tr style="page-break-inside:avoid;height:16px;">
+                <td style="width:282px;border:solid windowtext 1.0pt;border-top:none;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+                    <p>{{ historique.libelle }}</p>
+                </td>
+                <td style="width:136px;border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+                    <p align="right" style="margin-top:0cm;margin-right:.75pt;margin-bottom:0cm;margin-left:15.7pt;margin-bottom:.0001pt;text-align:right;">+ {{ historique.montant|number_format(2, ',', ' ') }}</p>
+                </td>
+            </tr>
+
+            {% set salaire_net = salaire_net + historique.montant %}
+        {% endif %}
+    {% endfor %}
+
+    {#------VIDE------#}
+    <tr style="page-break-inside:avoid;height:32px;">
+        <td style="width:282px;border:solid windowtext 1.0pt;border-top:none;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:32px;vertical-align:top;">
+            <p>&nbsp;</p>
+        </td>
+        <td style="width:136px;border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:32px;vertical-align:top;">
+            <p align="right" style="margin-top:0cm;margin-right:.75pt;margin-bottom:0cm;margin-left:15.7pt;margin-bottom:.0001pt;text-align:right;">&nbsp;</p>
+        </td>
+    </tr>
+
+    {#-----------TITRE DU DEBIT-----------#}
+    <tr style="page-break-inside:avoid;height:16px;">
+        <td style="width:282px;border:solid windowtext 1.0pt;border-top:none;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+            <p><strong>Prélèvement sur Salaire:</strong></p>
+        </td>
+        <td style="width:136px;border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+            <p align="right" style="margin-top:0cm;margin-right:.75pt;margin-bottom:0cm;margin-left:15.7pt;margin-bottom:.0001pt;text-align:right;">&nbsp;</p>
+        </td>
+    </tr>
+
+    {% for historique in historiques %}
+        {% if historique.type == 'debit' and not historique.priseSalaire %}
+            <tr style="page-break-inside:avoid;height:16px;">
+                <td style="width:282px;border:solid windowtext 1.0pt;border-top:none;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+                    <p>{{ historique.libelle }}</p>
+                </td>
+                <td style="width:136px;border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+                    <p align="right" style="margin-top:0cm;margin-right:.75pt;margin-bottom:0cm;margin-left:15.7pt;margin-bottom:.0001pt;text-align:right;">- {{ historique.montant|number_format(2, ',', ' ') }}</p>
+                </td>
+            </tr>
+
+            {% set salaire_net = salaire_net - historique.montant %}
+        {% endif %}
+    {% endfor %}
+
+
+
+    <tr style="page-break-inside:avoid;height:16px;">
+        <td style="width:282px;border:solid windowtext 1.0pt;border-top:none;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+            <p>&nbsp;</p>
+        </td>
+        <td style="width:136px;border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+            <p align="right" style="margin-top:0cm;margin-right:.75pt;margin-bottom:0cm;margin-left:15.7pt;margin-bottom:.0001pt;text-align:right;">&nbsp;</p>
+        </td>
+    </tr>
+    <tr style="page-break-inside:avoid;height:15px;">
+        <td style="width:282px;border:solid windowtext 1.0pt;border-top:none;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:15px;vertical-align:top;">
+            <p><strong>Salaire net</strong></p>
+        </td>
+        <td style="width:136px;border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:15px;vertical-align:top;">
+            <p align="right" style="margin-top:0cm;margin-right:.75pt;margin-bottom:0cm;margin-left:15.7pt;margin-bottom:.0001pt;text-align:right;"><strong>{{ salaire_net|number_format(2, ',', ' ') }}</strong></p>
+        </td>
+    </tr>
+    <tr style="page-break-inside:avoid;height:16px;">
+        <td style="width:282px;border:solid windowtext 1.0pt;border-top:none;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+            <p>&nbsp;</p>
+
+            <p>&nbsp;</p>
+        </td>
+        <td style="width:136px;border-top:none;border-left:none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:1.0pt 1.0pt 1.0pt 1.0pt;height:16px;vertical-align:top;">
+            <p align="right" style="margin-top:0cm;margin-right:.75pt;margin-bottom:0cm;margin-left:15.7pt;margin-bottom:.0001pt;text-align:right;">&nbsp;</p>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div style="clear:both;">&nbsp;</div>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+
+<table style="width: 100%; margin-left: 120pt;">
+    <tr>
+        <td></td>
+        <td><p><strong>La Société</strong></p></td>
+        <td></td>
+        <td><p><strong>L'Employé</strong></p></td>
+        <td></td>
+    </tr>
+</table>
+</body>

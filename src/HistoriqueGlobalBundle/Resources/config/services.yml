@@ -1,0 +1,4 @@
+services:
+#    historique_global.example:
+#        class: HistoriqueGlobalBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]

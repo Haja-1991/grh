@@ -1,0 +1,387 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <style>
+        /*RADIO TYPE*/
+        .btn span.glyphicon {
+            opacity: 0;
+        }
+        .btn.active span.glyphicon {
+            opacity: 1;
+        }
+    </style>
+
+    <h1>Formulaire de Demande Congé-Permission</h1>
+
+    <div class="row">
+        <div class="col-md-6 col-lg-6">
+            <form action="#" method="post" autocomplete="off">
+                <br>
+
+                <div class="form-group">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label for="">Type:</label><br>
+
+                        <label class="btn btn-default btn-lg active">
+                            <input type="radio" name="type_dcp" class="class_type" id="option2" autocomplete="off" value="Congé" checked >  Congé
+                            <span class="glyphicon glyphicon-ok"></span>
+                        </label>
+
+                        <label class="btn btn-warning btn-lg">
+                            <input type="radio" name="type_dcp" class="class_type" id="option3" autocomplete="off" value="Permission"> Permission
+                            <span class="glyphicon glyphicon-ok"></span>
+                        </label>
+
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="employe">Nom de l'employé: </label>
+                    <input list="listEmploye" id="employe" class="form-control" name="employe" required>
+                    <datalist id="listEmploye">
+                        {% for employe in employes %}
+                            <option value="{{ employe.nomComplet }}">{{ employe.poste }}</option>
+                        {% endfor %}
+                    </datalist>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-danger" ><b id="resteConge"></b></h3>
+
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class='col-md-6'>
+                        <div class="form-group">
+                            <label for="date_debut_absence">Date de début:</label>
+                            <div class='input-group date' id='_date_debut_dcp'>
+
+                                <input type='datetime' class="form-control date_absence" id="date_debut_dcp"  name="date_debut_dcp" required/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            <script>
+                                $('#_date_debut_dcp').datetimepicker({
+                                    format: 'DD/MM/YYYY',
+                                }).on('dp.change', function () {
+                                    changementIntervalleDcp();
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div class='col-md-6'>
+                        <div class="form-group">
+                            <label for="date_fin_dcp">Date fin:</label>
+                            <div class='input-group date' id='_date_fin_dcp'>
+
+                                <input type='datetime' class="form-control date_dcp" id="date_fin_dcp"  name="date_fin_dcp" required/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            <script>
+                                $('#_date_fin_dcp').datetimepicker({
+                                    format: 'DD/MM/YYYY',
+                                }).on('dp.change', function () {
+                                    changementIntervalleDcp();
+                                    testMemeMois();
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div class='col-md-6'>
+                        <div class="form-group">
+                            <label for="date_retour_dcp">Date de retour:</label>
+                            <div class='input-group date' id='_date_retour_dcp'>
+
+                                <input type='datetime' class="form-control" id="date_retour_dcp"  name="date_retour_dcp" required/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            <script>
+                                $('#_date_retour_dcp').datetimepicker({
+                                    format: 'DD/MM/YYYY',
+                                })
+                            </script>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <b class="text-danger" id="erreurSaisi_date">
+
+                        </b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="intervalle_dcp">Intervalle (en jour):</label>
+                            <input type="text" class="form-control only_float" name="intervalle_dcp" id="intervalle_dcp" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="text-danger" ><b id="prixDemande"></b></h4>
+                    </div>
+                    <div class="col-md-6">
+                        <b class="text-danger" id="erreurSaisi_intervalle">
+
+                        </b>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="motif_dcp">Motif:</label>
+                    <textarea id="motif_dcp" class="form-control" name="motif_dcp" rows="5"></textarea>
+                </div>
+
+                <hr>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6"><button type="submit" id="btn_valider_dcp" class="btn btn-primary btn-lg btn-block"><i class="fa fa-save"></i> Enregistrer</button></div>
+                    <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6"><a href="{{ path('dcp_index') }}" class="btn btn-default btn-lg btn-block">Annuler</a></div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    {#SCRIPT DE L'INTERVALLE DE DATE ET API #}
+    <script>
+        function stringToDate(str_date) {
+            splitStr = str_date.split('/');
+
+            return dateConverted = new Date(splitStr[2], splitStr[1]-1, splitStr[0]);
+        }
+
+        function dateDiff(dateold, datenew)
+        {
+            var WNbJours = -1*(dateold.getTime() - datenew.getTime());
+            return Math.ceil(WNbJours/(1000*60*60*24));
+        }
+
+        function changementIntervalleDcp() {
+            dt1 = $('#date_debut_dcp').val();
+            dt2 = $('#date_fin_dcp').val();
+
+            date_debut = stringToDate(dt1);
+            date_fin = stringToDate(dt2);
+
+            intervalle = dateDiff(date_debut, date_fin);
+
+            if(intervalle > 0){
+                $('#intervalle_dcp').val(intervalle+1);
+            }
+
+            if(dt1 == dt2){
+                $('#intervalle_dcp').val('1');
+            }
+
+            type_demande = $("input[name=type_dcp]").filter(":checked").val();
+
+        }
+
+        {#//FUNCTION CALCUL DU PRIX#}
+        {#function afficherPrixDemande(){#}
+
+        {#    nom_complet = $('#employe').val();#}
+        {#    inter = $('#intervalle_dcp').val();#}
+
+        {#    //AJAX#}
+        {#    $.post("{{ path('dcp_response_prix_demande') }}",#}
+        {#        {#}
+        {#            employe: nom_complet,#}
+        {#            intervalle_dcp: inter#}
+        {#        },#}
+        {#        function(data, status){#}
+
+        {#            if(status == 'success'){#}
+        {#                var prix = jQuery.parseJSON(data);#}
+
+        {#                if (prix != 'OK'){#}
+        {#                    $('#prixDemande').html('Votre demande dépasse le reste de votre congé <br> Coût: '+prix.prix);#}
+        {#                }else {#}
+        {#                    $('#prixDemande').html('');#}
+
+        {#                }#}
+        {#            }#}
+
+        {#            // alert("Data: " + data + "\nStatus: " + test);#}
+        {#        }#}
+        {#    );#}
+        {#}#}
+
+        $('#intervalle_dcp').keyup(function () {
+
+            type_demande = $("input[name=type_dcp]").filter(":checked").val();
+
+        });
+
+    </script>
+
+    {#TEST NOM EMPLOYE#}
+    <script>
+        function testNomEmploye() {
+            var val=$("#employe").val();
+
+            var obj=$("#listEmploye").find("option[value='"+val+"']");
+
+            if(obj !=null && obj.length>0){
+
+                return true;
+            }
+            else{
+                alert("Nom de l'employé non-reconnu"); // don't allow form submission
+                return false;
+            }
+        }
+
+        $('#btn_valider_dcp').click(function () {
+            return testNomEmploye();
+        });
+    </script>
+
+    {#TEST DES DATES#}
+    <script>
+        function testDate() {
+            dt1 = $('#date_debut_dcp').val();
+            dt2 = $('#date_fin_dcp').val();
+            dt3 = $('#date_retour_dcp').val();
+
+            date_debut = stringToDate(dt1);
+            date_fin = stringToDate(dt2);
+            date_retour = stringToDate(dt3);
+
+            intervalle1 = dateDiff(date_debut, date_fin);
+            intervalle2 = dateDiff(date_fin, date_retour);
+
+            retour = true;
+
+
+            if(intervalle1 < 0){
+                retour = false;
+                alert('Vérifier la date de début & Date fin');
+            }
+            if(intervalle2 < 0 || intervalle2 > 1){
+                retour = false;
+                alert('Vérifier la date de retour');
+            }
+
+            return retour;
+        }
+
+        $('#btn_valider_dcp').click(function () {
+            return testDate();
+        });
+    </script>
+
+    {#TEST DU MOTIF#}
+    <script>
+        function testMotif() {
+            type_demande = $("input[name=type_dcp]").filter(":checked").val();
+            motif = $('#motif_dcp').val();
+
+            if(type_demande == 'Permission' && motif == ''){
+                alert('Motif exigé pour les Demandes de Permissions');
+                return false;
+            }else
+                return true;
+        }
+
+        $('#btn_valider_dcp').click(function () {
+            return testMotif();
+        });
+    </script>
+
+    {#RESTE CONGE#}
+    <script>
+        function resteConge(nom_emp){
+            //AJAX
+            $.post("{{ path('api_reste_conge') }}",
+                {
+                    nom_complet: nom_emp
+                },
+                function(data, status){
+
+                    if(status == 'success'){
+                        var prix = jQuery.parseJSON(data);
+
+                        $('#resteConge').html('Reste Congé: ' +data+"jour(s)");
+                    }
+
+                    // alert("Data: " + data + "\nStatus: " + test);
+                }
+            );
+        }
+
+        $('#employe').change(function () {
+            resteConge($(this).val());
+        })
+    </script>
+
+{#    -------------------- TEST DU MEME MOIS -------------------- #}
+    <script>
+        function testMemeMois() {
+            dateDebut = $('#date_debut_dcp').val();
+            dateFin = $('#date_fin_dcp').val();
+
+            if(dateDebut[4] != dateFin[4]){
+                $('#erreurSaisi_date').html('La demande doit être dans le même mois. <br> Veuillez faire des demandes séparer!');
+                $('#btn_valider_dcp').addClass('disabled');
+                $('#btn_valider_dcp').prop('disabled', true);
+                return false;
+
+            }else {
+                $('#erreurSaisi_date').html('');
+                $('#btn_valider_dcp').removeClass('disabled');
+                $('#btn_valider_dcp').prop('disabled', false);
+
+                return true;
+            }
+
+        }
+    </script>
+
+{#    TEST DE L'INTERVALE -0.5#}
+    <script>
+        function testIntervale_0_5() {
+            dt1 = $('#date_debut_dcp').val();
+            dt2 = $('#date_fin_dcp').val();
+
+            date_debut = stringToDate(dt1);
+            date_fin = stringToDate(dt2);
+
+            intervalle = dateDiff(date_debut, date_fin);
+
+            if(intervalle > 0){
+                intervalle ++;
+            }
+
+            if(dt1 == dt2){
+                intervalle = 1;
+            }
+
+            intEcrit = parseFloat($('#intervalle_dcp').val());
+
+            if((intervalle - 0.5) > intEcrit || (intervalle + 0.5) < intEcrit ){
+                $('#erreurSaisi_intervalle').html('Vérifiez l\'intervalle saisie');
+                return false;
+            }else {
+                $('#erreurSaisi_intervalle').html('');
+                return true;
+            }
+
+        }
+
+        $('#btn_valider_dcp').click(function () {
+            return testIntervale_0_5();
+        })
+    </script>
+
+
+
+{% endblock %}

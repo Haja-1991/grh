@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+{% block titre %}Liste Employé{% endblock %}
+
+{% block body %}
+    <h1 class="text-primary">Liste des Employés</h1>
+    <hr>
+
+    <div class="write">
+        <a href="{{ path('employe_ajouter') }}" class="btn btn-lg btn-success">Nouveau employé</a>
+        <hr>
+    </div>
+
+
+    <table class="table-striped table" id="myTable">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Matricule</th>
+                <th>Nom</th>
+                <th>Prénom(s)</th>
+                <th>Adresse</th>
+                <th>Poste</th>
+                <th>Date embauche</th>
+                <th>Contact</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for employe in employes %}
+            <tr>
+                <td>
+                    <strong class="hide">
+                        {% if employe.matricul %}
+                            1
+                        {% else %}
+                            0
+                        {% endif %}
+                    </strong>
+                    <a href="{{ path('employe_voir', { 'slug': employe.slug }) }}"><img src="{{ asset('document/imagesEmployes/') }}{{ employe.imageUrl }}" alt="" class="img-circle" width="50" height="50"></a>
+                </td>
+                <td><a  href="{{ path('employe_voir', { 'slug': employe.slug }) }}">{{ employe.matricul }}</a></td>
+                <td><a  href="{{ path('employe_voir', { 'slug': employe.slug }) }}">{{ employe.nom }}</a></td>
+                <td>{{ employe.prenom }}</td>
+                <td>{{ employe.adresse }}</td>
+                <td>{{ employe.poste }}</td>
+                <td>{{ employe.dateDebut|date('d/m/Y') }}</td>
+                <td>{{ employe.contact }}</td>
+                <td>
+                    <a href="{{ path('employe_voir', { 'slug': employe.slug }) }}" class="btn btn-default"><i class="fa fa-info-circle"></i> </a>
+                    <a href="{{ path('employe_modifier', { 'slug': employe.slug }) }}" class="btn btn-primary write"><i class="fa fa-edit"></i> </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <div class="write text-right">
+        <a href="{{ path('employe_index_innactive') }}" class="btn btn-danger btn-lg"><i class="fa fa-eye-slash"></i> Afficher les comptes employés désactivés</a>
+    </div>
+
+    {% if not app.user.ifRole('ROLE_RH') or not app.user.ifRole('ROLE_PAIE') %}
+        <script>
+            $('.write').addClass('hide');
+        </script>
+    {% endif %}
+
+    {#SORT DU TABLE#}
+    <link rel="stylesheet" href="{{ asset('assets/DataTables/datatables.css') }}">
+    <script src="{{ asset('assets/DataTables/datatables.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable({
+                paging: false,
+                info: false,
+                order: [ [0, "desc"], [1, "asc"] ],
+                language: {
+                    processing:     "Traitement en cours...",
+                    search:         "Rechercher&nbsp;:",
+                    lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix:    "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable:     "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first:      "Premier",
+                        previous:   "Pr&eacute;c&eacute;dent",
+                        next:       "Suivant",
+                        last:       "Dernier"
+                    },
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+        } );
+    </script>
+
+{% endblock %}
